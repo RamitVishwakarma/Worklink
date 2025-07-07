@@ -93,6 +93,7 @@ function AddMachinePage() {
   });
 
   const onSubmit = async (data: MachineFormData) => {
+    // Check if user is authenticated
     if (!user?.id) {
       toast({
         title: 'Error',
@@ -263,7 +264,7 @@ function AddMachinePage() {
                             <FormLabel>Location</FormLabel>
                             <FormControl>
                               <IndustrialInput
-                                placeholder="e.g., Chicago, IL"
+                                placeholder="e.g., Mumbai, Maharashtra"
                                 {...field}
                               />
                             </FormControl>

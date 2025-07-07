@@ -150,6 +150,7 @@ export function SigninForm() {
 
         const userData = {
           ...response.user,
+          id: (response.user as any)._id || response.user.id, // Normalize _id to id
           userType: userTypeEnum, // Ensure userType is properly typed
         };
 

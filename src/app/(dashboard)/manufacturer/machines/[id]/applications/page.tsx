@@ -260,10 +260,10 @@ function MachineApplicationsPage() {
         <IndustrialContainer>
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <Skeleton className="h-8 w-8 bg-industrial-muted" />
+              <Skeleton className="h-8 w-8 bg-gray-200" />
               <div>
-                <Skeleton className="h-8 w-64 bg-industrial-muted mb-2" />
-                <Skeleton className="h-4 w-48 bg-industrial-muted" />
+                <Skeleton className="h-8 w-64 bg-gray-200 mb-2" />
+                <Skeleton className="h-4 w-48 bg-gray-200" />
               </div>
             </div>
 
@@ -271,8 +271,8 @@ function MachineApplicationsPage() {
               {[...Array(3)].map((_, index) => (
                 <IndustrialCard key={index}>
                   <IndustrialCardContent className="p-4">
-                    <Skeleton className="h-4 w-24 bg-industrial-muted mb-2" />
-                    <Skeleton className="h-8 w-16 bg-industrial-muted" />
+                    <Skeleton className="h-4 w-24 bg-gray-200 mb-2" />
+                    <Skeleton className="h-8 w-16 bg-gray-200" />
                   </IndustrialCardContent>
                 </IndustrialCard>
               ))}

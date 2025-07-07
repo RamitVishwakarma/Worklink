@@ -79,7 +79,10 @@ export function NotificationBell({
           )}
         >
           <Bell
-            className={cn('h-5 w-5', iconClassName || 'text-industrial-muted')}
+            className={cn(
+              'h-5 w-5',
+              iconClassName || 'text-industrial-gunmetal-600'
+            )}
           />
           {unreadCount > 0 && (
             <Badge
@@ -94,27 +97,27 @@ export function NotificationBell({
 
       <DropdownMenuContent
         align="end"
-        className="w-80 bg-white border-gray-200 shadow-lg"
+        className="w-80 bg-white border-industrial-border shadow-lg"
       >
-        <DropdownMenuLabel className="flex items-center justify-between text-gray-900">
+        <DropdownMenuLabel className="flex items-center justify-between text-industrial-gunmetal-900">
           <span>Notifications</span>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={markAllAsRead}
-              className="text-xs text-gray-600 hover:text-gray-900"
+              className="text-xs text-industrial-gunmetal-600 hover:text-industrial-gunmetal-900"
             >
               Mark all read
             </Button>
           )}
         </DropdownMenuLabel>
 
-        <DropdownMenuSeparator className="bg-gray-200" />
+        <DropdownMenuSeparator className="bg-industrial-border" />
 
         <ScrollArea className="h-96">
           {recentNotifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-gray-600">
+            <div className="flex flex-col items-center justify-center py-8 text-industrial-gunmetal-600">
               <Bell className="h-8 w-8 mb-2 opacity-50" />
               <p className="text-sm">No notifications yet</p>
             </div>

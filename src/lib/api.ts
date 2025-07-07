@@ -377,15 +377,22 @@ export const authAPI = {
 
 // Worker endpoints
 export const workerAPI = {
-  getProfile: (): Promise<WorkerProfile> => apiGet('/worker/profile'),
+  getProfile: async (): Promise<WorkerProfile> => {
+    const response = await apiGet('/worker/profile');
+    // Extract the worker data from the response
+    return response.Worker || response;
+  },
 
-  updateProfile: (
+  updateProfile: async (
     profileData: Partial<WorkerProfile>
-  ): Promise<WorkerProfile> =>
-    apiPut('/worker/profile', profileData, {
+  ): Promise<WorkerProfile> => {
+    const response = await apiPut('/worker/profile', profileData, {
       showSuccessToast: true,
       successMessage: 'Profile updated successfully!',
-    }),
+    });
+    // Extract the worker data from the response
+    return response.Worker || response;
+  },
 
   getAppliedGigs: (): Promise<GigApplication[]> =>
     apiGet('/worker/applied-gigs'),
@@ -408,15 +415,22 @@ export const workerAPI = {
 
 // Startup endpoints
 export const startupAPI = {
-  getProfile: (): Promise<StartupProfile> => apiGet('/startup/profile'),
+  getProfile: async (): Promise<StartupProfile> => {
+    const response = await apiGet('/startup/profile');
+    // Extract the startup data from the response
+    return response.Startup || response;
+  },
 
-  updateProfile: (
+  updateProfile: async (
     profileData: Partial<StartupProfile>
-  ): Promise<StartupProfile> =>
-    apiPut('/startup/profile', profileData, {
+  ): Promise<StartupProfile> => {
+    const response = await apiPut('/startup/profile', profileData, {
       showSuccessToast: true,
       successMessage: 'Profile updated successfully!',
-    }),
+    });
+    // Extract the startup data from the response
+    return response.Startup || response;
+  },
 
   createGig: (gigData: any): Promise<Gig> =>
     apiPost('/startup/create-gig', gigData, {
@@ -444,16 +458,22 @@ export const startupAPI = {
 
 // Manufacturer endpoints
 export const manufacturerAPI = {
-  getProfile: (): Promise<ManufacturerProfile> =>
-    apiGet('/manufacturer/profile'),
+  getProfile: async (): Promise<ManufacturerProfile> => {
+    const response = await apiGet('/manufacturer/profile');
+    // Extract the manufacturer data from the response
+    return response.Manufacturer || response;
+  },
 
-  updateProfile: (
+  updateProfile: async (
     profileData: Partial<ManufacturerProfile>
-  ): Promise<ManufacturerProfile> =>
-    apiPut('/manufacturer/profile', profileData, {
+  ): Promise<ManufacturerProfile> => {
+    const response = await apiPut('/manufacturer/profile', profileData, {
       showSuccessToast: true,
       successMessage: 'Profile updated successfully!',
-    }),
+    });
+    // Extract the manufacturer data from the response
+    return response.Manufacturer || response;
+  },
 
   addMachine: (machineData: any): Promise<Machine> =>
     apiPost('/manufacturer/add-machine', machineData, {

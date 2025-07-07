@@ -88,19 +88,27 @@ function ManufacturerProfilePage() {
   // Update form data when profile loads
   useEffect(() => {
     if (currentProfile) {
-      const manufacturerProfile = currentProfile as ManufacturerProfile;
+      const manufacturerProfile = currentProfile as any; // Using any to handle different data structures
       setFormData({
         companyName: manufacturerProfile.companyName || '',
-        industry: manufacturerProfile.industry || '',
+        industry:
+          manufacturerProfile.industry || manufacturerProfile.workSector || '',
         description: manufacturerProfile.description || '',
         address: manufacturerProfile.address || '',
-        city: manufacturerProfile.city || '',
-        state: manufacturerProfile.state || '',
+        city:
+          manufacturerProfile.city || manufacturerProfile.location?.city || '',
+        state:
+          manufacturerProfile.state ||
+          manufacturerProfile.location?.state ||
+          '',
         zipCode: manufacturerProfile.zipCode || '',
         phone: manufacturerProfile.phone || '',
         website: manufacturerProfile.website || '',
         contactPerson: manufacturerProfile.contactPerson || '',
-        contactEmail: manufacturerProfile.contactEmail || '',
+        contactEmail:
+          manufacturerProfile.contactEmail ||
+          manufacturerProfile.companyEmail ||
+          '',
       });
     }
   }, [currentProfile]);
@@ -108,14 +116,59 @@ function ManufacturerProfilePage() {
   // Removed the incomplete function as it's now handled by memoizedFetchProfile
   const handleSave = async () => {
     try {
+      // Transform form data to match backend expected format
+      const profileUpdateData = {
+        companyName: formData.companyName,
+        workSector: formData.industry, // Backend expects workSector
+        description: formData.description,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        phone: formData.phone,
+        website: formData.website,
+        contactPerson: formData.contactPerson,
+        companyEmail: formData.contactEmail, // Backend expects companyEmail
+      };
+
       const updatedProfile = await updateCurrentUserProfile(
         UserType.MANUFACTURER,
-        formData
+        profileUpdateData as any // Use any to handle backend data structure
       );
 
       // Update user in auth store if company name changed
       if (formData.companyName !== user?.companyName) {
         updateUser({ ...user!, companyName: formData.companyName });
+      }
+
+      // The store should already have the updated profile, but let's ensure form data is synced
+      if (updatedProfile) {
+        const manufacturerProfile = updatedProfile as any;
+        setFormData({
+          companyName: manufacturerProfile.companyName || '',
+          industry:
+            manufacturerProfile.industry ||
+            manufacturerProfile.workSector ||
+            '',
+          description: manufacturerProfile.description || '',
+          address: manufacturerProfile.address || '',
+          city:
+            manufacturerProfile.city ||
+            manufacturerProfile.location?.city ||
+            '',
+          state:
+            manufacturerProfile.state ||
+            manufacturerProfile.location?.state ||
+            '',
+          zipCode: manufacturerProfile.zipCode || '',
+          phone: manufacturerProfile.phone || '',
+          website: manufacturerProfile.website || '',
+          contactPerson: manufacturerProfile.contactPerson || '',
+          contactEmail:
+            manufacturerProfile.contactEmail ||
+            manufacturerProfile.companyEmail ||
+            '',
+        });
       }
 
       toast({
@@ -124,9 +177,11 @@ function ManufacturerProfilePage() {
       });
       setEditing(false);
     } catch (error: any) {
+      console.error('Profile update error:', error);
       toast({
         title: 'Error',
-        description: 'Failed to update profile',
+        description:
+          error?.response?.data?.message || 'Failed to update profile',
         variant: 'destructive',
       });
     }
@@ -134,19 +189,27 @@ function ManufacturerProfilePage() {
 
   const handleCancel = () => {
     if (currentProfile) {
-      const manufacturerProfile = currentProfile as ManufacturerProfile;
+      const manufacturerProfile = currentProfile as any; // Using any to handle different data structures
       setFormData({
         companyName: manufacturerProfile.companyName || '',
-        industry: manufacturerProfile.industry || '',
+        industry:
+          manufacturerProfile.industry || manufacturerProfile.workSector || '',
         description: manufacturerProfile.description || '',
         address: manufacturerProfile.address || '',
-        city: manufacturerProfile.city || '',
-        state: manufacturerProfile.state || '',
+        city:
+          manufacturerProfile.city || manufacturerProfile.location?.city || '',
+        state:
+          manufacturerProfile.state ||
+          manufacturerProfile.location?.state ||
+          '',
         zipCode: manufacturerProfile.zipCode || '',
         phone: manufacturerProfile.phone || '',
         website: manufacturerProfile.website || '',
         contactPerson: manufacturerProfile.contactPerson || '',
-        contactEmail: manufacturerProfile.contactEmail || '',
+        contactEmail:
+          manufacturerProfile.contactEmail ||
+          manufacturerProfile.companyEmail ||
+          '',
       });
     }
     setEditing(false);
@@ -227,8 +290,8 @@ function ManufacturerProfilePage() {
               className="absolute top-0 left-0 h-1 bg-gradient-to-r from-industrial-accent via-industrial-safety-400 to-industrial-accent rounded-full"
             />
 
-            <div className="flex items-center justify-between pt-4">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-4 pt-4">
+              <div className="flex items-start gap-3 sm:gap-4 min-w-0">
                 {/* 3D Factory Icon with Hover Animation */}
                 <motion.div
                   whileHover={{
@@ -237,7 +300,7 @@ function ManufacturerProfilePage() {
                     rotateX: 5,
                   }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="relative"
+                  className="relative flex-shrink-0 mt-1"
                 >
                   <motion.div
                     animate={{
@@ -261,16 +324,16 @@ function ManufacturerProfilePage() {
                   <div className="absolute inset-0 bg-gradient-radial from-industrial-accent/20 to-transparent rounded-full blur-xl" />
                 </motion.div>
 
-                <div>
+                <div className="min-w-0 flex-1">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-industrial-accent to-gray-800 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-800 via-industrial-accent to-gray-800 bg-clip-text text-transparent mb-1 sm:mb-2 break-words">
                       Company Profile
                     </h1>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-600 break-words leading-relaxed">
                       Manage your manufacturing company information and
                       industrial operations
                     </p>
@@ -279,19 +342,20 @@ function ManufacturerProfilePage() {
               </div>
 
               {/* Enhanced Action Buttons */}
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                 {editing ? (
                   <>
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      className="order-2 sm:order-1"
                     >
                       <Button
                         variant="industrial-outline"
                         size="sm"
                         onClick={handleCancel}
                         disabled={isUpdating}
-                        className="shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="w-full shadow-lg hover:shadow-xl transition-all duration-300"
                       >
                         <X className="h-4 w-4 mr-2" />
                         Cancel
@@ -300,13 +364,14 @@ function ManufacturerProfilePage() {
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      className="order-1 sm:order-2"
                     >
                       <Button
                         variant="industrial-accent"
                         size="sm"
                         onClick={handleSave}
                         disabled={isUpdating}
-                        className="shadow-xl hover:shadow-2xl transition-all duration-300"
+                        className="w-full shadow-xl hover:shadow-2xl transition-all duration-300"
                       >
                         {isUpdating ? (
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -326,7 +391,7 @@ function ManufacturerProfilePage() {
                       variant="industrial-accent"
                       size="sm"
                       onClick={() => setEditing(true)}
-                      className="shadow-xl hover:shadow-2xl transition-all duration-300"
+                      className="w-full shadow-xl hover:shadow-2xl transition-all duration-300"
                     >
                       <Edit3 className="h-4 w-4 mr-2" />
                       Edit Profile
@@ -339,11 +404,14 @@ function ManufacturerProfilePage() {
             {/* Metal texture overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-industrial-gunmetal-50/5 to-transparent pointer-events-none" />
           </motion.div>{' '}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Enhanced Profile Statistics */}
-            <motion.div variants={itemVariants} className="lg:col-span-1">
+            <motion.div
+              variants={itemVariants}
+              className="lg:col-span-1 order-2 lg:order-1"
+            >
               <motion.div variants={metalCardVariants} whileHover="hover">
-                <IndustrialCard className="relative overflow-hidden border-l-4 border-l-industrial-accent bg-gradient-to-br from-industrial-gunmetal-50 to-industrial-gunmetal-100">
+                <IndustrialCard className="relative overflow-hidden border-l-4 border-l-industrial-accent bg-gradient-to-br from-industrial-gunmetal-50 to-industrial-gunmetal-100 h-full">
                   {/* Metal grid pattern overlay */}
                   <div className="absolute inset-0 opacity-[0.03]">
                     <div
@@ -362,7 +430,7 @@ function ManufacturerProfilePage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-industrial-accent/5 to-transparent opacity-50" />
 
                   <IndustrialCardHeader className="relative z-10">
-                    <IndustrialCardTitle className="flex items-center gap-3">
+                    <IndustrialCardTitle className="flex items-center gap-2 sm:gap-3">
                       <motion.div
                         animate={{ rotate: [0, 360] }}
                         transition={{
@@ -377,77 +445,77 @@ function ManufacturerProfilePage() {
                           className="text-industrial-accent"
                         />
                       </motion.div>
-                      <span className="text-gray-800 font-bold">
+                      <span className="text-gray-800 font-bold text-sm sm:text-base truncate">
                         Manufacturing Statistics
                       </span>
                     </IndustrialCardTitle>
                   </IndustrialCardHeader>
 
-                  <IndustrialCardContent className="space-y-4 relative z-10">
+                  <IndustrialCardContent className="space-y-3 sm:space-y-4 relative z-10">
                     {isLoading ? (
                       <>
-                        <Skeleton className="h-16 w-full bg-industrial-muted" />
-                        <Skeleton className="h-16 w-full bg-industrial-muted" />
-                        <Skeleton className="h-16 w-full bg-industrial-muted" />
+                        <Skeleton className="h-12 sm:h-16 w-full bg-gray-200" />
+                        <Skeleton className="h-12 sm:h-16 w-full bg-gray-200" />
+                        <Skeleton className="h-12 sm:h-16 w-full bg-gray-200" />
                       </>
                     ) : (
                       <>
                         {/* Total Machines */}
-                        <div className="flex items-center justify-between p-4 bg-industrial-navy-50 border border-industrial-navy-200 rounded-lg">
-                          <div className="flex items-center space-x-3">
+                        <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-industrial-navy-50 border border-industrial-navy-200 rounded-lg">
+                          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
                             <motion.div
                               whileHover={{ scale: 1.1, rotateY: 180 }}
                               transition={{ duration: 0.3 }}
+                              className="flex-shrink-0"
                             >
-                              <Factory className="h-8 w-8 text-industrial-navy-500" />
+                              <Factory className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-industrial-navy-500" />
                             </motion.div>
-                            <div>
-                              <p className="text-sm text-gray-600">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs sm:text-sm text-gray-600 truncate">
                                 Total Machines
                               </p>
-                              <p className="text-2xl font-bold text-industrial-navy-600">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.totalMachines || 0}
+                              <p className="text-base sm:text-lg lg:text-2xl font-bold text-industrial-navy-600 truncate">
+                                {(currentProfile as any)?.totalMachines || 0}
                               </p>
                             </div>
                           </div>
                         </div>
 
                         {/* Active Machines */}
-                        <div className="flex items-center justify-between p-4 bg-industrial-safety-50 border border-industrial-safety-200 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <motion.div>
-                              <TrendingUp className="h-8 w-8 text-industrial-safety-500" />
+                        <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-industrial-safety-50 border border-industrial-safety-200 rounded-lg">
+                          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                            <motion.div className="flex-shrink-0">
+                              <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-industrial-safety-500" />
                             </motion.div>
-                            <div>
-                              <p className="text-sm text-gray-600">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs sm:text-sm text-gray-600 truncate">
                                 Active Machines
                               </p>
-                              <p className="text-2xl font-bold text-industrial-safety-600">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.activeMachines || 0}
+                              <p className="text-base sm:text-lg lg:text-2xl font-bold text-industrial-safety-600 truncate">
+                                {(currentProfile as any)?.activeMachines || 0}
                               </p>
                             </div>
                           </div>
                         </div>
 
                         {/* Member Since */}
-                        <div className="flex items-center justify-between p-4 bg-industrial-accent-50 border border-industrial-accent-200 rounded-lg">
-                          <div className="flex items-center space-x-3">
+                        <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-industrial-accent-50 border border-industrial-accent-200 rounded-lg">
+                          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
                             <motion.div
                               whileHover={{
                                 scale: [1, 1.2, 1],
                                 rotateX: [0, 360, 0],
                               }}
                               transition={{ duration: 0.6 }}
+                              className="flex-shrink-0"
                             >
-                              <Calendar className="h-8 w-8 text-industrial-accent" />
+                              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-industrial-accent" />
                             </motion.div>
-                            <div>
-                              <p className="text-sm text-gray-600">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs sm:text-sm text-gray-600 truncate">
                                 Member Since
-                              </p>{' '}
-                              <p className="text-2xl font-bold text-industrial-accent">
+                              </p>
+                              <p className="text-base sm:text-lg lg:text-2xl font-bold text-industrial-accent truncate">
                                 {currentProfile?.createdAt
                                   ? new Date(
                                       currentProfile.createdAt
@@ -464,9 +532,12 @@ function ManufacturerProfilePage() {
               </motion.div>
             </motion.div>{' '}
             {/* Enhanced Profile Information */}
-            <motion.div variants={itemVariants} className="lg:col-span-2">
+            <motion.div
+              variants={itemVariants}
+              className="lg:col-span-3 order-1 lg:order-2"
+            >
               <motion.div variants={metalCardVariants} whileHover="hover">
-                <IndustrialCard className="relative overflow-hidden border-l-4 border-l-industrial-navy-400 bg-gradient-to-br from-industrial-navy-50 to-industrial-navy-100">
+                <IndustrialCard className="relative overflow-hidden border-l-4 border-l-industrial-navy-400 bg-gradient-to-br from-industrial-navy-50 to-industrial-navy-100 h-full">
                   {/* Metal grid pattern overlay */}
                   <div className="absolute inset-0 opacity-[0.03]">
                     <div
@@ -485,14 +556,14 @@ function ManufacturerProfilePage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-industrial-navy-400/5 to-transparent opacity-50" />
 
                   <IndustrialCardHeader className="relative z-10">
-                    <IndustrialCardTitle className="flex items-center gap-3">
+                    <IndustrialCardTitle className="flex items-center gap-2 sm:gap-3">
                       <motion.div
                         whileHover={{ scale: 1.1, rotateY: 180 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Building className="h-6 w-6 text-industrial-navy-400" />
+                        <Building className="h-5 w-5 sm:h-6 sm:w-6 text-industrial-navy-400" />
                       </motion.div>
-                      <span className="text-gray-800 font-bold">
+                      <span className="text-gray-800 font-bold text-sm sm:text-base lg:text-lg truncate">
                         Company Information
                       </span>
                     </IndustrialCardTitle>
@@ -500,21 +571,21 @@ function ManufacturerProfilePage() {
 
                   <IndustrialCardContent className="relative z-10">
                     {isLoading ? (
-                      <div className="space-y-6">
+                      <div className="space-y-4 sm:space-y-6">
                         {Array.from({ length: 8 }).map((_, i) => (
                           <div key={i} className="space-y-2">
-                            <Skeleton className="h-4 w-24 bg-industrial-muted" />
-                            <Skeleton className="h-10 w-full bg-industrial-muted" />
+                            <Skeleton className="h-3 sm:h-4 w-20 sm:w-24 bg-gray-200" />
+                            <Skeleton className="h-8 sm:h-10 w-full bg-gray-200" />
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
                         {/* Company Name */}
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <Label
                             htmlFor="companyName"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Company Name
                           </Label>
@@ -530,14 +601,14 @@ function ManufacturerProfilePage() {
                                   companyName: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <Building className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.companyName || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <Building className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.companyName ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
@@ -546,7 +617,7 @@ function ManufacturerProfilePage() {
                         <div>
                           <Label
                             htmlFor="contactPerson"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Contact Person
                           </Label>
@@ -562,14 +633,14 @@ function ManufacturerProfilePage() {
                                   contactPerson: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <User className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.contactPerson || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <User className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.contactPerson ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
@@ -578,7 +649,7 @@ function ManufacturerProfilePage() {
                         <div>
                           <Label
                             htmlFor="contactEmail"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Contact Email
                           </Label>
@@ -594,14 +665,15 @@ function ManufacturerProfilePage() {
                                   contactEmail: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <Mail className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.contactEmail || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.contactEmail ||
+                                  (currentProfile as any)?.companyEmail ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
@@ -610,7 +682,7 @@ function ManufacturerProfilePage() {
                         <div>
                           <Label
                             htmlFor="industry"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Industry
                           </Label>
@@ -626,14 +698,15 @@ function ManufacturerProfilePage() {
                                   industry: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <Factory className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.industry || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <Factory className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.industry ||
+                                  (currentProfile as any)?.workSector ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
@@ -642,7 +715,7 @@ function ManufacturerProfilePage() {
                         <div>
                           <Label
                             htmlFor="phone"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Phone Number
                           </Label>
@@ -658,23 +731,23 @@ function ManufacturerProfilePage() {
                                   phone: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <Phone className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.phone || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.phone ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
                         </div>
                         {/* Website */}
-                        <div>
+                        <div className="sm:col-span-2">
                           <Label
                             htmlFor="website"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Website
                           </Label>
@@ -690,23 +763,23 @@ function ManufacturerProfilePage() {
                                   website: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <Globe className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.website || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <Globe className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.website ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
                         </div>
                         {/* Address */}
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <Label
                             htmlFor="address"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Street Address
                           </Label>
@@ -722,14 +795,14 @@ function ManufacturerProfilePage() {
                                   address: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2 flex items-center space-x-2">
-                              <MapPin className="h-4 w-4 text-gray-500" />
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.address || 'Not specified'}
+                            <div className="mt-1 sm:mt-2 flex items-center space-x-2">
+                              <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.address ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
@@ -738,14 +811,14 @@ function ManufacturerProfilePage() {
                         <div>
                           <Label
                             htmlFor="city"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             City
                           </Label>
                           {editing ? (
                             <IndustrialInput
                               id="city"
-                              placeholder="Enter city"
+                              placeholder="e.g. Mumbai"
                               value={formData.city}
                               onChange={(e) =>
                                 setFormData({
@@ -753,13 +826,14 @@ function ManufacturerProfilePage() {
                                   city: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2">
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.city || 'Not specified'}
+                            <div className="mt-1 sm:mt-2">
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.city ||
+                                  (currentProfile as any)?.location?.city ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
@@ -768,14 +842,14 @@ function ManufacturerProfilePage() {
                         <div>
                           <Label
                             htmlFor="state"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             State
                           </Label>
                           {editing ? (
                             <IndustrialInput
                               id="state"
-                              placeholder="Enter state"
+                              placeholder="e.g. Maharashtra"
                               value={formData.state}
                               onChange={(e) =>
                                 setFormData({
@@ -783,29 +857,30 @@ function ManufacturerProfilePage() {
                                   state: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2">
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.state || 'Not specified'}
+                            <div className="mt-1 sm:mt-2">
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.state ||
+                                  (currentProfile as any)?.location?.state ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
                         </div>
                         {/* Zip Code */}
-                        <div>
+                        <div className="sm:col-span-2">
                           <Label
                             htmlFor="zipCode"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Zip Code
                           </Label>
                           {editing ? (
                             <IndustrialInput
                               id="zipCode"
-                              placeholder="Enter zip code"
+                              placeholder="e.g. 400001"
                               value={formData.zipCode}
                               onChange={(e) =>
                                 setFormData({
@@ -813,22 +888,22 @@ function ManufacturerProfilePage() {
                                   zipCode: e.target.value,
                                 })
                               }
-                              className="mt-2"
+                              className="mt-1 sm:mt-2"
                             />
                           ) : (
-                            <div className="mt-2">
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.zipCode || 'Not specified'}
+                            <div className="mt-1 sm:mt-2">
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words">
+                                {(currentProfile as any)?.zipCode ||
+                                  'Not specified'}
                               </span>
                             </div>
                           )}
                         </div>
                         {/* Description */}
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <Label
                             htmlFor="description"
-                            className="text-gray-700 font-medium"
+                            className="text-xs sm:text-sm lg:text-base text-gray-700 font-medium"
                           >
                             Company Description
                           </Label>
@@ -843,13 +918,13 @@ function ManufacturerProfilePage() {
                                   description: e.target.value,
                                 })
                               }
-                              className="mt-2 min-h-[100px] bg-gray-50 border-gray-200 text-gray-800 placeholder:text-gray-500 focus:border-industrial-accent focus:ring-industrial-accent"
+                              className="mt-1 sm:mt-2 min-h-[80px] sm:min-h-[100px] bg-gray-50 border-gray-200 text-gray-800 placeholder:text-gray-500 focus:border-industrial-accent focus:ring-industrial-accent text-xs sm:text-sm resize-y"
                             />
                           ) : (
-                            <div className="mt-2">
-                              <span className="text-gray-800">
-                                {(currentProfile as ManufacturerProfile)
-                                  ?.description || 'No description provided'}
+                            <div className="mt-1 sm:mt-2">
+                              <span className="text-xs sm:text-sm lg:text-base text-gray-800 break-words leading-relaxed">
+                                {(currentProfile as any)?.description ||
+                                  'No description provided'}
                               </span>
                             </div>
                           )}

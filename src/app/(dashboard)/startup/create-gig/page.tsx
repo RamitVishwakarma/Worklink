@@ -283,19 +283,165 @@ function CreateGigPage() {
                             <MapPin className="h-4 w-4 text-industrial-accent" />
                             City *
                           </Label>
-                          <IndustrialInput
-                            id="city"
+                          <Select
                             value={formData.location.city}
-                            onChange={(e) =>
+                            onValueChange={(value) =>
                               handleInputChange('location', {
                                 ...formData.location,
-                                city: e.target.value,
+                                city: value,
                               })
                             }
-                            placeholder="e.g. Detroit"
-                            className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
-                            required
-                          />
+                          >
+                            <SelectTrigger className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent">
+                              <SelectValue placeholder="Select city" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border-gray-200">
+                              <SelectItem
+                                value="Delhi"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Delhi
+                              </SelectItem>
+                              <SelectItem
+                                value="Mumbai"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Mumbai
+                              </SelectItem>
+                              <SelectItem
+                                value="Bangalore"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Bangalore
+                              </SelectItem>
+                              <SelectItem
+                                value="Hyderabad"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Hyderabad
+                              </SelectItem>
+                              <SelectItem
+                                value="Chennai"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Chennai
+                              </SelectItem>
+                              <SelectItem
+                                value="Kolkata"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Kolkata
+                              </SelectItem>
+                              <SelectItem
+                                value="Pune"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Pune
+                              </SelectItem>
+                              <SelectItem
+                                value="Ahmedabad"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Ahmedabad
+                              </SelectItem>
+                              <SelectItem
+                                value="Jaipur"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Jaipur
+                              </SelectItem>
+                              <SelectItem
+                                value="Surat"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Surat
+                              </SelectItem>
+                              <SelectItem
+                                value="Lucknow"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Lucknow
+                              </SelectItem>
+                              <SelectItem
+                                value="Kanpur"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Kanpur
+                              </SelectItem>
+                              <SelectItem
+                                value="Nagpur"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Nagpur
+                              </SelectItem>
+                              <SelectItem
+                                value="Indore"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Indore
+                              </SelectItem>
+                              <SelectItem
+                                value="Bhopal"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Bhopal
+                              </SelectItem>
+                              <SelectItem
+                                value="Visakhapatnam"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Visakhapatnam
+                              </SelectItem>
+                              <SelectItem
+                                value="Vadodara"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Vadodara
+                              </SelectItem>
+                              <SelectItem
+                                value="Ghaziabad"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Ghaziabad
+                              </SelectItem>
+                              <SelectItem
+                                value="Noida"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Noida
+                              </SelectItem>
+                              <SelectItem
+                                value="Faridabad"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Faridabad
+                              </SelectItem>
+                              <SelectItem
+                                value="Gurgaon"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Gurgaon
+                              </SelectItem>
+                              <SelectItem
+                                value="Coimbatore"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Coimbatore
+                              </SelectItem>
+                              <SelectItem
+                                value="Kochi"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Kochi
+                              </SelectItem>
+                              <SelectItem
+                                value="Mysore"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Mysore
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                         <div className="space-y-2">
                           <Label
@@ -305,19 +451,195 @@ function CreateGigPage() {
                             <MapPin className="h-4 w-4 text-industrial-accent" />
                             State *
                           </Label>
-                          <IndustrialInput
-                            id="state"
+                          <Select
                             value={formData.location.state}
-                            onChange={(e) =>
+                            onValueChange={(value) =>
                               handleInputChange('location', {
                                 ...formData.location,
-                                state: e.target.value,
+                                state: value,
                               })
                             }
-                            placeholder="e.g. MI"
-                            className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
-                            required
-                          />
+                          >
+                            <SelectTrigger className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent">
+                              <SelectValue placeholder="Select state" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border-gray-200">
+                              <SelectItem
+                                value="Andhra Pradesh"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Andhra Pradesh
+                              </SelectItem>
+                              <SelectItem
+                                value="Arunachal Pradesh"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Arunachal Pradesh
+                              </SelectItem>
+                              <SelectItem
+                                value="Assam"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Assam
+                              </SelectItem>
+                              <SelectItem
+                                value="Bihar"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Bihar
+                              </SelectItem>
+                              <SelectItem
+                                value="Chhattisgarh"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Chhattisgarh
+                              </SelectItem>
+                              <SelectItem
+                                value="Delhi"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Delhi
+                              </SelectItem>
+                              <SelectItem
+                                value="Goa"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Goa
+                              </SelectItem>
+                              <SelectItem
+                                value="Gujarat"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Gujarat
+                              </SelectItem>
+                              <SelectItem
+                                value="Haryana"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Haryana
+                              </SelectItem>
+                              <SelectItem
+                                value="Himachal Pradesh"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Himachal Pradesh
+                              </SelectItem>
+                              <SelectItem
+                                value="Jharkhand"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Jharkhand
+                              </SelectItem>
+                              <SelectItem
+                                value="Karnataka"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Karnataka
+                              </SelectItem>
+                              <SelectItem
+                                value="Kerala"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Kerala
+                              </SelectItem>
+                              <SelectItem
+                                value="Madhya Pradesh"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Madhya Pradesh
+                              </SelectItem>
+                              <SelectItem
+                                value="Maharashtra"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Maharashtra
+                              </SelectItem>
+                              <SelectItem
+                                value="Manipur"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Manipur
+                              </SelectItem>
+                              <SelectItem
+                                value="Meghalaya"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Meghalaya
+                              </SelectItem>
+                              <SelectItem
+                                value="Mizoram"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Mizoram
+                              </SelectItem>
+                              <SelectItem
+                                value="Nagaland"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Nagaland
+                              </SelectItem>
+                              <SelectItem
+                                value="Odisha"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Odisha
+                              </SelectItem>
+                              <SelectItem
+                                value="Punjab"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Punjab
+                              </SelectItem>
+                              <SelectItem
+                                value="Rajasthan"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Rajasthan
+                              </SelectItem>
+                              <SelectItem
+                                value="Sikkim"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Sikkim
+                              </SelectItem>
+                              <SelectItem
+                                value="Tamil Nadu"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Tamil Nadu
+                              </SelectItem>
+                              <SelectItem
+                                value="Telangana"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Telangana
+                              </SelectItem>
+                              <SelectItem
+                                value="Tripura"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Tripura
+                              </SelectItem>
+                              <SelectItem
+                                value="Uttar Pradesh"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Uttar Pradesh
+                              </SelectItem>
+                              <SelectItem
+                                value="Uttarakhand"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                Uttarakhand
+                              </SelectItem>
+                              <SelectItem
+                                value="West Bengal"
+                                className="text-gray-900 hover:bg-gray-50"
+                              >
+                                West Bengal
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
 

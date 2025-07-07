@@ -7,17 +7,17 @@ import { IndustrialIcon } from './industrial-icon';
 import { LucideIcon, AlertCircle } from 'lucide-react';
 
 const industrialInputVariants = cva(
-  'flex h-10 w-full border border-industrial-border bg-industrial-background px-3 py-2 text-sm text-industrial-foreground placeholder:text-industrial-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-industrial-ring disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
+  'flex h-10 w-full border border-industrial-border bg-industrial-background px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-industrial-ring disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
   {
     variants: {
       variant: {
         default:
-          'rounded-industrial border-industrial-gunmetal-400 bg-white focus:border-industrial-navy-600 focus:ring-industrial-navy-200',
+          'rounded-industrial border-gray-300 bg-white text-gray-900 focus:border-industrial-navy-600 focus:ring-industrial-navy-200',
         steel:
-          'rounded-industrial border-industrial-gunmetal-500 bg-industrial-gunmetal-50 focus:border-industrial-gunmetal-600 focus:ring-industrial-gunmetal-200 metal-texture',
+          'rounded-industrial border-gray-400 bg-gray-50 text-gray-900 focus:border-gray-600 focus:ring-gray-200 metal-texture',
         dark: 'rounded-industrial border-industrial-gunmetal-600 bg-industrial-gunmetal-900 text-white focus:border-industrial-safety-300 focus:ring-industrial-safety-200',
         accent:
-          'rounded-industrial border-industrial-safety-400 bg-industrial-safety-50 focus:border-industrial-safety-500 focus:ring-industrial-safety-200',
+          'rounded-industrial border-industrial-safety-400 bg-industrial-safety-50 text-gray-900 focus:border-industrial-safety-500 focus:ring-industrial-safety-200',
       },
       size: {
         default: 'h-10 px-3 py-2',
@@ -92,11 +92,9 @@ const IndustrialInput = React.forwardRef<
     return (
       <div className={cn('space-y-2', containerClassName)}>
         {label && (
-          <label className="text-sm font-medium text-industrial-foreground">
+          <label className="text-sm font-medium text-gray-700">
             {label}
-            {isRequired && (
-              <span className="text-industrial-safety-300 ml-1">*</span>
-            )}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
           </label>
         )}
         <div className="relative">
@@ -106,7 +104,7 @@ const IndustrialInput = React.forwardRef<
                 <IndustrialIcon
                   icon={leftIcon}
                   size="sm"
-                  className="text-industrial-muted-foreground"
+                  className="text-gray-400"
                 />
               )}
               {leftComponent}
@@ -132,7 +130,7 @@ const IndustrialInput = React.forwardRef<
                 <IndustrialIcon
                   icon={rightIcon}
                   size="sm"
-                  className="text-industrial-muted-foreground"
+                  className="text-gray-400"
                 />
               )}
               {rightComponent}
@@ -140,9 +138,7 @@ const IndustrialInput = React.forwardRef<
           )}
         </div>
         {description && !error && (
-          <p className="text-xs text-industrial-muted-foreground">
-            {description}
-          </p>
+          <p className="text-xs text-gray-500">{description}</p>
         )}{' '}
         {error && (
           <p className="text-xs text-red-500 flex items-center gap-1">

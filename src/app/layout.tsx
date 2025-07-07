@@ -1,5 +1,3 @@
-import Navbar, { Header } from '@/components/ui/header';
-import Footer from '@/components/ui/footer';
 import './globals.css';
 import type { Metadata } from 'next';
 import {
@@ -76,9 +74,7 @@ export default function RootLayout({
         className={`${sourceSans.variable} ${inter.variable} ${oswald.variable} ${bebasNeue.variable} ${jetbrainsMono.variable} ${RobotoFont.variable} flex flex-col min-h-screen font-industrial-body antialiased`}
       >
         <AppProvider>
-          <Header />
           <main>{children}</main>
-          <Footer />
           <Toaster />
           <NotificationToast />
         </AppProvider>

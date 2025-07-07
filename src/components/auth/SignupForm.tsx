@@ -178,6 +178,7 @@ export function SignupForm() {
 
         const userData = {
           ...response.user,
+          id: (response.user as any)._id || response.user.id, // Normalize _id to id
           userType: userTypeEnum, // Ensure userType is properly typed
         };
 
@@ -540,7 +541,7 @@ export function SignupForm() {
                               </FormLabel>
                               <FormControl>
                                 <IndustrialInput
-                                  placeholder="New York"
+                                  placeholder="Mumbai"
                                   variant="industrial"
                                   {...field}
                                   value={field.value || ''}
@@ -563,7 +564,7 @@ export function SignupForm() {
                               </FormLabel>
                               <FormControl>
                                 <IndustrialInput
-                                  placeholder="NY"
+                                  placeholder="Maharashtra"
                                   variant="industrial"
                                   {...field}
                                   value={field.value || ''}
@@ -614,7 +615,7 @@ export function SignupForm() {
                               </FormLabel>
                               <FormControl>
                                 <IndustrialInput
-                                  placeholder="San Francisco"
+                                  placeholder="Delhi"
                                   variant="industrial"
                                   {...field}
                                   value={field.value || ''}
@@ -637,7 +638,7 @@ export function SignupForm() {
                               </FormLabel>
                               <FormControl>
                                 <IndustrialInput
-                                  placeholder="CA"
+                                  placeholder="Delhi"
                                   variant="industrial"
                                   {...field}
                                   value={field.value || ''}

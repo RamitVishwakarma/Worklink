@@ -709,7 +709,7 @@ function StartupProfilePage() {
                               onChange={(e) =>
                                 handleInputChange('phone', e.target.value)
                               }
-                              placeholder="+1 (555) 123-4567"
+                              placeholder="+91 98765 43210"
                               className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
                             />
                           ) : (
@@ -734,7 +734,7 @@ function StartupProfilePage() {
                               onChange={(e) =>
                                 handleInputChange('address', e.target.value)
                               }
-                              placeholder="123 Industrial Ave, Manufacturing City, State 12345"
+                              placeholder="123 Industrial Road, Mumbai, Maharashtra 400001"
                               className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
                             />
                           ) : (

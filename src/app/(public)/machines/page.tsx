@@ -230,27 +230,27 @@ export default function MachinesPage() {
     return (
       <IndustrialLayout>
         <IndustrialContainer>
-          <div className="space-y-6 mt-16">
+          <div className="space-y-4 sm:space-y-6 mt-8 sm:mt-12 lg:mt-16">
             {/* Header Skeleton */}
-            <div className="flex items-center space-x-4 mb-8">
-              <Skeleton className="h-8 w-8 bg-gray-200 rounded" />
-              <div>
-                <Skeleton className="h-8 w-48 bg-gray-200 mb-2" />
-                <Skeleton className="h-4 w-80 bg-gray-200" />
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-6 sm:mb-8">
+              <Skeleton className="h-6 w-6 sm:h-8 sm:w-8 bg-gray-200 rounded flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <Skeleton className="h-6 sm:h-8 w-32 sm:w-48 bg-gray-200 mb-2" />
+                <Skeleton className="h-4 w-48 sm:w-80 bg-gray-200" />
               </div>
             </div>
 
             {/* Stats Cards Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
               {[1, 2, 3, 4].map((i) => (
                 <IndustrialCard key={i} className="border-gray-200">
-                  <IndustrialCardContent className="p-4">
+                  <IndustrialCardContent className="p-3 sm:p-4">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <Skeleton className="h-4 w-24 bg-gray-200 mb-2" />
-                        <Skeleton className="h-6 w-8 bg-gray-200" />
+                      <div className="min-w-0 flex-1">
+                        <Skeleton className="h-3 sm:h-4 w-16 sm:w-24 bg-gray-200 mb-2" />
+                        <Skeleton className="h-5 sm:h-6 w-6 sm:w-8 bg-gray-200" />
                       </div>
-                      <Skeleton className="h-8 w-8 bg-gray-200 rounded" />
+                      <Skeleton className="h-5 w-5 sm:h-8 sm:w-8 bg-gray-200 rounded flex-shrink-0" />
                     </div>
                   </IndustrialCardContent>
                 </IndustrialCard>
@@ -258,52 +258,54 @@ export default function MachinesPage() {
             </div>
 
             {/* Search and Filters Skeleton */}
-            <div className="flex flex-col md:flex-row gap-4 mb-6">
-              <Skeleton className="h-10 flex-1 bg-gray-200" />
-              <Skeleton className="h-10 w-[140px] bg-gray-200" />
-              <Skeleton className="h-10 w-[140px] bg-gray-200" />
-              <Skeleton className="h-10 w-[140px] bg-gray-200" />
+            <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <Skeleton className="h-9 sm:h-10 w-full sm:max-w-md bg-gray-200" />
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <Skeleton className="h-9 sm:h-10 w-full sm:w-[140px] bg-gray-200" />
+                <Skeleton className="h-9 sm:h-10 w-full sm:w-[140px] bg-gray-200" />
+                <Skeleton className="h-9 sm:h-10 w-full sm:w-[140px] bg-gray-200" />
+              </div>
             </div>
 
             {/* Machines Grid Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(9)].map((_, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {[...Array(8)].map((_, index) => (
                 <IndustrialCard
                   key={index}
                   className="h-full flex flex-col border-gray-200"
                 >
-                  <IndustrialCardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <Skeleton className="h-6 w-3/4 bg-gray-200 mb-2" />
+                  <IndustrialCardHeader className="pb-2 sm:pb-3">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="flex-1 min-w-0">
+                        <Skeleton className="h-5 sm:h-6 w-3/4 bg-gray-200 mb-2" />
                         <div className="flex items-center gap-1">
-                          <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                          <Skeleton className="h-4 w-1/2 bg-gray-200" />
+                          <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                          <Skeleton className="h-3 sm:h-4 w-1/2 bg-gray-200" />
                         </div>
                       </div>
-                      <Skeleton className="h-6 w-16 bg-gray-200 rounded-full" />
+                      <Skeleton className="h-5 sm:h-6 w-12 sm:w-16 bg-gray-200 rounded-full flex-shrink-0" />
                     </div>
                   </IndustrialCardHeader>
-                  <IndustrialCardContent className="space-y-4 flex-1 flex flex-col">
-                    <Skeleton className="h-12 w-full bg-gray-200" />
+                  <IndustrialCardContent className="space-y-3 sm:space-y-4 flex-1 flex flex-col">
+                    <Skeleton className="h-8 sm:h-12 w-full bg-gray-200" />
 
-                    <div className="grid grid-cols-1 gap-3 flex-1">
+                    <div className="grid grid-cols-1 gap-2 sm:gap-3 flex-1">
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                        <Skeleton className="h-4 w-3/4 bg-gray-200" />
+                        <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                        <Skeleton className="h-3 sm:h-4 w-3/4 bg-gray-200" />
                       </div>
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                        <Skeleton className="h-4 w-1/2 bg-gray-200" />
+                        <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                        <Skeleton className="h-3 sm:h-4 w-1/2 bg-gray-200" />
                       </div>
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                        <Skeleton className="h-4 w-2/3 bg-gray-200" />
+                        <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                        <Skeleton className="h-3 sm:h-4 w-2/3 bg-gray-200" />
                       </div>
                     </div>
 
-                    <div className="pt-4 mt-auto">
-                      <Skeleton className="h-10 w-full bg-gray-200" />
+                    <div className="pt-3 sm:pt-4 mt-auto">
+                      <Skeleton className="h-8 sm:h-10 w-full bg-gray-200" />
                     </div>
                   </IndustrialCardContent>
                 </IndustrialCard>
@@ -322,15 +324,24 @@ export default function MachinesPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="space-y-6 mt-16"
+          className="space-y-4 sm:space-y-6 mt-8 sm:mt-12 lg:mt-16"
         >
           {/* Header */}
           <motion.div variants={itemVariants}>
-            <div className="flex items-center space-x-4 mb-8">
-              <IndustrialIcon icon="gear" size="lg" />
-              <div>
-                <IndustrialHeader level={1}>Browse Machines</IndustrialHeader>
-                <p className="text-industrial-gunmetal-600 mt-2">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-6 sm:mb-8">
+              <IndustrialIcon
+                icon="gear"
+                size="lg"
+                className="text-blue-600 flex-shrink-0"
+              />
+              <div className="min-w-0">
+                <IndustrialHeader
+                  level={1}
+                  className="text-xl sm:text-2xl lg:text-3xl text-gray-900 break-words"
+                >
+                  Browse Machines
+                </IndustrialHeader>
+                <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2 break-words">
                   Discover and apply for industrial equipment
                 </p>
               </div>
@@ -340,35 +351,36 @@ export default function MachinesPage() {
           {/* Stats Cards */}
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-1 md:grid-cols-4 gap-4"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
           >
-            <IndustrialCard className="border-industrial-primary/20">
-              <IndustrialCardContent className="p-4">
+            <IndustrialCard className="border-blue-200">
+              <IndustrialCardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-industrial-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">
                       Total Machines
                     </p>
-                    <p className="text-2xl font-bold text-industrial-foreground">
+                    <p className="text-lg sm:text-2xl font-bold text-blue-900 truncate">
                       {machines.length}
                     </p>
                   </div>
                   <IndustrialIcon
                     icon="gear"
-                    className="text-industrial-primary"
+                    className="text-blue-600 flex-shrink-0"
+                    size="sm"
                   />
                 </div>
               </IndustrialCardContent>
             </IndustrialCard>
 
-            <IndustrialCard className="border-industrial-accent/20">
-              <IndustrialCardContent className="p-4">
+            <IndustrialCard className="border-yellow-200">
+              <IndustrialCardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-industrial-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">
                       Available
                     </p>
-                    <p className="text-2xl font-bold text-industrial-accent">
+                    <p className="text-lg sm:text-2xl font-bold text-yellow-600 truncate">
                       {Array.isArray(machines)
                         ? machines.filter(
                             (m) => m.availability || m.isAvailable
@@ -378,20 +390,21 @@ export default function MachinesPage() {
                   </div>
                   <IndustrialIcon
                     icon="gear"
-                    className="text-industrial-accent"
+                    className="text-yellow-600 flex-shrink-0"
+                    size="sm"
                   />
                 </div>
               </IndustrialCardContent>
             </IndustrialCard>
 
-            <IndustrialCard className="border-red-500/20">
-              <IndustrialCardContent className="p-4">
+            <IndustrialCard className="border-red-200">
+              <IndustrialCardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-industrial-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">
                       In Use
                     </p>
-                    <p className="text-2xl font-bold text-red-500">
+                    <p className="text-lg sm:text-2xl font-bold text-red-600 truncate">
                       {Array.isArray(machines)
                         ? machines.filter(
                             (m) => !(m.availability || m.isAvailable)
@@ -399,25 +412,30 @@ export default function MachinesPage() {
                         : 0}
                     </p>
                   </div>
-                  <IndustrialIcon icon="gear" className="text-red-500" />
+                  <IndustrialIcon
+                    icon="gear"
+                    className="text-red-600 flex-shrink-0"
+                    size="sm"
+                  />
                 </div>
               </IndustrialCardContent>
             </IndustrialCard>
 
-            <IndustrialCard className="border-industrial-secondary/20">
-              <IndustrialCardContent className="p-4">
+            <IndustrialCard className="border-gray-200">
+              <IndustrialCardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-industrial-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">
                       Machine Types
                     </p>
-                    <p className="text-2xl font-bold text-industrial-secondary">
+                    <p className="text-lg sm:text-2xl font-bold text-gray-800 truncate">
                       {types.length}
                     </p>
                   </div>
                   <IndustrialIcon
                     icon="gear"
-                    className="text-industrial-secondary"
+                    className="text-gray-600 flex-shrink-0"
+                    size="sm"
                   />
                 </div>
               </IndustrialCardContent>
@@ -425,27 +443,24 @@ export default function MachinesPage() {
           </motion.div>
 
           {/* Filters */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between"
-          >
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-industrial-muted-foreground" />
+          <motion.div variants={itemVariants} className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="relative flex-1 max-w-full sm:max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <IndustrialInput
                   placeholder="Search machines..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 text-sm sm:text-base"
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <Select
                   value={locationFilter}
                   onValueChange={setLocationFilter}
                 >
-                  <SelectTrigger className="w-[140px] bg-white border-gray-300 text-gray-900">
+                  <SelectTrigger className="w-full sm:w-[140px] bg-white border-gray-300 text-gray-900 text-sm">
                     <SelectValue placeholder="Location" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-200 shadow-lg">
@@ -471,7 +486,7 @@ export default function MachinesPage() {
                 </Select>
 
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-[140px] bg-white border-gray-300 text-gray-900">
+                  <SelectTrigger className="w-full sm:w-[140px] bg-white border-gray-300 text-gray-900 text-sm">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-200 shadow-lg">
@@ -500,7 +515,7 @@ export default function MachinesPage() {
                   value={availabilityFilter}
                   onValueChange={setAvailabilityFilter}
                 >
-                  <SelectTrigger className="w-[140px] bg-white border-gray-300 text-gray-900">
+                  <SelectTrigger className="w-full sm:w-[140px] bg-white border-gray-300 text-gray-900 text-sm">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-200 shadow-lg">
@@ -531,21 +546,21 @@ export default function MachinesPage() {
           {/* Machines Grid */}
           <motion.div variants={itemVariants}>
             {filteredMachines.length === 0 ? (
-              <IndustrialCard className="text-center py-12">
+              <IndustrialCard className="text-center py-8 sm:py-12">
                 <IndustrialCardContent>
-                  <div className="flex flex-col items-center space-y-4">
+                  <div className="flex flex-col items-center space-y-3 sm:space-y-4">
                     <IndustrialIcon
                       icon="gear"
                       size="lg"
-                      className="text-industrial-muted-foreground"
+                      className="text-gray-400"
                     />
-                    <div>
-                      <h3 className="text-lg font-semibold text-industrial-foreground mb-2">
+                    <div className="max-w-md">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                         {machines.length === 0
                           ? 'No machines available'
                           : 'No matches found'}
                       </h3>
-                      <p className="text-industrial-muted-foreground">
+                      <p className="text-sm sm:text-base text-gray-600 break-words">
                         {machines.length === 0
                           ? 'Check back later for available industrial equipment'
                           : 'Try adjusting your search or filter criteria'}
@@ -556,7 +571,7 @@ export default function MachinesPage() {
               </IndustrialCard>
             ) : (
               <AnimatePresence mode="popLayout">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                   {Array.isArray(filteredMachines) &&
                     filteredMachines.map((machine) => (
                       <motion.div
@@ -570,18 +585,24 @@ export default function MachinesPage() {
                         <IndustrialCard className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden h-full flex flex-col">
                           {/* Background Pattern */}
                           <div className="absolute inset-0 bg-gradient-to-br from-industrial-background to-industrial-muted/5 opacity-50" />
-                          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-industrial-primary/10 to-transparent" />
+                          <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-industrial-primary/10 to-transparent" />
 
                           <div className="relative flex-1 flex flex-col">
-                            <IndustrialCardHeader className="pb-3">
-                              <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                  <IndustrialCardTitle className="text-lg group-hover:text-industrial-primary transition-colors">
+                            <IndustrialCardHeader className="pb-2 sm:pb-3">
+                              <div className="flex justify-between items-start gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <IndustrialCardTitle className="text-base sm:text-lg group-hover:text-blue-600 transition-colors text-gray-900 break-words">
                                     {machine.name}
                                   </IndustrialCardTitle>
                                   <IndustrialCardDescription className="flex items-center gap-1 mt-1">
-                                    <IndustrialIcon icon="gear" size="sm" />
-                                    {machine.type}
+                                    <IndustrialIcon
+                                      icon="gear"
+                                      size="sm"
+                                      className="flex-shrink-0"
+                                    />
+                                    <span className="truncate text-xs sm:text-sm">
+                                      {machine.type}
+                                    </span>
                                   </IndustrialCardDescription>
                                 </div>
                                 <Badge
@@ -590,11 +611,11 @@ export default function MachinesPage() {
                                       ? 'default'
                                       : 'secondary'
                                   }
-                                  className={
+                                  className={`flex-shrink-0 text-xs ${
                                     machine.availability || machine.isAvailable
-                                      ? 'bg-industrial-accent text-industrial-background'
-                                      : 'bg-industrial-muted text-industrial-muted-foreground'
-                                  }
+                                      ? 'bg-green-100 text-green-800'
+                                      : 'bg-gray-100 text-gray-600'
+                                  }`}
                                 >
                                   {machine.availability || machine.isAvailable
                                     ? 'Available'
@@ -603,35 +624,35 @@ export default function MachinesPage() {
                               </div>
                             </IndustrialCardHeader>
 
-                            <IndustrialCardContent className="space-y-4 flex-1 flex flex-col">
-                              <p className="text-sm text-industrial-muted-foreground line-clamp-3">
+                            <IndustrialCardContent className="space-y-3 sm:space-y-4 flex-1 flex flex-col">
+                              <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3">
                                 {machine.description}
                               </p>
 
-                              <div className="grid grid-cols-1 gap-3 text-sm flex-1">
+                              <div className="grid grid-cols-1 gap-2 sm:gap-3 text-xs sm:text-sm flex-1">
                                 <div className="flex items-center gap-2">
                                   <IndustrialIcon
                                     icon="factory"
                                     size="sm"
-                                    className="text-industrial-muted-foreground"
+                                    className="text-gray-500 flex-shrink-0"
                                   />
-                                  <span className="text-industrial-muted-foreground truncate">
+                                  <span className="text-gray-600 truncate">
                                     {machine.location}
                                   </span>
                                 </div>
 
                                 {machine.pricePerHour && (
                                   <div className="flex items-center gap-2">
-                                    <DollarSign className="h-4 w-4 text-industrial-accent" />
-                                    <span className="text-industrial-accent font-medium">
+                                    <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
+                                    <span className="text-green-600 font-medium truncate">
                                       ${machine.pricePerHour}/hr
                                     </span>
                                   </div>
                                 )}
 
                                 <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 text-industrial-muted-foreground" />
-                                  <span className="text-xs text-industrial-muted-foreground">
+                                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                                  <span className="text-xs text-gray-600 truncate">
                                     Listed{' '}
                                     {new Date(
                                       machine.createdAt
@@ -640,7 +661,7 @@ export default function MachinesPage() {
                                 </div>
                               </div>
 
-                              <div className="pt-4 mt-auto">
+                              <div className="pt-3 sm:pt-4 mt-auto">
                                 {machine.availability || machine.isAvailable ? (
                                   <Button
                                     onClick={() =>
@@ -650,18 +671,25 @@ export default function MachinesPage() {
                                       applyingToMachine ===
                                       (machine._id || machine.id)
                                     }
-                                    className="w-full bg-industrial-accent hover:bg-industrial-accent/90 text-industrial-background"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm"
+                                    size="sm"
                                   >
                                     {applyingToMachine ===
                                     (machine._id || machine.id) ? (
                                       <>
-                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                        Applying...
+                                        <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2 animate-spin" />
+                                        <span className="hidden sm:inline">
+                                          Applying...
+                                        </span>
+                                        <span className="sm:hidden">...</span>
                                       </>
                                     ) : (
                                       <>
-                                        <CheckCircle className="h-4 w-4 mr-2" />
-                                        Apply to Use
+                                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                                        <span className="hidden sm:inline">
+                                          Apply to Use
+                                        </span>
+                                        <span className="sm:hidden">Apply</span>
                                       </>
                                     )}
                                   </Button>
@@ -669,10 +697,14 @@ export default function MachinesPage() {
                                   <Button
                                     disabled
                                     variant="secondary"
-                                    className="w-full"
+                                    className="w-full text-xs sm:text-sm"
+                                    size="sm"
                                   >
-                                    <XCircle className="h-4 w-4 mr-2" />
-                                    Currently In Use
+                                    <XCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                                    <span className="hidden sm:inline">
+                                      Currently In Use
+                                    </span>
+                                    <span className="sm:hidden">In Use</span>
                                   </Button>
                                 )}
                               </div>
@@ -693,13 +725,13 @@ export default function MachinesPage() {
         open={applicationDialogOpen}
         onOpenChange={setApplicationDialogOpen}
       >
-        <DialogContent className="bg-white border-gray-200">
+        <DialogContent className="bg-white border-gray-200 max-w-sm sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-industrial-foreground">
-              <IndustrialIcon icon="gear" className="text-industrial-accent" />
+            <DialogTitle className="flex items-center gap-2 text-gray-900 text-base sm:text-lg">
+              <IndustrialIcon icon="gear" className="text-blue-600" />
               Apply for Machine
             </DialogTitle>
-            <DialogDescription className="text-industrial-muted-foreground">
+            <DialogDescription className="text-gray-600 text-sm sm:text-base">
               Are you sure you want to apply to use "{selectedMachine?.name}"?
               The manufacturer will review your application and respond
               accordingly.
@@ -707,40 +739,36 @@ export default function MachinesPage() {
           </DialogHeader>
 
           {selectedMachine && (
-            <div className="space-y-3 py-4">
-              <div className="flex items-center gap-2 text-sm">
+            <div className="space-y-2 sm:space-y-3 py-3 sm:py-4">
+              <div className="flex items-center gap-2 text-xs sm:text-sm">
                 <IndustrialIcon
                   icon="gear"
                   size="sm"
-                  className="text-industrial-muted-foreground"
+                  className="text-gray-500 flex-shrink-0"
                 />
-                <span className="text-industrial-muted-foreground">Type:</span>
-                <span className="text-industrial-foreground">
+                <span className="text-gray-600">Type:</span>
+                <span className="text-gray-900 break-words">
                   {selectedMachine.type}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-xs sm:text-sm">
                 <IndustrialIcon
                   icon="factory"
                   size="sm"
-                  className="text-industrial-muted-foreground"
+                  className="text-gray-500 flex-shrink-0"
                 />
-                <span className="text-industrial-muted-foreground">
-                  Location:
-                </span>
-                <span className="text-industrial-foreground">
+                <span className="text-gray-600">Location:</span>
+                <span className="text-gray-900 break-words">
                   {selectedMachine.location}
                 </span>
               </div>
 
               {selectedMachine.pricePerHour && (
-                <div className="flex items-center gap-2 text-sm">
-                  <DollarSign className="h-4 w-4 text-industrial-muted-foreground" />
-                  <span className="text-industrial-muted-foreground">
-                    Rate:
-                  </span>
-                  <span className="text-industrial-accent font-medium">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                  <span className="text-gray-600">Rate:</span>
+                  <span className="text-green-600 font-medium">
                     ${selectedMachine.pricePerHour}/hour
                   </span>
                 </div>
@@ -748,19 +776,19 @@ export default function MachinesPage() {
             </div>
           )}
 
-          <DialogFooter>
+          <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-0">
             <Button
               variant="outline"
               onClick={() => setApplicationDialogOpen(false)}
-              className="border-industrial-border hover:bg-industrial-muted"
+              className="border-industrial-border hover:bg-industrial-muted text-sm"
             >
               Cancel
             </Button>
             <Button
               onClick={confirmApplication}
-              className="bg-industrial-accent hover:bg-industrial-accent/90 text-industrial-background"
+              className="bg-industrial-accent hover:bg-industrial-accent/90 text-industrial-background text-sm"
             >
-              <CheckCircle className="h-4 w-4 mr-2" />
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
               Submit Application
             </Button>
           </DialogFooter>

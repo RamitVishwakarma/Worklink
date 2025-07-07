@@ -89,22 +89,21 @@ const itemVariants = {
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20, rotateX: 15 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    rotateX: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.6,
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
   hover: {
-    scale: 1.02,
-    y: -4,
-    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+    scale: 1.01,
+    y: -2,
+    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
     transition: {
-      duration: 0.3,
+      duration: 0.2,
       ease: 'easeOut',
     },
   },
@@ -159,11 +158,24 @@ export default function WorkerProfilePage() {
   useEffect(() => {
     if (currentProfile) {
       const profile = currentProfile as any; // Type assertion for now
+
+      // Handle location field - convert object to string if needed
+      let locationString = '';
+      if (profile.location) {
+        if (typeof profile.location === 'string') {
+          locationString = profile.location;
+        } else if (typeof profile.location === 'object') {
+          // Handle location object with city, state structure
+          const { city, state } = profile.location;
+          locationString = [city, state].filter(Boolean).join(', ');
+        }
+      }
+
       form.reset({
         name: profile.name || '',
         email: profile.email || '',
         phone: profile.phone || '',
-        location: profile.location || '',
+        location: locationString,
         bio: profile.bio || '',
         skills: Array.isArray(profile.skills)
           ? profile.skills.join(', ')
@@ -252,14 +264,14 @@ export default function WorkerProfilePage() {
 
             <div className="flex items-center gap-6 pt-4">
               <motion.div
-                whileHover={{ rotate: 15, scale: 1.1 }}
-                transition={{ duration: 0.3 }}
+                whileHover={{ rotate: 5, scale: 1.02 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
                 className="p-4 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30"
               >
                 <IndustrialIcon
                   icon="hardhat"
                   size="xl"
-                  className="text-industrial-accent"
+                  className="text-industrial-safety-600"
                 />
               </motion.div>
               <div>
@@ -302,7 +314,8 @@ export default function WorkerProfilePage() {
                   <IndustrialCardHeader className="relative border-b border-industrial-accent/20">
                     <IndustrialCardTitle className="flex items-center gap-3 text-xl">
                       <motion.div
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
                         className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20"
                       >
                         <IndustrialIcon
@@ -322,12 +335,12 @@ export default function WorkerProfilePage() {
                       <div className="flex-1 space-y-6">
                         {/* Status Badge */}
                         <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
                           transition={{
                             delay: 0.5,
-                            type: 'spring',
-                            stiffness: 200,
+                            duration: 0.6,
+                            ease: [0.25, 0.46, 0.45, 0.94],
                           }}
                           className="flex items-center gap-3"
                         >
@@ -351,8 +364,8 @@ export default function WorkerProfilePage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <motion.div
                             className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            transition={{ duration: 0.2 }}
+                            whileHover={{ scale: 1.002 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                           >
                             <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
                               <MapPin className="h-4 w-4 text-blue-600" />
@@ -362,16 +375,30 @@ export default function WorkerProfilePage() {
                                 Location
                               </p>
                               <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors">
-                                {(currentProfile as any).location ||
-                                  'Not specified'}
+                                {(() => {
+                                  const location = (currentProfile as any)
+                                    .location;
+                                  if (!location) return 'Not specified';
+                                  if (typeof location === 'string')
+                                    return location;
+                                  if (typeof location === 'object') {
+                                    const { city, state } = location;
+                                    return (
+                                      [city, state]
+                                        .filter(Boolean)
+                                        .join(', ') || 'Not specified'
+                                    );
+                                  }
+                                  return 'Not specified';
+                                })()}
                               </p>
                             </div>
                           </motion.div>
 
                           <motion.div
                             className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            transition={{ duration: 0.2 }}
+                            whileHover={{ scale: 1.002 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                           >
                             <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
                               <Briefcase className="h-4 w-4 text-emerald-600" />
@@ -389,8 +416,8 @@ export default function WorkerProfilePage() {
 
                           <motion.div
                             className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            transition={{ duration: 0.2 }}
+                            whileHover={{ scale: 1.002 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                           >
                             <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
                               <Calendar className="h-4 w-4 text-amber-600" />
@@ -414,8 +441,8 @@ export default function WorkerProfilePage() {
 
                           <motion.div
                             className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            transition={{ duration: 0.2 }}
+                            whileHover={{ scale: 1.002 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
                           >
                             <div className="p-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
                               <IndustrialIcon
@@ -459,21 +486,22 @@ export default function WorkerProfilePage() {
 
                 <IndustrialCardHeader className="relative border-b border-industrial-accent/20">
                   <IndustrialCardTitle className="flex items-center gap-3 text-xl">
-                    <motion.div
-                      animate={{ rotate: [0, 360] }}
-                      transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: 'linear',
-                      }}
-                      className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20"
-                    >
-                      <IndustrialIcon
-                        icon="gear"
-                        size="sm"
-                        className="text-industrial-accent"
-                      />
-                    </motion.div>
+                    <div className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20">
+                      <motion.div
+                        animate={{ rotate: [0, 360] }}
+                        transition={{
+                          duration: 8,
+                          repeat: Infinity,
+                          ease: 'linear',
+                        }}
+                      >
+                        <IndustrialIcon
+                          icon="gear"
+                          size="sm"
+                          className="text-industrial-accent"
+                        />
+                      </motion.div>
+                    </div>
                     <span className="text-industrial-gunmetal-800 font-semibold">
                       Profile Information
                     </span>
@@ -548,7 +576,7 @@ export default function WorkerProfilePage() {
                               <FormControl>
                                 <IndustrialInput
                                   {...field}
-                                  placeholder="City, State/Country"
+                                  placeholder="e.g. Mumbai, Maharashtra"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -627,8 +655,9 @@ export default function WorkerProfilePage() {
                       {/* Enhanced Save Button */}
                       <motion.div
                         className="flex justify-end pt-4"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
                       >
                         <Button
                           type="submit"
@@ -655,7 +684,11 @@ export default function WorkerProfilePage() {
                           ) : (
                             <>
                               <motion.div
-                                whileHover={{ scale: 1.1 }}
+                                whileHover={{ scale: 1.02 }}
+                                transition={{
+                                  duration: 0.3,
+                                  ease: 'easeInOut',
+                                }}
                                 className="mr-2"
                               >
                                 <Save className="w-5 h-5" />

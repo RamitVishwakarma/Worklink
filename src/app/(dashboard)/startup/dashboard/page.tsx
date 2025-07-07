@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import {
   IndustrialCard,
   IndustrialCardContent,
@@ -139,50 +140,50 @@ function StartupDashboardPage() {
       <IndustrialLayout>
         <IndustrialContainer>
           {' '}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <Skeleton className="h-8 w-64 mb-2 bg-industrial-gunmetal-200/50" />
-                <Skeleton className="h-4 w-96 bg-industrial-gunmetal-200/50" />
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 flex-1">
+                <Skeleton className="h-6 sm:h-8 w-48 sm:w-64 mb-2 bg-industrial-gunmetal-200/50" />
+                <Skeleton className="h-3 sm:h-4 w-full sm:w-96 bg-industrial-gunmetal-200/50" />
               </div>
-              <Skeleton className="h-10 w-32 bg-industrial-gunmetal-200/50" />
+              <Skeleton className="h-9 sm:h-10 w-full sm:w-32 bg-industrial-gunmetal-200/50" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               {[...Array(4)].map((_, i) => (
                 <IndustrialCard key={i}>
-                  <IndustrialCardContent className="p-6">
-                    <Skeleton className="h-12 w-12 mb-4 bg-industrial-gunmetal-200/50" />
-                    <Skeleton className="h-4 w-24 mb-2 bg-industrial-gunmetal-200/50" />
-                    <Skeleton className="h-8 w-16 bg-industrial-gunmetal-200/50" />
+                  <IndustrialCardContent className="p-3 sm:p-4 lg:p-6">
+                    <Skeleton className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 mb-3 sm:mb-4 bg-industrial-gunmetal-200/50" />
+                    <Skeleton className="h-3 sm:h-4 w-20 sm:w-24 mb-2 bg-industrial-gunmetal-200/50" />
+                    <Skeleton className="h-6 sm:h-8 w-12 sm:w-16 bg-industrial-gunmetal-200/50" />
                   </IndustrialCardContent>
                 </IndustrialCard>
               ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <IndustrialCard>
-                <IndustrialCardHeader>
-                  <Skeleton className="h-6 w-32 bg-industrial-gunmetal-200/50" />
+                <IndustrialCardHeader className="p-3 sm:p-4 lg:p-6">
+                  <Skeleton className="h-5 sm:h-6 w-24 sm:w-32 bg-industrial-gunmetal-200/50" />
                 </IndustrialCardHeader>
-                <IndustrialCardContent className="space-y-4">
+                <IndustrialCardContent className="p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-48 bg-industrial-gunmetal-200/50" />
-                      <Skeleton className="h-4 w-32 bg-industrial-gunmetal-200/50" />
+                      <Skeleton className="h-3 sm:h-4 w-full sm:w-48 bg-industrial-gunmetal-200/50" />
+                      <Skeleton className="h-3 sm:h-4 w-3/4 sm:w-32 bg-industrial-gunmetal-200/50" />
                     </div>
                   ))}
                 </IndustrialCardContent>
               </IndustrialCard>
               <IndustrialCard>
-                <IndustrialCardHeader>
-                  <Skeleton className="h-6 w-40 bg-industrial-gunmetal-200/50" />
+                <IndustrialCardHeader className="p-3 sm:p-4 lg:p-6">
+                  <Skeleton className="h-5 sm:h-6 w-28 sm:w-40 bg-industrial-gunmetal-200/50" />
                 </IndustrialCardHeader>
-                <IndustrialCardContent className="space-y-4">
+                <IndustrialCardContent className="p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-48 bg-industrial-gunmetal-200/50" />
-                      <Skeleton className="h-4 w-32 bg-industrial-gunmetal-200/50" />
+                      <Skeleton className="h-3 sm:h-4 w-full sm:w-48 bg-industrial-gunmetal-200/50" />
+                      <Skeleton className="h-3 sm:h-4 w-3/4 sm:w-32 bg-industrial-gunmetal-200/50" />
                     </div>
                   ))}
                 </IndustrialCardContent>
@@ -205,7 +206,7 @@ function StartupDashboardPage() {
               animate: 'visible',
               variants: containerVariants,
             }}
-            className="space-y-4 sm:space-y-6 md:space-y-8 mt-2 sm:mt-4 md:mt-6 px-3 sm:px-4 md:px-6 lg:px-0"
+            className="space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8 mt-2 sm:mt-4 md:mt-6 px-2 sm:px-4 lg:px-0"
           >
             {/* Enhanced Header with industrial accent bar */}
             <motion.div className="relative" variants={itemVariants}>
@@ -220,20 +221,22 @@ function StartupDashboardPage() {
                 className="absolute top-0 left-0 h-1 bg-gradient-to-r from-industrial-accent via-industrial-safety-400 to-industrial-accent rounded-full"
               />
 
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 md:gap-4 pt-2 sm:pt-4">
-                <div className="flex items-start sm:items-center gap-2 sm:gap-3 md:gap-4 flex-wrap sm:flex-nowrap">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 pt-2 sm:pt-4">
+                <div className="flex items-start gap-3 sm:items-center sm:gap-4 min-w-0">
                   <motion.div
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.8, ease: 'easeInOut' }}
-                    className="p-2 sm:p-3 aspect-square bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-md border border-industrial-accent/30 flex items-center justify-center"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
+                    className="p-2 sm:p-3 flex-shrink-0 aspect-square bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-md border border-industrial-accent/30 flex items-center justify-center"
                   >
-                    <IndustrialIcon
-                      icon="factory"
-                      size="sm"
-                      className="text-industrial-accent h-5 w-5 sm:h-6 sm:w-6"
+                    <Image
+                      src="/logo.png"
+                      alt="WorkLink Logo"
+                      width={24}
+                      height={24}
+                      className="object-contain"
                     />
                   </motion.div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -241,7 +244,7 @@ function StartupDashboardPage() {
                     >
                       <IndustrialHeader
                         level={1}
-                        className="text-xl sm:text-2xl md:text-3xl"
+                        className="text-lg sm:text-xl md:text-2xl lg:text-3xl break-words"
                       >
                         <IndustrialText as="span" variant="default">
                           Welcome back,{' '}

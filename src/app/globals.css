@@ -65,97 +65,27 @@
 
     --radius: 0.5rem;
 
-    /* Industrial Theme Variables */
-    --industrial-background: 220 13% 18%;
-    --industrial-foreground: 210 40% 98%;
-    --industrial-muted: 220 14% 11%;
-    --industrial-muted-foreground: 215 20% 65%;
-    --industrial-popover: 224 71% 4%;
-    --industrial-popover-foreground: 210 40% 98%;
-    --industrial-card: 224 71% 4%;
-    --industrial-card-foreground: 210 40% 98%;
-    --industrial-border: 215 27% 32%;
-    --industrial-input: 215 27% 32%;
-    --industrial-primary: 210 40% 98%;
-    --industrial-primary-foreground: 220 14% 11%;
-    --industrial-secondary: 215 27% 32%;
-    --industrial-secondary-foreground: 210 40% 98%;
-    --industrial-accent: 47 96% 53%;
-    --industrial-accent-foreground: 220 14% 11%;
+    /* Industrial Theme Variables - Light Mode */
+    --industrial-background: 0 0% 100%;
+    --industrial-foreground: 210 30% 20%;
+    --industrial-muted: 210 40% 96%;
+    --industrial-muted-foreground: 215 16% 47%;
+    --industrial-popover: 0 0% 100%;
+    --industrial-popover-foreground: 210 30% 20%;
+    --industrial-card: 0 0% 100%;
+    --industrial-card-foreground: 210 30% 20%;
+    --industrial-border: 214 32% 91%;
+    --industrial-input: 214 32% 91%;
+    --industrial-primary: 216 34% 17%;
+    --industrial-primary-foreground: 210 40% 98%;
+    --industrial-secondary: 210 40% 96%;
+    --industrial-secondary-foreground: 216 34% 17%;
+    --industrial-accent: 217 91% 60%;
+    --industrial-accent-foreground: 210 40% 98%;
     --industrial-destructive: 0 84% 60%;
     --industrial-destructive-foreground: 210 40% 98%;
-    --industrial-ring: 212 72% 59%;
+    --industrial-ring: 217 91% 60%;
     --industrial-radius: 0.25rem;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-
-    --input: 0 0% 14.9%;
-
-    --ring: 0 0% 83.1%;
-
-    --chart-1: 220 70% 50%;
-
-    --chart-2: 160 60% 45%;
-
-    --chart-3: 30 80% 55%;
-
-    --chart-4: 280 65% 60%;
-
-    --chart-5: 340 75% 55%;
-
-    /* Industrial Dark Mode Variables */
-    --industrial-background: 224 71% 4%;
-    --industrial-foreground: 210 40% 98%;
-    --industrial-muted: 215 27% 17%;
-    --industrial-muted-foreground: 217 10% 64%;
-    --industrial-popover: 224 71% 4%;
-    --industrial-popover-foreground: 210 40% 98%;
-    --industrial-card: 224 71% 4%;
-    --industrial-card-foreground: 210 40% 98%;
-    --industrial-border: 215 27% 32%;
-    --industrial-input: 215 27% 32%;
-    --industrial-primary: 210 40% 98%;
-    --industrial-primary-foreground: 220 14% 11%;
-    --industrial-secondary: 215 27% 32%;
-    --industrial-secondary-foreground: 210 40% 98%;
-    --industrial-accent: 47 96% 53%;
-    --industrial-accent-foreground: 220 14% 11%;
-    --industrial-destructive: 0 84% 60%;
-    --industrial-destructive-foreground: 210 40% 98%;
-    --industrial-ring: 212 72% 59%;
   }
 }
 

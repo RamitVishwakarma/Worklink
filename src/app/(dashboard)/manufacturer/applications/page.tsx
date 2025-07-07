@@ -112,7 +112,6 @@ function AllApplicationsPage() {
     try {
       setLoading(true);
       const response = await manufacturerAPI.getMachineApplications();
-      console.log('Applications API response:', response); // Debug log
 
       // Handle different possible response structures
       let applicationsData: MachineApplication[] = [];

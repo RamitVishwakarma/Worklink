@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
 import {
   IndustrialCard,
   IndustrialCardContent,
@@ -141,70 +142,70 @@ export default function GigsPage() {
         <IndustrialContainer>
           <div className="space-y-6 mt-20">
             {/* Header Skeleton */}
-            <div className="space-y-2 mb-8">
-              <div className="flex items-center gap-3">
-                <Skeleton className="h-8 w-8 bg-gray-200 rounded" />
-                <Skeleton className="h-8 w-64 bg-gray-200" />
+            <div className="space-y-3 mb-6 md:mb-8">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Skeleton className="h-6 w-6 sm:h-8 sm:w-8 bg-gray-200 rounded" />
+                <Skeleton className="h-6 sm:h-8 w-48 sm:w-64 bg-gray-200" />
               </div>
-              <Skeleton className="h-4 w-96 bg-gray-200" />
+              <Skeleton className="h-4 w-full sm:w-96 bg-gray-200" />
             </div>
 
             {/* Filters Skeleton */}
-            <div className="flex flex-col md:flex-row gap-4">
-              <Skeleton className="h-10 flex-1 bg-gray-200" />
-              <Skeleton className="h-10 w-48 bg-gray-200" />
-              <Skeleton className="h-10 w-48 bg-gray-200" />
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:gap-4">
+              <Skeleton className="h-10 bg-gray-200 xl:flex-1" />
+              <Skeleton className="h-10 bg-gray-200 xl:w-48" />
+              <Skeleton className="h-10 bg-gray-200 xl:w-48" />
             </div>
 
             {/* Results Count Skeleton */}
-            <Skeleton className="h-4 w-32 bg-gray-200" />
+            <Skeleton className="h-4 w-24 sm:w-32 bg-gray-200" />
 
             {/* Gigs Grid Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <IndustrialCard
                   key={i}
                   className="h-full flex flex-col border-gray-200"
                 >
-                  <IndustrialCardHeader>
+                  <IndustrialCardHeader className="pb-3">
                     <div className="flex justify-between items-start gap-2">
-                      <Skeleton className="h-6 w-3/4 bg-gray-200" />
-                      <Skeleton className="h-6 w-16 bg-gray-200 rounded-full" />
+                      <Skeleton className="h-5 sm:h-6 w-3/4 bg-gray-200" />
+                      <Skeleton className="h-5 sm:h-6 w-12 sm:w-16 bg-gray-200 rounded-full" />
                     </div>
                     <div className="flex items-center gap-2 mt-2">
-                      <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                      <Skeleton className="h-4 w-1/2 bg-gray-200" />
+                      <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                      <Skeleton className="h-3 sm:h-4 w-1/2 bg-gray-200" />
                     </div>
                   </IndustrialCardHeader>
-                  <IndustrialCardContent className="space-y-4 flex-1 flex flex-col">
-                    <Skeleton className="h-12 w-full bg-gray-200" />
+                  <IndustrialCardContent className="space-y-3 sm:space-y-4 flex-1 flex flex-col pt-0">
+                    <Skeleton className="h-10 sm:h-12 w-full bg-gray-200" />
 
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                        <Skeleton className="h-4 w-2/3 bg-gray-200" />
+                        <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                        <Skeleton className="h-3 sm:h-4 w-2/3 bg-gray-200" />
                       </div>
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                        <Skeleton className="h-4 w-1/2 bg-gray-200" />
+                        <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                        <Skeleton className="h-3 sm:h-4 w-1/2 bg-gray-200" />
                       </div>
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-4 w-4 bg-gray-200 rounded" />
-                        <Skeleton className="h-4 w-3/4 bg-gray-200" />
+                        <Skeleton className="h-3 w-3 sm:h-4 sm:w-4 bg-gray-200 rounded" />
+                        <Skeleton className="h-3 sm:h-4 w-3/4 bg-gray-200" />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Skeleton className="h-4 w-24 bg-gray-200" />
+                      <Skeleton className="h-3 sm:h-4 w-20 sm:w-24 bg-gray-200" />
                       <div className="flex flex-wrap gap-1">
-                        <Skeleton className="h-5 w-16 bg-gray-200 rounded-full" />
-                        <Skeleton className="h-5 w-20 bg-gray-200 rounded-full" />
-                        <Skeleton className="h-5 w-14 bg-gray-200 rounded-full" />
+                        <Skeleton className="h-4 sm:h-5 w-12 sm:w-16 bg-gray-200 rounded-full" />
+                        <Skeleton className="h-4 sm:h-5 w-16 sm:w-20 bg-gray-200 rounded-full" />
+                        <Skeleton className="h-4 sm:h-5 w-10 sm:w-14 bg-gray-200 rounded-full" />
                       </div>
                     </div>
 
                     <div className="mt-auto">
-                      <Skeleton className="h-10 w-full bg-gray-200" />
+                      <Skeleton className="h-9 sm:h-10 w-full bg-gray-200" />
                     </div>
                   </IndustrialCardContent>
                 </IndustrialCard>
@@ -219,22 +220,26 @@ export default function GigsPage() {
   return (
     <IndustrialLayout>
       <IndustrialContainer>
-        <div className="space-y-6 mt-16">
+        <div className="space-y-4 sm:space-y-6 mt-12 sm:mt-16 px-4 sm:px-0">
           {/* Header */}
           <IndustrialHeader>
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="space-y-2"
+              className="space-y-2 sm:space-y-3"
             >
-              <div className="flex items-center gap-3">
-                <IndustrialIcon icon="wrench" size="lg" />
-                <h1 className="text-3xl font-bold text-industrial-gunmetal-800">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <IndustrialIcon
+                  icon="wrench"
+                  size="md"
+                  className="sm:!h-8 sm:!w-8"
+                />
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-industrial-gunmetal-800 break-words">
                   Available Gigs
                 </h1>
               </div>
-              <p className="text-industrial-gunmetal-600">
+              <p className="text-sm sm:text-base text-industrial-gunmetal-600 leading-relaxed">
                 Discover and apply for exciting job opportunities that match
                 your industrial skills and expertise.
               </p>
@@ -246,22 +251,22 @@ export default function GigsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="flex flex-col md:flex-row gap-4"
+            className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:gap-4"
           >
-            <div className="relative flex-1">
+            <div className="relative xl:flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-industrial-muted-foreground h-4 w-4" />
               <IndustrialInput
-                placeholder="Search gigs by title, description, or company..."
+                placeholder="Search gigs..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-10 text-sm sm:text-base"
               />
             </div>
 
             <Select value={locationFilter} onValueChange={setLocationFilter}>
-              <SelectTrigger className="w-full md:w-48 border-industrial-border bg-white text-industrial-gunmetal-800">
+              <SelectTrigger className="h-10 border-industrial-border bg-white text-industrial-gunmetal-800 text-sm sm:text-base xl:w-48">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-industrial-gunmetal-500" />
+                  <MapPin className="h-4 w-4 text-industrial-gunmetal-500 flex-shrink-0" />
                   <SelectValue placeholder="Location" />
                 </div>
               </SelectTrigger>
@@ -306,9 +311,9 @@ export default function GigsPage() {
             </Select>
 
             <Select value={jobTypeFilter} onValueChange={setJobTypeFilter}>
-              <SelectTrigger className="w-full md:w-48 border-industrial-border bg-white text-industrial-gunmetal-800">
+              <SelectTrigger className="h-10 border-industrial-border bg-white text-industrial-gunmetal-800 text-sm sm:text-base xl:w-48">
                 <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-industrial-gunmetal-500" />
+                  <Filter className="h-4 w-4 text-industrial-gunmetal-500 flex-shrink-0" />
                   <SelectValue placeholder="Job Type" />
                 </div>
               </SelectTrigger>
@@ -347,7 +352,7 @@ export default function GigsPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <p className="text-sm text-industrial-muted-foreground">
+            <p className="text-xs sm:text-sm text-industrial-muted-foreground">
               Showing {filteredGigs.length} of {safeGigs.length} gigs
             </p>
           </motion.div>
@@ -357,19 +362,19 @@ export default function GigsPage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           >
             {filteredGigs.length === 0 ? (
-              <div className="col-span-full text-center py-12">
+              <div className="col-span-full text-center py-8 sm:py-12 px-4">
                 <IndustrialIcon
                   icon="factory"
                   size="xl"
                   className="mx-auto mb-4 text-industrial-gunmetal-400"
                 />
-                <h3 className="text-lg font-semibold text-industrial-gunmetal-800 mb-2">
+                <h3 className="text-base sm:text-lg font-semibold text-industrial-gunmetal-800 mb-2">
                   No gigs found
                 </h3>
-                <p className="text-industrial-gunmetal-600">
+                <p className="text-sm sm:text-base text-industrial-gunmetal-600 max-w-md mx-auto">
                   Try adjusting your search criteria or check back later for new
                   opportunities.
                 </p>
@@ -378,48 +383,56 @@ export default function GigsPage() {
               filteredGigs.map((gig, index) => (
                 <motion.div key={gig._id} variants={cardVariants}>
                   <IndustrialCard className="h-full hover:shadow-industrial-lg transition-all duration-200 hover:border-industrial-accent/50">
-                    <IndustrialCardHeader>
+                    <IndustrialCardHeader className="pb-3">
                       <div className="flex justify-between items-start gap-2">
-                        <IndustrialCardTitle className="text-lg line-clamp-2">
+                        <IndustrialCardTitle className="text-base sm:text-lg line-clamp-2 leading-tight break-words">
                           {gig.title}
                         </IndustrialCardTitle>
-                        <Badge variant="industrial-secondary">
+                        <Badge
+                          variant="industrial-secondary"
+                          className="text-xs shrink-0"
+                        >
                           {gig.jobType}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-industrial-muted-foreground">
-                        <Building className="h-4 w-4" />
-                        {gig.company}
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                        <Building className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                        <span className="truncate">{gig.company}</span>
                       </div>
                     </IndustrialCardHeader>
 
-                    <IndustrialCardContent className="space-y-4">
-                      <p className="text-sm text-industrial-muted-foreground line-clamp-3">
+                    <IndustrialCardContent className="space-y-3 sm:space-y-4 pt-0">
+                      <p className="text-xs sm:text-sm text-industrial-muted-foreground line-clamp-3 leading-relaxed">
                         {gig.description}
                       </p>
 
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm text-industrial-muted-foreground">
-                          <MapPin className="h-4 w-4" />
-                          {gig.location}
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">{gig.location}</span>
                         </div>
 
                         {gig.salary && (
-                          <div className="flex items-center gap-2 text-sm text-industrial-muted-foreground">
-                            <DollarSign className="h-4 w-4" />$
-                            {gig.salary.toLocaleString()}/year
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                            <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="truncate">
+                              ${gig.salary.toLocaleString()}/year
+                            </span>
                           </div>
                         )}
 
-                        <div className="flex items-center gap-2 text-sm text-industrial-muted-foreground">
-                          <Clock className="h-4 w-4" />
-                          Posted {new Date(gig.createdAt).toLocaleDateString()}
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                          <Clock className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">
+                            Posted{' '}
+                            {new Date(gig.createdAt).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
 
                       {gig.requiredSkills && gig.requiredSkills.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-sm font-medium text-industrial-foreground">
+                          <p className="text-xs sm:text-sm font-medium text-industrial-foreground">
                             Required Skills:
                           </p>
                           <div className="flex flex-wrap gap-1">
@@ -427,7 +440,8 @@ export default function GigsPage() {
                               <Badge
                                 key={skill}
                                 variant="industrial-outline"
-                                className="text-xs"
+                                className="text-xs truncate max-w-24"
+                                title={skill}
                               >
                                 {skill}
                               </Badge>
@@ -446,7 +460,7 @@ export default function GigsPage() {
 
                       <Button
                         variant="industrial-accent"
-                        className="w-full"
+                        className="w-full h-9 sm:h-10 text-sm"
                         onClick={() => handleGigApplication(gig._id)}
                         disabled={
                           applyingTo === gig._id || user?.userType !== 'worker'
@@ -454,13 +468,13 @@ export default function GigsPage() {
                       >
                         {applyingTo === gig._id ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Applying...
+                            <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                            <span className="truncate">Applying...</span>
                           </>
                         ) : (
                           <>
-                            <HardHat className="mr-2 h-4 w-4" />
-                            Apply Now
+                            <HardHat className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="truncate">Apply Now</span>
                           </>
                         )}
                       </Button>
