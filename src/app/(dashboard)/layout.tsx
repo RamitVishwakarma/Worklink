@@ -13,8 +13,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Dashboard layout excludes header and footer from root layout
-  // The individual user type layouts (worker/startup/manufacturer) handle their own structure
   return (
     <>
       {children}

@@ -18,6 +18,7 @@ import {
   Factory,
   Settings,
   Plus,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,6 +61,12 @@ export function DashboardLayout({ children, userType }: DashboardLayoutProps) {
           icon: FileText,
           title: 'Applied Gigs',
           description: 'Track your applications',
+        },
+        {
+          href: '/worker/applications',
+          icon: ClipboardList,
+          title: 'Applications',
+          description: 'View application status',
         },
       ],
       startup: [
@@ -338,7 +345,7 @@ export function DashboardLayout({ children, userType }: DashboardLayoutProps) {
 
       {/* Main content */}
       <div className="md:ml-64 ml-16 pt-20">
-        <div className="p-4 md:p-6">{children}</div>
+        <div className="p-0 sm:p-4 md:p-6">{children}</div>
       </div>
     </div>
   );

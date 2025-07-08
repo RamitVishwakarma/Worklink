@@ -23,7 +23,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   IndustrialLayout,
   IndustrialContainer,
-  IndustrialHeader,
 } from '@/components/ui/industrial-layout';
 import { IndustrialIcon } from '@/components/ui/industrial-icon';
 import { useToast } from '@/hooks/use-toast';
@@ -143,7 +142,7 @@ function ApplicationsPage() {
             </div>
 
             {/* Stats Cards Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {[...Array(3)].map((_, i) => (
                 <IndustrialCard key={i} className="border-gray-200">
                   <IndustrialCardContent className="p-6">
@@ -175,7 +174,7 @@ function ApplicationsPage() {
                         </div>
                       </IndustrialCardHeader>
                       <IndustrialCardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                           <Skeleton className="h-4 w-24 bg-gray-200" />
                           <Skeleton className="h-4 w-32 bg-gray-200" />
                           <Skeleton className="h-4 w-28 bg-gray-200" />
@@ -266,7 +265,7 @@ function ApplicationsPage() {
 
           {/* Enhanced Stats Cards with Industrial Styling */}
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
             variants={itemVariants}
           >
             {/* Total Applications Card */}

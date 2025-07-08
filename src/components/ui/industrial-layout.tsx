@@ -23,7 +23,7 @@ const backgroundStyles = {
 const paddingStyles = {
   none: '',
   sm: 'p-4 sm:p-6',
-  md: 'p-4 sm:p-6 md:p-8',
+  md: 'p-3 sm:p-6 md:p-8',
   lg: 'p-6 sm:p-8 md:p-10 lg:p-12',
   xl: 'p-8 sm:p-10 md:p-12 lg:p-16',
 };
@@ -122,7 +122,7 @@ const IndustrialContainer = React.forwardRef<
         containerSizes[size],
         center && 'mx-auto',
         'w-full',
-        responsive && 'px-4 sm:px-6 lg:px-8', // Responsive horizontal padding
+        responsive && 'px-2 xs:px-4 sm:px-6 lg:px-8', // Responsive horizontal padding
         className
       )}
       {...props}

@@ -1,18 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
-  User,
-  Settings,
   Save,
   Loader2,
   MapPin,
-  Phone,
-  Mail,
   Calendar,
   Briefcase,
   Shield,
@@ -28,7 +23,6 @@ import {
 import {
   IndustrialCard,
   IndustrialCardContent,
-  IndustrialCardDescription,
   IndustrialCardHeader,
   IndustrialCardTitle,
 } from '@/components/ui/card';
@@ -48,6 +42,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { UserType } from '@/lib/types';
 
+export const dynamic = 'force-dynamic';
+
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
@@ -61,52 +57,6 @@ const profileSchema = z.object({
 
 type ProfileData = z.infer<typeof profileSchema> & {
   createdAt?: string;
-};
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  },
-  hover: {
-    scale: 1.01,
-    y: -2,
-    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-    transition: {
-      duration: 0.2,
-      ease: 'easeOut',
-    },
-  },
 };
 
 export default function WorkerProfilePage() {
@@ -213,498 +163,429 @@ export default function WorkerProfilePage() {
       });
     }
   };
+
   if (isLoading) {
     return (
       <IndustrialLayout>
         <IndustrialContainer>
-          <div className="flex items-center justify-center min-h-[400px]">
-            <motion.div
-              className="relative"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            >
-              {/* Outer ring */}
-              <motion.div
-                className="absolute inset-0 border-4 border-industrial-accent/30 rounded-full"
-                animate={{ rotate: -360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              />
-              {/* Inner gear */}
-              <div className="p-4 bg-industrial-gunmetal-100 rounded-full border-2 border-industrial-accent/50">
+          <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px] px-3 sm:px-4">
+            <div className="relative">
+              <div className="absolute inset-0 border-4 border-industrial-accent/30 rounded-full w-16 h-16 sm:w-20 sm:h-20 animate-spin"></div>
+              <div className="p-2.5 sm:p-3 lg:p-4 bg-industrial-gunmetal-100 rounded-full border-2 border-industrial-accent/50">
                 <IndustrialIcon
                   icon="gear"
-                  size="xl"
-                  className="text-industrial-accent"
+                  size="lg"
+                  className="text-industrial-accent w-6 h-6 sm:w-8 sm:h-8"
                 />
               </div>
-            </motion.div>
+            </div>
           </div>
         </IndustrialContainer>
       </IndustrialLayout>
     );
   }
+
   return (
     <IndustrialLayout>
       <IndustrialContainer>
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-8"
-        >
-          {/* Enhanced Header */}
-          <motion.div variants={itemVariants} className="relative">
-            {/* Industrial accent bar */}
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: '100%' }}
-              transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
-              className="absolute top-0 left-0 h-1 bg-industrial-accent rounded-full"
-            />
-
-            <div className="flex items-center gap-6 pt-4">
-              <motion.div
-                whileHover={{ rotate: 5, scale: 1.02 }}
-                transition={{ duration: 0.4, ease: 'easeInOut' }}
-                className="p-4 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30"
-              >
+        <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+          {/* Enhanced Header - Responsive */}
+          <div className="relative">
+            <div className="absolute top-0 left-0 h-1 bg-industrial-accent rounded-full w-full"></div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 lg:gap-6 pt-3 sm:pt-4">
+              <div className="p-2 sm:p-3 lg:p-4 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30 shrink-0">
                 <IndustrialIcon
                   icon="hardhat"
-                  size="xl"
-                  className="text-industrial-safety-600"
+                  size="lg"
+                  className="text-industrial-safety-600 sm:w-8 sm:h-8"
                 />
-              </motion.div>
-              <div>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
+              </div>
+              <div className="min-w-0 flex-1">
+                <IndustrialHeader
+                  level={1}
+                  className="text-industrial-gunmetal-800 font-bold text-xl sm:text-2xl lg:text-3xl xl:text-4xl"
                 >
-                  <IndustrialHeader
-                    level={1}
-                    className="text-industrial-gunmetal-800 font-bold"
-                  >
-                    Worker Profile
-                  </IndustrialHeader>
-                </motion.div>
-                <motion.p
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-lg text-industrial-gunmetal-600 mt-2"
-                >
+                  Worker Profile
+                </IndustrialHeader>
+                <p className="text-sm sm:text-base lg:text-lg text-industrial-gunmetal-600 mt-1 sm:mt-2">
                   Manage your personal information and professional details
-                </motion.p>
+                </p>
               </div>
             </div>
-          </motion.div>{' '}
+          </div>
+
           {/* Enhanced Profile Overview */}
           {currentProfile && (
-            <motion.div variants={itemVariants}>
-              <motion.div variants={cardVariants} whileHover="hover">
-                <IndustrialCard
-                  variant="industrial"
-                  className="relative overflow-hidden bg-industrial-gunmetal-50 border-l-4 border-l-industrial-accent"
-                >
-                  {/* Industrial pattern overlay */}
-                  <div className="absolute inset-0 opacity-5">
-                    <div className="h-full w-full bg-[radial-gradient(circle_at_1px_1px,_#2C3E50_1px,_transparent_0)] bg-[length:24px_24px]" />
-                  </div>
-
-                  <IndustrialCardHeader className="relative border-b border-industrial-accent/20">
-                    <IndustrialCardTitle className="flex items-center gap-3 text-xl">
-                      <motion.div
-                        whileHover={{ scale: 1.01 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20"
-                      >
-                        <IndustrialIcon
-                          icon="hardhat"
-                          size="sm"
-                          className="text-industrial-accent"
-                        />
-                      </motion.div>
-                      <span className="text-industrial-gunmetal-800 font-semibold">
-                        Profile Overview
-                      </span>
-                    </IndustrialCardTitle>
-                  </IndustrialCardHeader>
-                  <IndustrialCardContent className="relative p-6">
-                    <div className="flex flex-col lg:flex-row gap-8">
-                      {/* Profile Stats */}
-                      <div className="flex-1 space-y-6">
-                        {/* Status Badge */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: 0.5,
-                            duration: 0.6,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                          }}
-                          className="flex items-center gap-3"
-                        >
-                          <IndustrialBadge
-                            variant="success"
-                            className="shadow-md"
-                          >
-                            <Shield className="h-3 w-3 mr-1" />
-                            Active Professional
-                          </IndustrialBadge>
-                          <IndustrialBadge
-                            variant="secondary"
-                            className="shadow-md"
-                          >
-                            <Award className="h-3 w-3 mr-1" />
-                            Verified
-                          </IndustrialBadge>
-                        </motion.div>
-
-                        {/* Profile Information Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <motion.div
-                            className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.002 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                          >
-                            <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                              <MapPin className="h-4 w-4 text-blue-600" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
-                                Location
-                              </p>
-                              <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors">
-                                {(() => {
-                                  const location = (currentProfile as any)
-                                    .location;
-                                  if (!location) return 'Not specified';
-                                  if (typeof location === 'string')
-                                    return location;
-                                  if (typeof location === 'object') {
-                                    const { city, state } = location;
-                                    return (
-                                      [city, state]
-                                        .filter(Boolean)
-                                        .join(', ') || 'Not specified'
-                                    );
-                                  }
-                                  return 'Not specified';
-                                })()}
-                              </p>
-                            </div>
-                          </motion.div>
-
-                          <motion.div
-                            className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.002 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                          >
-                            <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
-                              <Briefcase className="h-4 w-4 text-emerald-600" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
-                                Experience
-                              </p>
-                              <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors">
-                                {(currentProfile as any).experience ||
-                                  'Not specified'}
-                              </p>
-                            </div>
-                          </motion.div>
-
-                          <motion.div
-                            className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.002 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                          >
-                            <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                              <Calendar className="h-4 w-4 text-amber-600" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
-                                Member Since
-                              </p>
-                              <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors">
-                                {new Date(
-                                  (currentProfile as any).createdAt ||
-                                    Date.now()
-                                ).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                })}
-                              </p>
-                            </div>
-                          </motion.div>
-
-                          <motion.div
-                            className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
-                            whileHover={{ scale: 1.002 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                          >
-                            <div className="p-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
-                              <IndustrialIcon
-                                icon="wrench"
-                                size="sm"
-                                className="text-purple-600"
-                              />
-                            </div>
-                            <div>
-                              <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
-                                Skills
-                              </p>
-                              <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors">
-                                {Array.isArray((currentProfile as any).skills)
-                                  ? (currentProfile as any).skills.length
-                                  : (currentProfile as any).skills?.split(',')
-                                      .length || 0}{' '}
-                                skills listed
-                              </p>
-                            </div>
-                          </motion.div>
-                        </div>
-                      </div>
-                    </div>
-                  </IndustrialCardContent>
-                </IndustrialCard>
-              </motion.div>
-            </motion.div>
-          )}{' '}
-          {/* Enhanced Profile Form */}
-          <motion.div variants={itemVariants}>
-            <motion.div variants={cardVariants} whileHover="hover">
+            <div>
               <IndustrialCard
                 variant="industrial"
-                className="relative overflow-hidden bg-industrial-gunmetal-50"
+                className="relative overflow-hidden bg-industrial-gunmetal-50 border-l-4 border-l-industrial-accent"
               >
-                {/* Metal grid pattern */}
                 <div className="absolute inset-0 opacity-5">
-                  <div className="h-full w-full bg-[linear-gradient(90deg,_#34495E_1px,_transparent_1px),_linear-gradient(#34495E_1px,_transparent_1px)] bg-[length:20px_20px]" />
+                  <div className="h-full w-full bg-[radial-gradient(circle_at_1px_1px,_#2C3E50_1px,_transparent_0)] bg-[length:24px_24px]" />
                 </div>
 
                 <IndustrialCardHeader className="relative border-b border-industrial-accent/20">
-                  <IndustrialCardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20">
-                      <motion.div
-                        animate={{ rotate: [0, 360] }}
-                        transition={{
-                          duration: 8,
-                          repeat: Infinity,
-                          ease: 'linear',
-                        }}
-                      >
-                        <IndustrialIcon
-                          icon="gear"
-                          size="sm"
-                          className="text-industrial-accent"
-                        />
-                      </motion.div>
+                  <IndustrialCardTitle className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-lg sm:text-xl">
+                    <div className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20 shrink-0">
+                      <IndustrialIcon
+                        icon="hardhat"
+                        size="sm"
+                        className="text-industrial-accent"
+                      />
                     </div>
                     <span className="text-industrial-gunmetal-800 font-semibold">
-                      Profile Information
+                      Profile Overview
                     </span>
                   </IndustrialCardTitle>
                 </IndustrialCardHeader>
-                <IndustrialCardContent className="relative p-6">
-                  <Form {...form}>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="space-y-8"
-                    >
-                      {' '}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Full Name</FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  {...field}
-                                  placeholder="Enter your full name"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  {...field}
-                                  type="email"
-                                  placeholder="your.email@example.com"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="phone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Phone</FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  {...field}
-                                  placeholder="Your phone number"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="location"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Location</FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  {...field}
-                                  placeholder="e.g. Mumbai, Maharashtra"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                <IndustrialCardContent className="relative p-3 sm:p-4 lg:p-6">
+                  <div className="flex flex-col space-y-4 sm:space-y-6">
+                    <div className="space-y-3 sm:space-y-4 lg:space-y-6">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 lg:gap-3">
+                        <IndustrialBadge
+                          variant="success"
+                          className="shadow-md text-xs sm:text-sm"
+                        >
+                          <Shield className="h-3 w-3 mr-1" />
+                          Active Professional
+                        </IndustrialBadge>
+                        <IndustrialBadge
+                          variant="secondary"
+                          className="shadow-md text-xs sm:text-sm"
+                        >
+                          <Award className="h-3 w-3 mr-1" />
+                          Verified
+                        </IndustrialBadge>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="skills"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Skills (comma-separated)</FormLabel>
-                              <FormControl>
-                                <IndustrialTextarea
-                                  {...field}
-                                  placeholder="e.g., Welding, CNC Operation, Quality Control"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
 
-                        <FormField
-                          control={form.control}
-                          name="experience"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Experience Level</FormLabel>
-                              <FormControl>
-                                <IndustrialTextarea
-                                  {...field}
-                                  placeholder="Describe your experience and background"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>{' '}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 xl:gap-6">
+                        <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 lg:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group">
+                          <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/20 shrink-0">
+                            <MapPin className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
+                              Location
+                            </p>
+                            <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors truncate">
+                              {(() => {
+                                const location = (currentProfile as any)
+                                  .location;
+                                if (!location) return 'Not specified';
+                                if (typeof location === 'string')
+                                  return location;
+                                if (typeof location === 'object') {
+                                  const { city, state } = location;
+                                  return (
+                                    [city, state].filter(Boolean).join(', ') ||
+                                    'Not specified'
+                                  );
+                                }
+                                return 'Not specified';
+                              })()}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 lg:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group">
+                          <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20 shrink-0">
+                            <Briefcase className="h-4 w-4 text-emerald-600" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
+                              Experience
+                            </p>
+                            <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors truncate">
+                              {(currentProfile as any).experience ||
+                                'Not specified'}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 lg:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group">
+                          <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20 shrink-0">
+                            <Calendar className="h-4 w-4 text-amber-600" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
+                              Member Since
+                            </p>
+                            <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors truncate">
+                              {new Date(
+                                (currentProfile as any).createdAt || Date.now()
+                              ).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 lg:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group">
+                          <div className="p-2 bg-purple-500/10 rounded-lg border border-purple-500/20 shrink-0">
+                            <IndustrialIcon
+                              icon="wrench"
+                              size="sm"
+                              className="text-purple-600"
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-industrial-gunmetal-600 uppercase tracking-wide">
+                              Skills
+                            </p>
+                            <p className="text-sm font-medium text-industrial-gunmetal-800 group-hover:text-industrial-accent transition-colors">
+                              {Array.isArray((currentProfile as any).skills)
+                                ? (currentProfile as any).skills.length
+                                : (currentProfile as any).skills?.split(',')
+                                    .length || 0}{' '}
+                              skills listed
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </IndustrialCardContent>
+              </IndustrialCard>
+            </div>
+          )}
+
+          {/* Enhanced Profile Form */}
+          <div>
+            <IndustrialCard
+              variant="industrial"
+              className="relative overflow-hidden bg-industrial-gunmetal-50"
+            >
+              <div className="absolute inset-0 opacity-5">
+                <div className="h-full w-full bg-[linear-gradient(90deg,_#34495E_1px,_transparent_1px),_linear-gradient(#34495E_1px,_transparent_1px)] bg-[length:20px_20px]" />
+              </div>
+
+              <IndustrialCardHeader className="relative border-b border-industrial-accent/20">
+                <IndustrialCardTitle className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-lg sm:text-xl">
+                  <div className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20 shrink-0">
+                    <IndustrialIcon
+                      icon="gear"
+                      size="sm"
+                      className="text-industrial-accent"
+                    />
+                  </div>
+                  <span className="text-industrial-gunmetal-800 font-semibold">
+                    Profile Information
+                  </span>
+                </IndustrialCardTitle>
+              </IndustrialCardHeader>
+              <IndustrialCardContent className="relative p-3 sm:p-4 lg:p-6">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 sm:space-y-6 lg:space-y-8"
+                  >
+                    {/* Basic Information - Responsive Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
                       <FormField
                         control={form.control}
-                        name="bio"
+                        name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Bio</FormLabel>
+                            <FormLabel className="text-sm sm:text-base">
+                              Full Name
+                            </FormLabel>
                             <FormControl>
-                              <IndustrialTextarea
+                              <IndustrialInput
                                 {...field}
-                                placeholder="Tell us about yourself and your professional background"
-                                rows={4}
+                                placeholder="Enter your full name"
+                                className="h-10 sm:h-11 lg:h-12"
                               />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         control={form.control}
-                        name="portfolio"
+                        name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Portfolio URL (Optional)</FormLabel>
+                            <FormLabel className="text-sm sm:text-base">
+                              Email
+                            </FormLabel>
                             <FormControl>
                               <IndustrialInput
                                 {...field}
-                                placeholder="https://your-portfolio.com"
+                                type="email"
+                                placeholder="your.email@example.com"
+                                className="h-10 sm:h-11 lg:h-12"
                               />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
-                      />{' '}
-                      {/* Enhanced Save Button */}
-                      <motion.div
-                        className="flex justify-end pt-4"
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm sm:text-base">
+                              Phone
+                            </FormLabel>
+                            <FormControl>
+                              <IndustrialInput
+                                {...field}
+                                placeholder="Your phone number"
+                                className="h-10 sm:h-11 lg:h-12"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="location"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm sm:text-base">
+                              Location
+                            </FormLabel>
+                            <FormControl>
+                              <IndustrialInput
+                                {...field}
+                                placeholder="e.g. Mumbai, Maharashtra"
+                                className="h-10 sm:h-11 lg:h-12"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Professional Information - Responsive Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                      <FormField
+                        control={form.control}
+                        name="skills"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm sm:text-base">
+                              Skills (comma-separated)
+                            </FormLabel>
+                            <FormControl>
+                              <IndustrialTextarea
+                                {...field}
+                                placeholder="e.g., Welding, CNC Operation, Quality Control"
+                                rows={3}
+                                className="resize-none"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="experience"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm sm:text-base">
+                              Experience Level
+                            </FormLabel>
+                            <FormControl>
+                              <IndustrialTextarea
+                                {...field}
+                                placeholder="Describe your experience and background"
+                                rows={3}
+                                className="resize-none"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Bio - Full Width */}
+                    <FormField
+                      control={form.control}
+                      name="bio"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm sm:text-base">
+                            Bio
+                          </FormLabel>
+                          <FormControl>
+                            <IndustrialTextarea
+                              {...field}
+                              placeholder="Tell us about yourself and your professional background"
+                              rows={4}
+                              className="resize-none"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Portfolio - Full Width */}
+                    <FormField
+                      control={form.control}
+                      name="portfolio"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm sm:text-base">
+                            Portfolio URL (Optional)
+                          </FormLabel>
+                          <FormControl>
+                            <IndustrialInput
+                              {...field}
+                              placeholder="https://your-portfolio.com"
+                              className="h-10 sm:h-11 lg:h-12"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Enhanced Save Button - Responsive */}
+                    <div className="flex flex-col sm:flex-row justify-end pt-3 sm:pt-4 gap-3 sm:gap-0">
+                      <Button
+                        type="submit"
+                        disabled={isUpdating}
+                        variant="industrial-accent"
+                        size="lg"
+                        className="w-full sm:w-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px] sm:min-h-[48px]"
                       >
-                        <Button
-                          type="submit"
-                          disabled={isUpdating}
-                          variant="industrial-accent"
-                          size="lg"
-                          className="px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-                        >
-                          {isUpdating ? (
-                            <>
-                              <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{
-                                  duration: 1,
-                                  repeat: Infinity,
-                                  ease: 'linear',
-                                }}
-                                className="mr-2"
-                              >
-                                <Loader2 className="w-5 h-5" />
-                              </motion.div>
+                        {isUpdating ? (
+                          <div className="flex items-center">
+                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                            <span className="text-sm sm:text-base">
                               Updating Profile...
-                            </>
-                          ) : (
-                            <>
-                              <motion.div
-                                whileHover={{ scale: 1.02 }}
-                                transition={{
-                                  duration: 0.3,
-                                  ease: 'easeInOut',
-                                }}
-                                className="mr-2"
-                              >
-                                <Save className="w-5 h-5" />
-                              </motion.div>
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <Save className="w-5 h-5 mr-2" />
+                            <span className="text-sm sm:text-base">
                               Update Profile
-                            </>
-                          )}
-                        </Button>{' '}
-                      </motion.div>
-                    </form>
-                  </Form>
-                </IndustrialCardContent>
-              </IndustrialCard>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+                            </span>
+                          </div>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </IndustrialCardContent>
+            </IndustrialCard>
+          </div>
+        </div>
       </IndustrialContainer>
     </IndustrialLayout>
   );

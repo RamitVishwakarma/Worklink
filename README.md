@@ -59,10 +59,9 @@ The platform facilitates:
 
 ### Backend Integration
 
-- **API Base URL**: `http://localhost:8000/api` (configurable via environment variables)
+- **API Base URL**: `http://localhost:3000/api` (configurable via environment variables)
 - **Authentication**: JWT tokens with Bearer authentication
 - **Data Format**: JSON API responses
-- **File Uploads**: Support for profile images and document uploads
 
 ## Industrial Design System
 

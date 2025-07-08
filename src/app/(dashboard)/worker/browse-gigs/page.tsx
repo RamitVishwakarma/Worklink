@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
 import { IndustrialIcon } from '@/components/ui/industrial-icon';
 import {
   IndustrialLayout,
@@ -40,14 +39,9 @@ import {
   Calendar,
   DollarSign,
   Search,
-  Filter,
   Building,
-  Clock,
   Loader2,
-  Wrench,
-  Cog,
   Factory,
-  HardHat,
 } from 'lucide-react';
 
 // Industrial Design System Animation Variants
@@ -236,39 +230,41 @@ export default function WorkerBrowseGigsPage() {
                 className="absolute top-0 left-0 h-1 bg-industrial-accent rounded-full"
               />
 
-              <div className="flex items-center gap-6 pt-4">
-                <motion.div
-                  whileHover={{ rotate: 5, scale: 1.02 }}
-                  transition={{ duration: 0.4, ease: 'easeInOut' }}
-                  className="p-4 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30"
-                >
-                  <IndustrialIcon
-                    icon="factory"
-                    size="xl"
-                    className="text-industrial-navy-600"
-                  />
-                </motion.div>
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
+                    whileHover={{ rotate: 5, scale: 1.02 }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="p-3 sm:p-4 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30"
                   >
-                    <IndustrialHeader
-                      level={1}
-                      className="text-industrial-gunmetal-800 font-bold"
-                    >
-                      Browse Gigs
-                    </IndustrialHeader>
+                    <IndustrialIcon
+                      icon="factory"
+                      size="lg"
+                      className="text-industrial-gunmetal-600 sm:w-8 sm:h-8"
+                    />
                   </motion.div>
-                  <motion.p
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="text-lg text-industrial-gunmetal-600 mt-2"
-                  >
-                    Discover and apply to manufacturing opportunities
-                  </motion.p>
+                  <div className="min-w-0 flex-1">
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <IndustrialHeader
+                        level={1}
+                        className="text-industrial-gunmetal-800 font-bold text-2xl sm:text-3xl lg:text-4xl"
+                      >
+                        Browse Gigs
+                      </IndustrialHeader>
+                    </motion.div>
+                    <motion.p
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-sm sm:text-base lg:text-lg text-industrial-gunmetal-600 mt-1 sm:mt-2"
+                    >
+                      Discover and apply to manufacturing opportunities
+                    </motion.p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -294,7 +290,7 @@ export default function WorkerBrowseGigsPage() {
                   </IndustrialCardTitle>
                 </IndustrialCardHeader>
 
-                <IndustrialCardContent className="relative p-6">
+                <IndustrialCardContent className="relative max-sm:p-2 p-6">
                   <IndustrialDashboardGrid
                     layout="default"
                     pattern="none"

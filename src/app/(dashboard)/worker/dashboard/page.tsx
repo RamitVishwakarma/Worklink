@@ -31,9 +31,7 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  RefreshCw,
   FileText,
-  Wrench,
 } from 'lucide-react';
 import withAuth from '@/components/auth/withAuth';
 import { UserType, GigApplication, WorkerProfile } from '@/lib/types';
@@ -62,12 +60,9 @@ function WorkerDashboardPage() {
   const recentGigs = gigs.slice(0, 6);
   const recentApplications = gigApplications.slice(0, 3);
 
-  // Enhanced loading announcement for accessibility
   React.useEffect(() => {
     if (!loading) {
-      // Announce when dashboard data has loaded for screen readers
       const message = `Dashboard loaded. You have ${applicationStats.total} total applications, ${applicationStats.pending} pending, and ${gigStats.active} active gigs available.`;
-      // This would typically be handled by the accessibility provider
       console.log('Accessibility:', message);
     }
   }, [loading, applicationStats, gigStats]);
@@ -165,25 +160,46 @@ function WorkerDashboardPage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-6"
+        className="space-y-6 max-sm:p-4"
       >
         {/* Dashboard Header */}
-        <motion.div variants={itemVariants} className="space-y-4">
-          <div className="flex items-center gap-3">
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ duration: 0.3 }}
-              className="sm:p-3 p-2 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30 flex items-center justify-center"
-            >
-              <HardHat className="sm:size-8 size-5 text-industrial-accent" />
-            </motion.div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-industrial-gunmetal-800">
-                Worker Dashboard
-              </h1>
-              <p className="text-industrial-gunmetal-600 mt-1">
-                Welcome back, {user?.email?.split('@')[0] || 'Worker'}!
-              </p>
+        <motion.div variants={itemVariants} className="relative">
+          {/* Industrial accent bar */}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
+            className="absolute top-0 left-0 h-1 bg-industrial-accent rounded-full"
+          />
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <motion.div
+                whileHover={{ rotate: 5, scale: 1.02 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                className="p-3 sm:p-4 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30"
+              >
+                <HardHat className="w-6 h-6 sm:w-8 sm:h-8 text-industrial-gunmetal-600" />
+              </motion.div>
+              <div className="min-w-0 flex-1">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-industrial-gunmetal-800">
+                    Worker Dashboard
+                  </h1>
+                </motion.div>
+                <motion.p
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-sm sm:text-base lg:text-lg text-industrial-gunmetal-600 mt-1 sm:mt-2"
+                >
+                  Welcome back, {user?.email?.split('@')[0] || 'Worker'}!
+                </motion.p>
+              </div>
             </div>
           </div>
         </motion.div>
