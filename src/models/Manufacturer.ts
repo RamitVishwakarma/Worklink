@@ -7,7 +7,6 @@ export interface IManufacturer extends Document {
   password: string;
   workSector: string;
   location: string;
-  profilePicture?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,10 +40,6 @@ const ManufacturerSchema = new Schema<IManufacturer>(
       type: String,
       required: [true, 'Location is required'],
       trim: true,
-    },
-    profilePicture: {
-      type: String,
-      default: null,
     },
   },
   {

@@ -26,14 +26,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const {
-      companyName,
-      companyEmail,
-      password,
-      workSector,
-      location,
-      profilePicture,
-    } = validation.data;
+    const { companyName, companyEmail, password, workSector, location } =
+      validation.data;
 
     // Check if startup already exists
     const existingStartup = await Startup.findOne({ companyEmail });
@@ -51,7 +45,6 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       workSector,
       location,
-      profilePicture,
     });
 
     await startup.save();

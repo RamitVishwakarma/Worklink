@@ -7,7 +7,6 @@ export interface IWorker extends Document {
   password: string;
   skills: string[];
   location?: string;
-  profilePicture?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,10 +41,6 @@ const WorkerSchema = new Schema<IWorker>(
     location: {
       type: String,
       required: false,
-    },
-    profilePicture: {
-      type: String,
-      default: null,
     },
   },
   {

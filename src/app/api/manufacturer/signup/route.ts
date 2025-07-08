@@ -29,14 +29,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const {
-      companyName,
-      companyEmail,
-      password,
-      workSector,
-      location,
-      profilePicture,
-    } = validation.data;
+    const { companyName, companyEmail, password, workSector, location } =
+      validation.data;
 
     // Check if manufacturer already exists
     const existingManufacturer = await Manufacturer.findOne({ companyEmail });
@@ -54,7 +48,6 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       workSector,
       location,
-      profilePicture,
     });
 
     await manufacturer.save();

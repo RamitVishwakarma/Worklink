@@ -7,7 +7,6 @@ export const workerSignupSchema = Joi.object({
   password: Joi.string().min(6).required(),
   skills: Joi.array().items(Joi.string().trim()).min(1).required(),
   location: Joi.string().trim().optional().allow(null, ''),
-  profilePicture: Joi.string().uri().optional().allow(null, ''),
 });
 
 export const workerSigninSchema = Joi.object({
@@ -19,7 +18,6 @@ export const workerUpdateSchema = Joi.object({
   name: Joi.string().trim().optional(),
   skills: Joi.array().items(Joi.string().trim()).min(1).optional(),
   location: Joi.string().trim().optional().allow(null, ''),
-  profilePicture: Joi.string().uri().optional().allow(null, ''),
 });
 
 // Startup validation schemas
@@ -29,7 +27,6 @@ export const startupSignupSchema = Joi.object({
   password: Joi.string().min(6).required(),
   workSector: Joi.string().required().trim(),
   location: Joi.string().required().trim(),
-  profilePicture: Joi.string().uri().optional().allow(null, ''),
 });
 
 export const startupSigninSchema = Joi.object({
@@ -41,7 +38,6 @@ export const startupUpdateSchema = Joi.object({
   companyName: Joi.string().trim().optional(),
   workSector: Joi.string().trim().optional(),
   location: Joi.string().trim().optional(),
-  profilePicture: Joi.string().uri().optional().allow(null, ''),
 });
 
 // Manufacturer validation schemas
@@ -51,7 +47,6 @@ export const manufacturerSignupSchema = Joi.object({
   password: Joi.string().min(6).required(),
   workSector: Joi.string().required().trim(),
   location: Joi.string().required().trim(),
-  profilePicture: Joi.string().uri().optional().allow(null, ''),
 });
 
 export const manufacturerSigninSchema = Joi.object({
@@ -63,7 +58,6 @@ export const manufacturerUpdateSchema = Joi.object({
   companyName: Joi.string().trim().optional(),
   workSector: Joi.string().trim().optional(),
   location: Joi.string().trim().optional(),
-  profilePicture: Joi.string().uri().optional().allow(null, ''),
 });
 
 // Gig validation schemas

@@ -48,7 +48,6 @@ const profileSchema = z.object({
   email: z.string().email('Invalid email address'),
   skills: z.string().min(1, 'Skills are required'),
   location: z.string().optional(),
-  profilePicture: z.string().optional(),
 });
 
 type ProfileData = z.infer<typeof profileSchema> & {
@@ -119,7 +118,6 @@ export default function WorkerProfilePage() {
       email: '',
       skills: '',
       location: '',
-      profilePicture: '',
     },
   });
 
@@ -168,7 +166,6 @@ export default function WorkerProfilePage() {
           ? profile.skills.join(', ')
           : profile.skills || '',
         location: location,
-        profilePicture: profile.profilePicture || '',
       });
     }
   }, [currentProfile, form]);
@@ -526,25 +523,6 @@ export default function WorkerProfilePage() {
                                 <IndustrialInput
                                   {...field}
                                   placeholder="e.g. Mumbai, Maharashtra"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="profilePicture"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                Profile Picture URL (Optional)
-                              </FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  {...field}
-                                  placeholder="https://example.com/your-photo.jpg"
                                 />
                               </FormControl>
                               <FormMessage />

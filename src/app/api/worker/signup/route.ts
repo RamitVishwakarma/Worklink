@@ -30,8 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, email, password, skills, location, profilePicture } =
-      validation.data;
+    const { name, email, password, skills, location } = validation.data;
 
     // Check if worker already exists
     const existingWorker = await Worker.findOne({ email });
@@ -49,7 +48,6 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       skills,
       ...(location && { location }), // Only include location if provided
-      profilePicture,
     });
 
     await worker.save();
