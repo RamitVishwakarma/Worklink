@@ -290,9 +290,10 @@ function StartupProfilePage() {
                 />
               </motion.div>
 
-              <div className="flex items-center justify-between pt-6">
-                <div className="flex items-center gap-6">
-                  {/* Enhanced 3D Factory Icon */}
+              {/* Responsive header with flex-direction changes for mobile */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-6 gap-4">
+                <div className="flex items-start sm:items-center gap-4 sm:gap-6">
+                  {/* Enhanced 3D Factory Icon - Optimized for mobile */}
                   <motion.div
                     whileHover={{
                       rotateY: 180,
@@ -300,7 +301,7 @@ function StartupProfilePage() {
                       rotateX: 10,
                     }}
                     transition={{ duration: 0.8, ease: 'easeInOut' }}
-                    className="relative"
+                    className="relative hidden sm:block"
                   >
                     <motion.div
                       animate={{
@@ -324,55 +325,73 @@ function StartupProfilePage() {
                     <div className="absolute inset-0 bg-gradient-radial from-industrial-accent/30 to-transparent rounded-2xl blur-xl -z-10" />
                   </motion.div>
 
+                  {/* Smaller icon for mobile */}
+                  <motion.div
+                    whileHover={{ rotate: 5, scale: 1.05 }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="p-3 bg-gradient-to-br from-industrial-accent/25 to-industrial-accent/10 rounded-xl border-2 border-industrial-accent/40 sm:hidden"
+                  >
+                    <IndustrialIcon
+                      icon="factory"
+                      size="sm"
+                      className="text-industrial-accent drop-shadow-lg"
+                    />
+                  </motion.div>
+
                   <div className="flex-1">
                     <motion.div
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.8, delay: 0.3 }}
                     >
-                      <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-industrial-accent to-gray-800 bg-clip-text text-transparent mb-2">
+                      <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 via-industrial-accent to-gray-800 bg-clip-text text-transparent mb-1 sm:mb-2">
                         Company Profile
                       </h1>
-                      <p className="text-gray-600 text-lg">
-                        Manage your industrial company information and
-                        manufacturing capabilities
+                      <p className="text-gray-600 text-sm sm:text-lg">
+                        Manage your industrial company information
                       </p>
                     </motion.div>
                   </div>
                 </div>
 
-                {/* Enhanced Action Buttons */}
+                {/* Enhanced Action Buttons - Mobile optimized */}
                 <motion.div
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end"
                 >
                   {editing ? (
                     <>
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        className="flex-1 sm:flex-none"
                       >
                         <Button
                           variant="industrial-outline"
                           onClick={handleCancel}
                           disabled={isUpdating}
-                          className="hover:bg-industrial-muted/50 transition-all duration-300"
+                          className="hover:bg-industrial-muted/50 transition-all duration-300 w-full sm:w-auto"
+                          size="sm"
+                          title="Cancel"
                         >
-                          <X className="h-4 w-4 mr-2" />
-                          Cancel
+                          <X className="h-4 w-4 sm:mr-2" />
+                          <span className="hidden sm:inline">Cancel</span>
                         </Button>
                       </motion.div>
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        className="flex-1 sm:flex-none"
                       >
                         <Button
                           onClick={handleSave}
                           disabled={isUpdating}
                           variant="industrial-accent"
-                          className="shadow-xl hover:shadow-2xl transition-all duration-300"
+                          className="shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
+                          size="sm"
+                          title={isUpdating ? 'Saving...' : 'Save Changes'}
                         >
                           {isUpdating ? (
                             <>
@@ -383,16 +402,20 @@ function StartupProfilePage() {
                                   repeat: Infinity,
                                   ease: 'linear',
                                 }}
-                                className="mr-2"
+                                className="sm:mr-2"
                               >
                                 <Loader2 className="h-4 w-4" />
                               </motion.div>
-                              Saving Changes...
+                              <span className="hidden sm:inline">
+                                Saving Changes...
+                              </span>
                             </>
                           ) : (
                             <>
-                              <Save className="h-4 w-4 mr-2" />
-                              Save Changes
+                              <Save className="h-4 w-4 sm:mr-2" />
+                              <span className="hidden sm:inline">
+                                Save Changes
+                              </span>
                             </>
                           )}
                         </Button>
@@ -402,14 +425,17 @@ function StartupProfilePage() {
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      className="flex-1 sm:flex-none"
                     >
                       <Button
                         onClick={() => setEditing(true)}
                         variant="industrial-accent"
-                        className="shadow-xl hover:shadow-2xl transition-all duration-300"
+                        className="shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
+                        size="sm"
+                        title="Edit Profile"
                       >
-                        <Edit3 className="h-4 w-4 mr-2" />
-                        Edit Profile
+                        <Edit3 className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Edit Profile</span>
                       </Button>
                     </motion.div>
                   )}
@@ -417,10 +443,10 @@ function StartupProfilePage() {
               </div>
             </motion.div>
 
-            {/* Enhanced Main Content with Industrial Grid System */}
+            {/* Enhanced Main Content with Industrial Grid System - Mobile Optimized */}
             <IndustrialGrid
               columns={{ default: 1, lg: 3 }}
-              gap={designTokens.spacing['8']}
+              gap="4 md:8"
               variant="industrial"
               className="w-full"
             >
@@ -459,11 +485,11 @@ function StartupProfilePage() {
                         </IndustrialCardTitle>
                       </IndustrialCardHeader>
 
-                      <IndustrialCardContent className="relative p-6">
+                      <IndustrialCardContent className="relative max-[425px]:p-2 p-6">
                         <div className="flex flex-col lg:flex-row gap-8">
                           {/* Company Stats */}
                           <div className="flex-1 space-y-6">
-                            {/* Status Badges */}
+                            {/* Status Badges - Mobile Optimized */}
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
@@ -472,93 +498,93 @@ function StartupProfilePage() {
                                 type: 'spring',
                                 stiffness: 200,
                               }}
-                              className="flex items-center gap-3"
+                              className="flex flex-wrap items-center gap-2 sm:gap-3"
                             >
                               <IndustrialBadge
                                 variant="success"
-                                className="shadow-md"
+                                className="shadow-md text-xs sm:text-sm"
                               >
                                 <Shield className="h-3 w-3 mr-1" />
-                                Active Company
+                                Active
                               </IndustrialBadge>
                               <IndustrialBadge
                                 variant="secondary"
-                                className="shadow-md"
+                                className="shadow-md text-xs sm:text-sm"
                               >
                                 <Award className="h-3 w-3 mr-1" />
                                 Verified
                               </IndustrialBadge>
                             </motion.div>
 
-                            {/* Company Information Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Company Information Grid - Mobile Optimized */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                               <motion.div
-                                className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
+                                className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
                                 whileHover={{ scale: 1.02, x: 4 }}
                                 transition={{ duration: 0.2 }}
                               >
-                                <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                                  <Building2 className="h-4 w-4 text-blue-600" />
+                                <div className="p-1.5 sm:p-2 bg-blue-500/10 rounded-lg border border-blue-500/20 flex-shrink-0">
+                                  <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600" />
                                 </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                <div className="min-w-0 overflow-hidden">
+                                  <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
                                     Company Name
                                   </p>
-                                  <p className="text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors">
+                                  <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
                                     {profile.companyName || 'Not specified'}
                                   </p>
                                 </div>
                               </motion.div>
 
                               <motion.div
-                                className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
+                                className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
                                 whileHover={{ scale: 1.02, x: 4 }}
                                 transition={{ duration: 0.2 }}
                               >
-                                <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
-                                  <Factory className="h-4 w-4 text-emerald-600" />
+                                <div className="p-1.5 sm:p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20 flex-shrink-0">
+                                  <Factory className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600" />
                                 </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                <div className="min-w-0 overflow-hidden">
+                                  <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
                                     Industry
                                   </p>
-                                  <p className="text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors">
+                                  <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
                                     {profile.industry || 'Not specified'}
                                   </p>
                                 </div>
                               </motion.div>
 
                               <motion.div
-                                className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
+                                className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
                                 whileHover={{ scale: 1.02, x: 4 }}
                                 transition={{ duration: 0.2 }}
                               >
-                                <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                                  <Calendar className="h-4 w-4 text-amber-600" />
+                                <div className="p-1.5 sm:p-2 bg-amber-500/10 rounded-lg border border-amber-500/20 flex-shrink-0">
+                                  <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
                                 </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                <div className="min-w-0 overflow-hidden">
+                                  <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
                                     Founded Year
                                   </p>
-                                  <p className="text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors">
+                                  <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
                                     {profile.foundedYear || 'Not specified'}
                                   </p>
                                 </div>
                               </motion.div>
 
                               <motion.div
-                                className="flex items-center gap-3 p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
+                                className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-industrial-gunmetal-50/50 rounded-lg border border-industrial-border/50 hover:border-industrial-accent/30 transition-colors group"
                                 whileHover={{ scale: 1.02, x: 4 }}
                                 transition={{ duration: 0.2 }}
                               >
-                                <div className="p-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
-                                  <Mail className="h-4 w-4 text-purple-600" />
+                                <div className="p-1.5 sm:p-2 bg-purple-500/10 rounded-lg border border-purple-500/20 flex-shrink-0">
+                                  <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-purple-600" />
                                 </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                <div className="min-w-0 overflow-hidden">
+                                  <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
                                     Contact Email
                                   </p>
-                                  <p className="text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors">
+                                  <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
                                     {profile.email || 'Not specified'}
                                   </p>
                                 </div>
@@ -584,15 +610,7 @@ function StartupProfilePage() {
 
                     <IndustrialCardHeader className="relative border-b border-industrial-accent/20">
                       <IndustrialCardTitle className="flex items-center gap-3 text-xl">
-                        <motion.div
-                          animate={{ rotate: [0, 360] }}
-                          transition={{
-                            duration: 8,
-                            repeat: Infinity,
-                            ease: 'linear',
-                          }}
-                          className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20"
-                        >
+                        <motion.div className="p-2 bg-industrial-accent/10 rounded-lg border border-industrial-accent/20">
                           <IndustrialIcon
                             icon="gear"
                             size="sm"
@@ -608,17 +626,22 @@ function StartupProfilePage() {
                       </IndustrialCardDescription>
                     </IndustrialCardHeader>
 
-                    <IndustrialCardContent className="relative p-6 space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
+                    <IndustrialCardContent className="relative max-[425px]:p-2 p-6 space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                        <div className="space-y-1.5 sm:space-y-2">
                           <Label
                             htmlFor="companyName"
-                            className="text-gray-700 font-semibold flex items-center gap-2"
+                            className="text-gray-700 font-semibold flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
                           >
                             <IndustrialIcon
                               icon="factory"
                               size="sm"
-                              className="text-industrial-accent"
+                              className="text-industrial-accent sm:hidden h-3 w-3"
+                            />
+                            <IndustrialIcon
+                              icon="factory"
+                              size="sm"
+                              className="text-industrial-accent hidden sm:block"
                             />
                             Company Name *
                           </Label>
@@ -630,24 +653,29 @@ function StartupProfilePage() {
                                 handleInputChange('companyName', e.target.value)
                               }
                               placeholder="Enter your company name"
-                              className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
+                              className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent text-sm sm:text-base"
                             />
                           ) : (
-                            <p className="p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800">
+                            <p className="p-2 sm:p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800 text-sm sm:text-base">
                               {profile?.companyName || 'Not specified'}
                             </p>
                           )}
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-1.5 sm:space-y-2">
                           <Label
                             htmlFor="industry"
-                            className="text-gray-700 font-semibold flex items-center gap-2"
+                            className="text-gray-700 font-semibold flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
                           >
                             <IndustrialIcon
                               icon="gear"
                               size="sm"
-                              className="text-industrial-accent"
+                              className="text-industrial-accent sm:hidden h-3 w-3"
+                            />
+                            <IndustrialIcon
+                              icon="gear"
+                              size="sm"
+                              className="text-industrial-accent hidden sm:block"
                             />
                             Industry *
                           </Label>
@@ -659,10 +687,10 @@ function StartupProfilePage() {
                                 handleInputChange('industry', e.target.value)
                               }
                               placeholder="e.g., Manufacturing, Technology"
-                              className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
+                              className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent text-sm sm:text-base"
                             />
                           ) : (
-                            <p className="p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800">
+                            <p className="p-2 sm:p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800 text-sm sm:text-base">
                               {profile?.industry || 'Not specified'}
                             </p>
                           )}
@@ -881,7 +909,7 @@ function StartupProfilePage() {
                       </IndustrialCardDescription>
                     </IndustrialCardHeader>
 
-                    <IndustrialCardContent className="relative p-6 space-y-4">
+                    <IndustrialCardContent className="relative p-6 max-[425px]:p-2 space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-gray-600">Profile Complete</span>
                         <span className="font-semibold text-industrial-accent">
@@ -926,28 +954,31 @@ function StartupProfilePage() {
                       </IndustrialCardTitle>
                     </IndustrialCardHeader>
 
-                    <IndustrialCardContent className="relative p-6">
-                      <div className="space-y-3">
+                    <IndustrialCardContent className="relative p-3 sm:p-6">
+                      <div className="space-y-2 sm:space-y-3">
                         <Button
                           variant="outline"
-                          className="w-full justify-start border-blue-200 hover:bg-blue-50"
+                          className="w-full justify-start border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
+                          size="sm"
                         >
-                          <Building2 className="h-4 w-4 mr-2" />
-                          View Public Profile
+                          <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                          <span className="truncate">View Public Profile</span>
                         </Button>
                         <Button
                           variant="outline"
-                          className="w-full justify-start border-blue-200 hover:bg-blue-50"
+                          className="w-full justify-start border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
+                          size="sm"
                         >
-                          <Target className="h-4 w-4 mr-2" />
-                          Create New Gig
+                          <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                          <span className="truncate">Create New Gig</span>
                         </Button>
                         <Button
                           variant="outline"
-                          className="w-full justify-start border-blue-200 hover:bg-blue-50"
+                          className="w-full justify-start border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
+                          size="sm"
                         >
-                          <DollarSign className="h-4 w-4 mr-2" />
-                          Manage Applications
+                          <DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                          <span className="truncate">Manage Applications</span>
                         </Button>
                       </div>
                     </IndustrialCardContent>

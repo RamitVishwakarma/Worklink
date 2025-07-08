@@ -38,16 +38,18 @@ import withAuth from '@/components/auth/withAuth';
 import { UserType } from '@/lib/types';
 import {
   Plus,
+  X,
+  Factory,
+  Clock,
+  Users,
+  Eye,
   Edit,
   Trash2,
-  Eye,
-  Users,
+  XCircle,
+  CheckCircle,
   MapPin,
   DollarSign,
   Calendar,
-  Clock,
-  CheckCircle,
-  XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -260,7 +262,7 @@ function StartupGigsPage() {
           animate="visible"
         >
           {' '}
-          {/* Enhanced Header with Industrial Styling */}
+          {/* Enhanced Header with Industrial Styling - Mobile Optimized */}
           <motion.div variants={headerVariants} className="relative">
             {/* Animated Metal Accent Bar */}
             <motion.div
@@ -270,9 +272,10 @@ function StartupGigsPage() {
               className="absolute top-0 left-0 h-1 bg-gradient-to-r from-industrial-accent via-industrial-safety-400 to-industrial-accent rounded-full"
             />
 
-            <div className="flex items-center justify-between pt-4">
-              <div className="flex items-center gap-4">
-                {/* 3D Factory Icon with Hover Animation */}
+            {/* Responsive header with flex-direction changes for mobile */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 gap-4">
+              <div className="flex items-start sm:items-center gap-4 sm:gap-6">
+                {/* 3D Factory Icon with Hover Animation - Mobile Optimized */}
                 <motion.div
                   whileHover={{
                     rotateY: 15,
@@ -280,7 +283,7 @@ function StartupGigsPage() {
                     rotateX: 5,
                   }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="relative"
+                  className="relative hidden sm:block"
                 >
                   <motion.div
                     animate={{
@@ -304,35 +307,45 @@ function StartupGigsPage() {
                   <div className="absolute inset-0 bg-gradient-radial from-industrial-accent/20 to-transparent rounded-full blur-xl" />
                 </motion.div>
 
+                {/* Mobile-only smaller icon */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="sm:hidden p-3 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-xl border border-industrial-accent/30"
+                >
+                  <Factory className="w-6 h-6 text-industrial-accent" />
+                </motion.div>
+
                 <div>
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">
                       Your Gigs
                     </h1>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-sm sm:text-base lg:text-lg text-gray-600">
                       Manage your industrial job postings and track applications
                     </p>
                   </motion.div>
                 </div>
               </div>
 
-              {/* Enhanced Create Button */}
+              {/* Enhanced Create Button - Mobile Optimized */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="self-start sm:self-center mt-2 sm:mt-0"
               >
                 <Button
                   asChild
                   variant="industrial-accent"
-                  className="shadow-xl hover:shadow-2xl transition-all duration-300"
+                  size="sm"
+                  className="shadow-xl hover:shadow-2xl transition-all duration-300 sm:text-base text-sm"
                 >
                   <Link href="/startup/create-gig">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create New Gig
+                    <Plus className="h-4 w-4 mr-1 sm:mr-2" />
+                    <span className="sm:inline">New Gig</span>
                   </Link>
                 </Button>
               </motion.div>
@@ -343,7 +356,7 @@ function StartupGigsPage() {
           </motion.div>{' '}
           {/* Enhanced Stats Cards with Industrial Styling */}
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6"
             variants={itemVariants}
           >
             {/* Total Gigs Card */}
