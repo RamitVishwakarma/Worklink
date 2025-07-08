@@ -1,23 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-// Location interface and schema
-export interface ILocation {
-  city: string;
-  state: string;
-}
-
-const LocationSchema = new Schema<ILocation>({
-  city: { type: String, required: true },
-  state: { type: String, required: true },
-});
-
 // Worker interface
 export interface IWorker extends Document {
   name: string;
   email: string;
   password: string;
   skills: string[];
-  location?: ILocation; // Make location optional
+  location?: string;
   profilePicture?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -51,8 +40,8 @@ const WorkerSchema = new Schema<IWorker>(
       },
     ],
     location: {
-      type: LocationSchema,
-      required: false, // Make location optional
+      type: String,
+      required: false,
     },
     profilePicture: {
       type: String,
@@ -64,8 +53,7 @@ const WorkerSchema = new Schema<IWorker>(
   }
 );
 
-// Index for faster queries (email index is already created by unique: true)
-WorkerSchema.index({ 'location.city': 1, 'location.state': 1 });
+WorkerSchema.index({ location: 1 });
 WorkerSchema.index({ skills: 1 });
 
 export default mongoose.models.Worker ||

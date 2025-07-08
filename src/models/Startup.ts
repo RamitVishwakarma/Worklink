@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ILocation } from './Worker';
 
 // Startup interface
 export interface IStartup extends Document {
@@ -7,7 +6,7 @@ export interface IStartup extends Document {
   companyEmail: string;
   password: string;
   workSector: string;
-  location: ILocation;
+  location: string;
   profilePicture?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -39,8 +38,9 @@ const StartupSchema = new Schema<IStartup>(
       trim: true,
     },
     location: {
-      city: { type: String, required: true },
-      state: { type: String, required: true },
+      type: String,
+      required: [true, 'Location is required'],
+      trim: true,
     },
     profilePicture: {
       type: String,
@@ -52,8 +52,7 @@ const StartupSchema = new Schema<IStartup>(
   }
 );
 
-// Index for faster queries (companyEmail index is already created by unique: true)
-StartupSchema.index({ 'location.city': 1, 'location.state': 1 });
+StartupSchema.index({ location: 1 });
 StartupSchema.index({ workSector: 1 });
 
 export default mongoose.models.Startup ||

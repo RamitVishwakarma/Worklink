@@ -1,12 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ILocation } from './Worker';
 
 // Gig interface
 export interface IGig extends Document {
   title: string;
   description: string;
   skillsRequired: string[];
-  location: ILocation;
+  location: string;
   salary: number;
   duration: string;
   startupId: mongoose.Types.ObjectId;
@@ -35,8 +34,9 @@ const GigSchema = new Schema<IGig>(
       },
     ],
     location: {
-      city: { type: String, required: true },
-      state: { type: String, required: true },
+      type: String,
+      required: [true, 'Location is required'],
+      trim: true,
     },
     salary: {
       type: Number,
@@ -62,7 +62,7 @@ const GigSchema = new Schema<IGig>(
 // Index for faster queries
 GigSchema.index({ startupId: 1 });
 GigSchema.index({ skillsRequired: 1 });
-GigSchema.index({ 'location.city': 1, 'location.state': 1 });
+GigSchema.index({ location: 1 });
 GigSchema.index({ salary: 1 });
 GigSchema.index({ createdAt: -1 });
 

@@ -13,9 +13,6 @@ interface MongooseCache {
   promise: Promise<typeof mongoose> | null;
 }
 
-// Global is used here to maintain a cached connection across hot reloads
-// in development. This prevents connections growing exponentially
-// during API Route usage.
 let cached: MongooseCache = (global as any).mongoose;
 
 if (!cached) {

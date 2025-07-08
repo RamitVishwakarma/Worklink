@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ILocation } from './Worker';
 
 // Manufacturer interface
 export interface IManufacturer extends Document {
@@ -7,7 +6,7 @@ export interface IManufacturer extends Document {
   companyEmail: string;
   password: string;
   workSector: string;
-  location: ILocation;
+  location: string;
   profilePicture?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -39,8 +38,9 @@ const ManufacturerSchema = new Schema<IManufacturer>(
       trim: true,
     },
     location: {
-      city: { type: String, required: true },
-      state: { type: String, required: true },
+      type: String,
+      required: [true, 'Location is required'],
+      trim: true,
     },
     profilePicture: {
       type: String,
@@ -52,8 +52,7 @@ const ManufacturerSchema = new Schema<IManufacturer>(
   }
 );
 
-// Index for faster queries (companyEmail index is already created by unique: true)
-ManufacturerSchema.index({ 'location.city': 1, 'location.state': 1 });
+ManufacturerSchema.index({ location: 1 });
 ManufacturerSchema.index({ workSector: 1 });
 
 export default mongoose.models.Manufacturer ||

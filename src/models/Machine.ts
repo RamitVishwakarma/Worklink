@@ -1,12 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ILocation } from './Worker';
 
 // Machine interface
 export interface IMachine extends Document {
   name: string;
   type: string;
   description: string;
-  location: ILocation;
+  location: string;
   available: boolean;
   manufacturerId: mongoose.Types.ObjectId;
   createdAt: Date;
@@ -32,8 +31,9 @@ const MachineSchema = new Schema<IMachine>(
       trim: true,
     },
     location: {
-      city: { type: String, required: true },
-      state: { type: String, required: true },
+      type: String,
+      required: [true, 'Location is required'],
+      trim: true,
     },
     available: {
       type: Boolean,
@@ -54,7 +54,7 @@ const MachineSchema = new Schema<IMachine>(
 MachineSchema.index({ manufacturerId: 1 });
 MachineSchema.index({ type: 1 });
 MachineSchema.index({ available: 1 });
-MachineSchema.index({ 'location.city': 1, 'location.state': 1 });
+MachineSchema.index({ location: 1 });
 MachineSchema.index({ createdAt: -1 });
 
 export default mongoose.models.Machine ||

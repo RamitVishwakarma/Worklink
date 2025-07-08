@@ -55,8 +55,7 @@ const workerSchema = baseSchema.extend({
   skills: z
     .string()
     .min(1, { message: 'Skills are required (comma-separated).' }),
-  city: z.string().optional(),
-  state: z.string().optional(),
+  location: z.string().optional(),
 });
 
 const startupSchema = baseSchema.extend({
@@ -103,12 +102,13 @@ export function SignupForm() {
       // Worker fields
       fullName: '',
       skills: '',
-      city: '',
-      state: '',
+      location: '',
       // Startup/Manufacturer fields
       companyName: '',
       workSector: '',
       industry: '',
+      city: '',
+      state: '',
     } as any, // Cast to any due to discriminated union complexities
   });
 
@@ -125,13 +125,7 @@ export function SignupForm() {
           email: values.email,
           password: values.password,
           skills: values.skills.split(',').map((skill) => skill.trim()),
-          ...(values.city &&
-            values.state && {
-              location: {
-                city: values.city,
-                state: values.state,
-              },
-            }),
+          ...(values.location && { location: values.location }),
         };
         response = await authAPI.workerSignup(workerData);
       } else if (values.userType === 'startup') {
@@ -140,10 +134,7 @@ export function SignupForm() {
           companyEmail: values.email,
           password: values.password,
           workSector: values.workSector,
-          location: {
-            city: values.city,
-            state: values.state,
-          },
+          location: `${values.city}, ${values.state}`,
         };
         response = await authAPI.startupSignup(startupData);
       } else if (values.userType === 'manufacturer') {
@@ -152,10 +143,7 @@ export function SignupForm() {
           companyEmail: values.email,
           password: values.password,
           workSector: values.industry,
-          location: {
-            city: values.city,
-            state: values.state,
-          },
+          location: `${values.city}, ${values.state}`,
         };
         response = await authAPI.manufacturerSignup(manufacturerData);
       }
@@ -352,11 +340,12 @@ export function SignupForm() {
                                 // Always include all possible fields with empty string defaults
                                 fullName: '',
                                 skills: '',
-                                city: '',
-                                state: '',
+                                location: '',
                                 companyName: '',
                                 workSector: '',
                                 industry: '',
+                                city: '',
+                                state: '',
                               };
 
                               // Cast to any to avoid TypeScript discriminated union issues during reset
@@ -529,42 +518,19 @@ export function SignupForm() {
                         />
                       </motion.div>
 
-                      {/* Optional location fields for workers */}
+                      {/* Optional location field for workers */}
                       <motion.div variants={formFieldVariants}>
                         <FormField
                           control={form.control}
-                          name="city"
+                          name="location"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="font-industrial-body font-semibold">
-                                City (Optional)
+                                Location (Optional)
                               </FormLabel>
                               <FormControl>
                                 <IndustrialInput
-                                  placeholder="Mumbai"
-                                  variant="industrial"
-                                  {...field}
-                                  value={field.value || ''}
-                                  className="h-12"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </motion.div>
-                      <motion.div variants={formFieldVariants}>
-                        <FormField
-                          control={form.control}
-                          name="state"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="font-industrial-body font-semibold">
-                                State (Optional)
-                              </FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  placeholder="Maharashtra"
+                                  placeholder="Mumbai, Maharashtra"
                                   variant="industrial"
                                   {...field}
                                   value={field.value || ''}
