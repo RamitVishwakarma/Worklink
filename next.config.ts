@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
   },
   // Enable standalone output for better deployment performance
   output: 'standalone',
+  // Ensure proper handling of static exports
+  trailingSlash: false,
+  reactStrictMode: true,
 };
 
 export default nextConfig;

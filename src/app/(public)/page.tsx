@@ -11,7 +11,7 @@ import { SiteMap } from '@/components/homepage/site-map';
 import { RoleSelector } from '@/components/homepage/role-selector';
 import { NewsletterSection } from '@/components/homepage/newsletter-section';
 
-const Page = () => {
+export default function HomePage() {
   return (
     <>
       <Header />
@@ -45,6 +45,4 @@ const Page = () => {
       <Footer />
     </>
   );
-};
-
-export default Page;
+}
