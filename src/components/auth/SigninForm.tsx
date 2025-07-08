@@ -396,11 +396,11 @@ export function SigninForm() {
             </IndustrialCardContent>{' '}
             <div className="flex flex-col items-center space-y-2 mt-4 p-6 pt-0">
               <motion.div className="text-center" variants={headerVariants}>
-                <p className="text-sm text-industrial-secondary">
+                <p className="text-sm text-gray-900">
                   Need access credentials?{' '}
                   <Link
                     href="/signup"
-                    className="font-medium text-industrial-accent hover:text-industrial-primary transition-colors duration-200"
+                    className="font-medium text-industrial-accent text-left hover:text-industrial-primary transition-colors duration-200"
                   >
                     Register Here
                   </Link>

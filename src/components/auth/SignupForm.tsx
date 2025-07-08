@@ -62,16 +62,14 @@ const startupSchema = baseSchema.extend({
   userType: z.literal('startup'),
   companyName: z.string().min(1, { message: 'Company name is required.' }),
   workSector: z.string().min(1, { message: 'Work sector is required.' }),
-  city: z.string().min(1, { message: 'City is required.' }),
-  state: z.string().min(1, { message: 'State is required.' }),
+  location: z.string().min(1, { message: 'Location is required.' }),
 });
 
 const manufacturerSchema = baseSchema.extend({
   userType: z.literal('manufacturer'),
   companyName: z.string().min(1, { message: 'Company name is required.' }),
   industry: z.string().min(1, { message: 'Industry is required.' }),
-  city: z.string().min(1, { message: 'City is required.' }),
-  state: z.string().min(1, { message: 'State is required.' }),
+  location: z.string().min(1, { message: 'Location is required.' }),
 });
 
 const formSchema = z
@@ -107,8 +105,6 @@ export function SignupForm() {
       companyName: '',
       workSector: '',
       industry: '',
-      city: '',
-      state: '',
     } as any, // Cast to any due to discriminated union complexities
   });
 
@@ -134,7 +130,7 @@ export function SignupForm() {
           companyEmail: values.email,
           password: values.password,
           workSector: values.workSector,
-          location: `${values.city}, ${values.state}`,
+          location: values.location,
         };
         response = await authAPI.startupSignup(startupData);
       } else if (values.userType === 'manufacturer') {
@@ -143,7 +139,7 @@ export function SignupForm() {
           companyEmail: values.email,
           password: values.password,
           workSector: values.industry,
-          location: `${values.city}, ${values.state}`,
+          location: values.location,
         };
         response = await authAPI.manufacturerSignup(manufacturerData);
       }
@@ -344,8 +340,6 @@ export function SignupForm() {
                                 companyName: '',
                                 workSector: '',
                                 industry: '',
-                                city: '',
-                                state: '',
                               };
 
                               // Cast to any to avoid TypeScript discriminated union issues during reset
@@ -573,38 +567,15 @@ export function SignupForm() {
                       <motion.div variants={formFieldVariants}>
                         <FormField
                           control={form.control}
-                          name="city"
+                          name="location"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="font-industrial-body font-semibold">
-                                City
+                                Location
                               </FormLabel>
                               <FormControl>
                                 <IndustrialInput
-                                  placeholder="Delhi"
-                                  variant="industrial"
-                                  {...field}
-                                  value={field.value || ''}
-                                  className="h-12"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </motion.div>
-                      <motion.div variants={formFieldVariants}>
-                        <FormField
-                          control={form.control}
-                          name="state"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="font-industrial-body font-semibold">
-                                State
-                              </FormLabel>
-                              <FormControl>
-                                <IndustrialInput
-                                  placeholder="Delhi"
+                                  placeholder="Mumbai, Maharashtra"
                                   variant="industrial"
                                   {...field}
                                   value={field.value || ''}
@@ -722,7 +693,7 @@ export function SignupForm() {
               </Form>
             </IndustrialCardContent>
             <div className="flex flex-col items-center space-y-2 mt-4 p-6 pt-0">
-              <p className="text-sm text-industrial-secondary">
+              <p className="text-sm text-gray-900">
                 Already have an account?{' '}
                 <Link
                   href="/signin"
