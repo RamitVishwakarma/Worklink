@@ -7,6 +7,7 @@ export interface IStartup extends Document {
   password: string;
   workSector: string;
   location: string;
+  foundedYear: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +41,10 @@ const StartupSchema = new Schema<IStartup>(
       type: String,
       required: [true, 'Location is required'],
       trim: true,
+    },
+    foundedYear: {
+      type: Number,
+      required: false,
     },
   },
   {

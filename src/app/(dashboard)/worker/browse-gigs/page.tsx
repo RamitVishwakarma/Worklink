@@ -396,7 +396,7 @@ export default function WorkerBrowseGigsPage() {
               >
                 {filteredGigs.map((gig: Gig) => (
                   <motion.div
-                    key={gig.id}
+                    key={gig._id || gig.id}
                     variants={cardVariants}
                     whileHover="hover"
                   >

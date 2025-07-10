@@ -102,6 +102,43 @@ const cardVariants = {
   },
 };
 
+const getMachineStatusBadge = (
+  available: boolean,
+  status: string = 'active'
+) => {
+  if (available && status === 'active') {
+    return (
+      <Badge
+        variant="default"
+        className="bg-green-100 text-green-700 border-green-200 shadow-sm hover:shadow-md transition-shadow"
+      >
+        <CheckCircle className="h-3 w-3 mr-1" />
+        Available
+      </Badge>
+    );
+  } else if (status === 'maintenance') {
+    return (
+      <Badge
+        variant="secondary"
+        className="bg-yellow-100 text-yellow-700 border-yellow-200 shadow-sm"
+      >
+        <Settings className="h-3 w-3 mr-1" />
+        Maintenance
+      </Badge>
+    );
+  } else {
+    return (
+      <Badge
+        variant="outline"
+        className="bg-gray-100 text-gray-600 border-gray-200 shadow-sm"
+      >
+        <XCircle className="h-3 w-3 mr-1" />
+        Unavailable
+      </Badge>
+    );
+  }
+};
+
 function YourMachinesPage() {
   const { user } = useAuthStore();
   const router = useRouter();
@@ -201,13 +238,9 @@ function YourMachinesPage() {
 
     // Status filter
     if (statusFilter === 'available') {
-      filtered = filtered.filter(
-        (machine) => machine.availability || machine.isAvailable
-      );
+      filtered = filtered.filter((machine) => machine.available);
     } else if (statusFilter === 'unavailable') {
-      filtered = filtered.filter(
-        (machine) => !(machine.availability || machine.isAvailable)
-      );
+      filtered = filtered.filter((machine) => !machine.available);
     }
 
     // Type filter
@@ -310,9 +343,7 @@ function YourMachinesPage() {
                     <p className="text-sm text-gray-600">Available</p>
                     <p className="text-2xl font-bold text-industrial-accent">
                       {Array.isArray(machines)
-                        ? machines.filter(
-                            (m) => m.availability || m.isAvailable
-                          ).length
+                        ? machines.filter((m) => m.available).length
                         : 0}
                     </p>
                   </div>{' '}
@@ -331,9 +362,7 @@ function YourMachinesPage() {
                     <p className="text-sm text-gray-600">Unavailable</p>
                     <p className="text-2xl font-bold text-red-500">
                       {Array.isArray(machines)
-                        ? machines.filter(
-                            (m) => !(m.availability || m.isAvailable)
-                          ).length
+                        ? machines.filter((m) => !m.available).length
                         : 0}
                     </p>
                   </div>
@@ -541,9 +570,7 @@ function YourMachinesPage() {
                                       onClick={() =>
                                         handleToggleAvailability(
                                           machine._id || machine.id,
-                                          machine.availability ||
-                                            machine.isAvailable ||
-                                            false
+                                          machine.available || false
                                         )
                                       }
                                       disabled={
@@ -554,14 +581,12 @@ function YourMachinesPage() {
                                       {togglingMachine ===
                                       (machine._id || machine.id) ? (
                                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                      ) : machine.availability ||
-                                        machine.isAvailable ? (
+                                      ) : machine.available ? (
                                         <ToggleLeft className="h-4 w-4 mr-2" />
                                       ) : (
                                         <ToggleRight className="h-4 w-4 mr-2" />
                                       )}
-                                      {machine.availability ||
-                                      machine.isAvailable
+                                      {machine.available
                                         ? 'Deactivate'
                                         : 'Activate'}
                                     </DropdownMenuItem>
@@ -623,33 +648,10 @@ function YourMachinesPage() {
                               </div>
 
                               <div className="flex items-center justify-between pt-2">
-                                <Badge
-                                  variant={
-                                    machine.availability || machine.isAvailable
-                                      ? 'default'
-                                      : 'secondary'
-                                  }
-                                  className={
-                                    machine.availability || machine.isAvailable
-                                      ? 'bg-industrial-accent text-industrial-background'
-                                      : 'bg-industrial-muted text-industrial-muted-foreground'
-                                  }
-                                >
-                                  {' '}
-                                  <IndustrialIcon
-                                    icon={
-                                      machine.availability ||
-                                      machine.isAvailable
-                                        ? 'gear'
-                                        : 'gear'
-                                    }
-                                    size="sm"
-                                    className="mr-1"
-                                  />
-                                  {machine.availability || machine.isAvailable
-                                    ? 'Available'
-                                    : 'Unavailable'}
-                                </Badge>
+                                {getMachineStatusBadge(
+                                  machine.available,
+                                  machine.status
+                                )}
 
                                 <span className="text-xs text-industrial-muted-foreground">
                                   {new Date(

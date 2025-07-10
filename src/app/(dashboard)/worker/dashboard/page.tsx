@@ -331,7 +331,7 @@ function WorkerDashboardPage() {
                 ) : (
                   recentGigs.map((gig) => (
                     <div
-                      key={gig.id}
+                      key={gig._id || gig.id}
                       className="border border-industrial-navy-200 rounded-lg p-4 hover:border-industrial-navy-400 hover:bg-industrial-navy-50/30 transition-all cursor-pointer"
                     >
                       <div className="flex justify-between items-start mb-2">

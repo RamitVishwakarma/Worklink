@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
+import { useMemo } from 'react';
 import { publicAPI, startupAPI, workerAPI } from '../api';
-import type { Gig, GigApplication } from '../types';
+import type { Gig, GigApplication, GigsResponse } from '../types';
 
 export interface GigsState {
   // Data
@@ -10,6 +11,7 @@ export interface GigsState {
   userGigs: Gig[]; // For startups - gigs they created
   appliedGigs: GigApplication[]; // For workers - gigs they applied to
   currentGig: Gig | null;
+  pagination: GigsResponse['pagination'] | null;
 
   // Loading states
   isLoading: boolean;
@@ -26,8 +28,9 @@ export interface GigsState {
   fetchGigs: (params?: any) => Promise<void>;
   fetchUserGigs: () => Promise<void>; // No userId needed - uses JWT
   fetchAppliedGigs: () => Promise<void>; // No userId needed - uses JWT
-  createGig: (gigData: any) => Promise<void>;
+  createGig: (gigData: any) => Promise<any>;
   deleteGig: (gigId: string) => Promise<void>;
+  toggleGigStatus: (gigId: string, currentStatus: boolean) => Promise<void>;
   applyToGig: (gigId: string, applicationData?: any) => Promise<void>; // No workerId needed
 
   // Utility actions
@@ -50,6 +53,7 @@ const initialState = {
   searchTerm: '',
   locationFilter: '',
   jobTypeFilter: '',
+  pagination: null,
 };
 
 export const useGigsStore = create<GigsState>()(
@@ -60,18 +64,37 @@ export const useGigsStore = create<GigsState>()(
       fetchGigs: async (params) => {
         set({ isLoading: true });
         try {
-          const gigs = await publicAPI.getAllGigs(params);
-          set({ gigs, isLoading: false });
+          const response = await publicAPI.getAllGigs(params);
+          set({
+            gigs: response.Gigs || [],
+            pagination: response.pagination || null,
+            isLoading: false,
+          });
         } catch (error) {
           console.error('Failed to fetch gigs:', error);
-          set({ isLoading: false });
+          set({ isLoading: false, gigs: [], pagination: null });
         }
       },
 
       fetchUserGigs: async () => {
         set({ isLoading: true });
         try {
-          const userGigs = await startupAPI.getGigs();
+          const response = await startupAPI.getGigs();
+
+          // Handle different response formats - the API might return { Gigs: [...] } or just [...]
+          let userGigs: Gig[] = [];
+          if (Array.isArray(response)) {
+            userGigs = response;
+          } else if (
+            response &&
+            typeof response === 'object' &&
+            'Gigs' in response
+          ) {
+            userGigs = (response as any).Gigs || [];
+          } else {
+            userGigs = [];
+          }
+
           set({ userGigs, isLoading: false });
         } catch (error) {
           console.error('Failed to fetch user gigs:', error);
@@ -93,16 +116,20 @@ export const useGigsStore = create<GigsState>()(
       createGig: async (gigData: any) => {
         set({ isCreating: true });
         try {
-          const newGig = await startupAPI.createGig(gigData);
-          const { userGigs } = get();
-          set({
-            userGigs: [newGig, ...userGigs],
+          const response = await startupAPI.createGig(gigData);
+          const newGig = (response as any).Gig;
+          if (!newGig) {
+            throw new Error('API did not return the new gig object.');
+          }
+          set((state) => ({
+            userGigs: [newGig, ...state.userGigs],
             isCreating: false,
-          });
+          }));
+          return response;
         } catch (error) {
           console.error('Failed to create gig:', error);
           set({ isCreating: false });
-          throw error; // Re-throw to allow component to handle
+          throw error; // Re-throw to be caught by the component
         }
       },
 
@@ -119,6 +146,37 @@ export const useGigsStore = create<GigsState>()(
         } catch (error) {
           console.error('Failed to delete gig:', error);
           set({ isDeleting: false });
+          throw error;
+        }
+      },
+
+      toggleGigStatus: async (gigId: string, currentStatus: boolean) => {
+        set({ isLoading: true });
+        try {
+          const updatedGig = await startupAPI.toggleGigStatus(
+            gigId,
+            currentStatus
+          );
+          const { userGigs, gigs } = get();
+
+          // Update userGigs
+          const updatedUserGigs = userGigs.map((gig) =>
+            gig._id === gigId ? { ...gig, status: updatedGig.status } : gig
+          );
+
+          // Update gigs
+          const updatedGigs = gigs.map((gig) =>
+            gig._id === gigId ? { ...gig, status: updatedGig.status } : gig
+          );
+
+          set({
+            userGigs: updatedUserGigs,
+            gigs: updatedGigs,
+            isLoading: false,
+          });
+        } catch (error) {
+          console.error('Failed to toggle gig status:', error);
+          set({ isLoading: false });
           throw error;
         }
       },
@@ -168,7 +226,23 @@ export const useGigsStore = create<GigsState>()(
   )
 );
 
-// Gig stats selector - defined outside of hook to prevent recreation
+// Gig stats selector function that takes userGigs as input
+export const useGigStats = (userGigs?: Gig[]) => {
+  return useMemo(() => {
+    const safeUserGigs = Array.isArray(userGigs) ? userGigs : [];
+
+    return {
+      total: safeUserGigs.length,
+      active: safeUserGigs.filter((gig) => gig.status === 'active').length,
+      applications: safeUserGigs.reduce(
+        (acc, gig) => acc + (gig.applicationCount || 0),
+        0
+      ),
+    };
+  }, [userGigs]);
+};
+
+// Original gig stats selector for the store
 const gigStatsSelector = (state: GigsState) => {
   const { gigs = [], userGigs = [] } = state;
 
@@ -184,7 +258,7 @@ const gigStatsSelector = (state: GigsState) => {
   };
 };
 
-// Derived hook for gig statistics with shallow comparison
-export const useGigStats = () => {
+// Store-based gig stats hook
+export const useGigStatsFromStore = () => {
   return useGigsStore(useShallow(gigStatsSelector));
 };

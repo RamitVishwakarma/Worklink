@@ -47,9 +47,21 @@ export interface Gig {
   postedBy: string; // startup ID
   createdAt: string;
   updatedAt: string;
-  status: 'active' | 'closed';
+  status: 'active' | 'inactive' | 'closed';
   isActive: boolean;
   applicationCount?: number; // Count of applications
+}
+
+export interface GigsResponse {
+  Gigs: Gig[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 export interface GigApplication {
@@ -74,8 +86,9 @@ export interface Machine {
   location: string;
   specifications: Record<string, any>;
   pricePerHour?: number;
-  availability: boolean;
-  isAvailable?: boolean; // For compatibility (same as availability)
+  available: boolean;
+  status: 'active' | 'inactive' | 'maintenance';
+  isAvailable?: boolean; // For compatibility (same as available)
   createdAt: string;
   updatedAt: string;
   hasApplied?: boolean; // Whether the current user has applied

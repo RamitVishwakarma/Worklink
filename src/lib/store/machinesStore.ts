@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
 import { publicAPI, manufacturerAPI, workerAPI, startupAPI } from '../api';
-import { useAuthStore } from './authStore';
 import type { Machine, MachineApplication } from '../types';
 
 export interface MachinesState {
@@ -18,6 +17,10 @@ export interface MachinesState {
   isApplying: boolean;
   isDeleting: boolean;
   isUpdating: boolean;
+
+  // Error states
+  error: string | null;
+  fetchError: string | null;
 
   // Filters and search
   searchTerm: string;
@@ -47,6 +50,8 @@ export interface MachinesState {
   setTypeFilter: (type: string) => void;
   setAvailabilityFilter: (availability: string) => void;
   clearFilters: () => void;
+  clearError: () => void;
+  clearFetchError: () => void;
   reset: () => void;
 }
 
@@ -60,6 +65,8 @@ const initialState = {
   isApplying: false,
   isDeleting: false,
   isUpdating: false,
+  error: null,
+  fetchError: null,
   searchTerm: '',
   locationFilter: '',
   typeFilter: '',
@@ -72,58 +79,91 @@ export const useMachinesStore = create<MachinesState>()(
       ...initialState,
 
       fetchMachines: async (params) => {
-        set({ isLoading: true });
+        set({ isLoading: true, fetchError: null });
         try {
           const response = await publicAPI.getAllMachines(params);
           // Ensure machines is always an array, even if API returns null/undefined
           const machines = Array.isArray(response) ? response : [];
-          set({ machines, isLoading: false });
-        } catch (error) {
+          set({ machines, isLoading: false, fetchError: null });
+        } catch (error: any) {
           console.error('Failed to fetch machines:', error);
-          set({ isLoading: false, machines: [] }); // Reset to empty array on error
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to fetch machines';
+          set({
+            isLoading: false,
+            machines: [], // Reset to empty array on error
+            fetchError: errorMessage,
+            error: errorMessage,
+          });
         }
       },
 
       fetchUserMachines: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true, fetchError: null });
         try {
           const userMachines = await manufacturerAPI.getMachines();
-          set({ userMachines, isLoading: false });
-        } catch (error) {
+          set({ userMachines, isLoading: false, fetchError: null });
+        } catch (error: any) {
           console.error('Failed to fetch user machines:', error);
-          set({ isLoading: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to fetch user machines';
+          set({
+            isLoading: false,
+            fetchError: errorMessage,
+            error: errorMessage,
+          });
         }
       },
 
       fetchApplications: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true, fetchError: null });
         try {
           const applications = await manufacturerAPI.getMachineApplications();
-          set({ applications, isLoading: false });
-        } catch (error) {
+          set({ applications, isLoading: false, fetchError: null });
+        } catch (error: any) {
           console.error('Failed to fetch applications:', error);
-          set({ isLoading: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to fetch applications';
+          set({
+            isLoading: false,
+            fetchError: errorMessage,
+            error: errorMessage,
+          });
         }
       },
 
       addMachine: async (machineData: any) => {
-        set({ isCreating: true });
+        set({ isCreating: true, error: null });
         try {
           const newMachine = await manufacturerAPI.addMachine(machineData);
           const { userMachines } = get();
           set({
             userMachines: [newMachine, ...userMachines],
             isCreating: false,
+            error: null,
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to add machine:', error);
-          set({ isCreating: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to add machine';
+          set({
+            isCreating: false,
+            error: errorMessage,
+          });
           throw error;
         }
       },
 
       deleteMachine: async (machineId: string) => {
-        set({ isDeleting: true });
+        set({ isDeleting: true, error: null });
         try {
           await manufacturerAPI.deleteMachine(machineId);
           const { userMachines, machines } = get();
@@ -133,10 +173,18 @@ export const useMachinesStore = create<MachinesState>()(
             ),
             machines: machines.filter((machine) => machine._id !== machineId),
             isDeleting: false,
+            error: null,
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to delete machine:', error);
-          set({ isDeleting: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to delete machine';
+          set({
+            isDeleting: false,
+            error: errorMessage,
+          });
           throw error;
         }
       },
@@ -145,7 +193,7 @@ export const useMachinesStore = create<MachinesState>()(
         machineId: string,
         availability: boolean
       ) => {
-        set({ isUpdating: true });
+        set({ isUpdating: true, error: null });
         try {
           const updatedMachine =
             await manufacturerAPI.toggleMachineAvailability(
@@ -154,31 +202,57 @@ export const useMachinesStore = create<MachinesState>()(
             );
           const { userMachines, machines } = get();
 
-          const updateMachine = (machine: Machine) =>
+          const updateMachine = (machine: Machine): Machine =>
             machine._id === machineId
-              ? { ...machine, availability, isAvailable: availability }
+              ? {
+                  ...machine,
+                  available: availability,
+                  isAvailable: availability,
+                  status: (availability ? 'active' : 'inactive') as
+                    | 'active'
+                    | 'inactive'
+                    | 'maintenance',
+                }
               : machine;
 
           set({
             userMachines: userMachines.map(updateMachine),
             machines: machines.map(updateMachine),
             isUpdating: false,
+            error: null,
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to toggle machine availability:', error);
-          set({ isUpdating: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to toggle machine availability';
+          set({
+            isUpdating: false,
+            error: errorMessage,
+          });
           throw error;
         }
       },
 
       applyToMachine: async (machineId: string, applicationData = {}) => {
-        set({ isApplying: true });
+        set({ isApplying: true, error: null });
         try {
+          // Get user type from localStorage or pass as parameter
+          const userDataStr = localStorage.getItem('auth-storage');
+          let userType = 'worker'; // default fallback
+
+          if (userDataStr) {
+            try {
+              const userData = JSON.parse(userDataStr);
+              userType = userData?.state?.user?.userType || 'worker';
+            } catch (e) {
+              console.warn('Failed to parse user data from localStorage');
+            }
+          }
+
           // The API will determine if this is a worker or startup based on JWT
           let application: MachineApplication;
-
-          // Check the user type from auth store to determine which API to use
-          const userType = useAuthStore.getState().user?.userType;
 
           if (userType === 'worker') {
             application = await workerAPI.applyToMachine(
@@ -205,10 +279,18 @@ export const useMachinesStore = create<MachinesState>()(
           set({
             machines: updatedMachines,
             isApplying: false,
+            error: null,
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to apply to machine:', error);
-          set({ isApplying: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to apply to machine';
+          set({
+            isApplying: false,
+            error: errorMessage,
+          });
           throw error;
         }
       },
@@ -217,7 +299,7 @@ export const useMachinesStore = create<MachinesState>()(
         applicationId: string,
         status: 'approved' | 'rejected'
       ) => {
-        set({ isUpdating: true });
+        set({ isUpdating: true, error: null });
         try {
           const updatedApplication =
             await manufacturerAPI.updateApplicationStatus(
@@ -230,10 +312,18 @@ export const useMachinesStore = create<MachinesState>()(
               app._id === applicationId ? { ...app, status } : app
             ),
             isUpdating: false,
+            error: null,
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to update application status:', error);
-          set({ isUpdating: false });
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to update application status';
+          set({
+            isUpdating: false,
+            error: errorMessage,
+          });
           throw error;
         }
       },
@@ -252,6 +342,9 @@ export const useMachinesStore = create<MachinesState>()(
           typeFilter: '',
           availabilityFilter: '',
         }),
+
+      clearError: () => set({ error: null }),
+      clearFetchError: () => set({ fetchError: null }),
 
       reset: () => set(initialState),
     }),
@@ -279,8 +372,12 @@ const machineStatsSelector = (state: MachinesState) => {
 
   return {
     total: safeMachines.length,
-    active: safeMachines.filter((machine) => machine.availability).length,
-    inactive: safeMachines.filter((machine) => !machine.availability).length,
+    active: safeMachines.filter(
+      (machine) => machine.available || machine.isAvailable
+    ).length,
+    inactive: safeMachines.filter(
+      (machine) => !(machine.available || machine.isAvailable)
+    ).length,
     totalApplications: safeApplications.length,
     pendingApplications: safeApplications.filter(
       (app) => app.status === 'pending'

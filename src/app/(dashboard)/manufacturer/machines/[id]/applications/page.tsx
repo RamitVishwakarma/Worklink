@@ -363,20 +363,14 @@ function MachineApplicationsPage() {
                       </div>
                     </div>
                     <Badge
-                      variant={
-                        machine.availability || machine.isAvailable
-                          ? 'default'
-                          : 'secondary'
-                      }
+                      variant={machine.available ? 'default' : 'secondary'}
                       className={
-                        machine.availability || machine.isAvailable
+                        machine.available
                           ? 'bg-industrial-accent text-industrial-background'
                           : 'bg-industrial-muted text-industrial-muted-foreground'
                       }
                     >
-                      {machine.availability || machine.isAvailable
-                        ? 'Available'
-                        : 'Unavailable'}
+                      {machine.available ? 'Available' : 'Unavailable'}
                     </Badge>
                   </div>
                 </IndustrialCardContent>

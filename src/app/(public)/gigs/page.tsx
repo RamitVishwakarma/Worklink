@@ -54,7 +54,7 @@ export default function GigsPage() {
   const router = useRouter();
 
   // Store data
-  const { gigs, isLoading: loading, fetchGigs } = useGigsStore();
+  const { gigs, pagination, isLoading: loading, fetchGigs } = useGigsStore();
   const { handleApplyToGig } = useGigOperations();
 
   // Local state for filters and UI
@@ -62,11 +62,12 @@ export default function GigsPage() {
   const [locationFilter, setLocationFilter] = useState('all');
   const [jobTypeFilter, setJobTypeFilter] = useState('all');
   const [applyingTo, setApplyingTo] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch gigs on component mount
+  // Fetch gigs on component mount or when page changes
   useEffect(() => {
-    fetchGigs();
-  }, [fetchGigs]);
+    fetchGigs({ page: currentPage, limit: 9 }); // Fetch 9 gigs per page
+  }, [fetchGigs, currentPage]);
 
   const handleGigApplication = async (gigId: string) => {
     if (!user) {
@@ -104,13 +105,19 @@ export default function GigsPage() {
     }
   };
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    window.scrollTo(0, 0); // Scroll to top on page change
+  };
+
   // Ensure gigs is an array before filtering
   const safeGigs = Array.isArray(gigs) ? gigs : [];
   const filteredGigs = safeGigs.filter((gig) => {
     const matchesSearch =
       gig.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       gig.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      gig.company.toLowerCase().includes(searchTerm.toLowerCase());
+      (gig.company &&
+        gig.company.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesLocation =
       locationFilter === 'all' ||
@@ -353,7 +360,7 @@ export default function GigsPage() {
             transition={{ delay: 0.2 }}
           >
             <p className="text-xs sm:text-sm text-industrial-muted-foreground">
-              Showing {filteredGigs.length} of {safeGigs.length} gigs
+              Showing {filteredGigs.length} of {pagination?.total || 0} gigs
             </p>
           </motion.div>
 
@@ -484,6 +491,38 @@ export default function GigsPage() {
               ))
             )}
           </motion.div>
+
+          {/* Pagination Controls */}
+          {pagination && pagination.totalPages > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="flex justify-center items-center gap-2 sm:gap-4 mt-6 sm:mt-8"
+            >
+              <Button
+                variant="industrial-outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={!pagination.hasPrevPage}
+                className="h-9 sm:h-10"
+              >
+                Previous
+              </Button>
+              <span className="text-xs sm:text-sm text-industrial-muted-foreground">
+                Page {pagination.page} of {pagination.totalPages}
+              </span>
+              <Button
+                variant="industrial-outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={!pagination.hasNextPage}
+                className="h-9 sm:h-10"
+              >
+                Next
+              </Button>
+            </motion.div>
+          )}
         </div>
       </IndustrialContainer>
     </IndustrialLayout>

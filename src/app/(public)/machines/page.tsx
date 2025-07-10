@@ -147,13 +147,9 @@ export default function MachinesPage() {
 
     // Availability filter
     if (availabilityFilter === 'available') {
-      filtered = filtered.filter(
-        (machine) => machine.availability || machine.isAvailable
-      );
+      filtered = filtered.filter((machine) => machine.available);
     } else if (availabilityFilter === 'unavailable') {
-      filtered = filtered.filter(
-        (machine) => !(machine.availability || machine.isAvailable)
-      );
+      filtered = filtered.filter((machine) => !machine.available);
     }
 
     setFilteredMachines(filtered);
@@ -382,9 +378,7 @@ export default function MachinesPage() {
                     </p>
                     <p className="text-lg sm:text-2xl font-bold text-yellow-600 truncate">
                       {Array.isArray(machines)
-                        ? machines.filter(
-                            (m) => m.availability || m.isAvailable
-                          ).length
+                        ? machines.filter((m) => m.available).length
                         : 0}
                     </p>
                   </div>
@@ -406,9 +400,7 @@ export default function MachinesPage() {
                     </p>
                     <p className="text-lg sm:text-2xl font-bold text-red-600 truncate">
                       {Array.isArray(machines)
-                        ? machines.filter(
-                            (m) => !(m.availability || m.isAvailable)
-                          ).length
+                        ? machines.filter((m) => !m.available).length
                         : 0}
                     </p>
                   </div>
@@ -607,19 +599,15 @@ export default function MachinesPage() {
                                 </div>
                                 <Badge
                                   variant={
-                                    machine.availability || machine.isAvailable
-                                      ? 'default'
-                                      : 'secondary'
+                                    machine.available ? 'default' : 'secondary'
                                   }
                                   className={`flex-shrink-0 text-xs ${
-                                    machine.availability || machine.isAvailable
+                                    machine.available
                                       ? 'bg-green-100 text-green-800'
                                       : 'bg-gray-100 text-gray-600'
                                   }`}
                                 >
-                                  {machine.availability || machine.isAvailable
-                                    ? 'Available'
-                                    : 'In Use'}
+                                  {machine.available ? 'Available' : 'In Use'}
                                 </Badge>
                               </div>
                             </IndustrialCardHeader>
@@ -662,7 +650,7 @@ export default function MachinesPage() {
                               </div>
 
                               <div className="pt-3 sm:pt-4 mt-auto">
-                                {machine.availability || machine.isAvailable ? (
+                                {machine.available ? (
                                   <Button
                                     onClick={() =>
                                       openApplicationDialog(machine)

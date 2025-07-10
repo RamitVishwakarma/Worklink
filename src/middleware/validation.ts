@@ -38,6 +38,12 @@ export const startupUpdateSchema = Joi.object({
   companyName: Joi.string().trim().optional(),
   workSector: Joi.string().trim().optional(),
   location: Joi.string().trim().optional(),
+  foundedYear: Joi.alternatives()
+    .try(
+      Joi.number().integer().min(1800).max(new Date().getFullYear()),
+      Joi.allow(null)
+    )
+    .optional(),
 });
 
 // Manufacturer validation schemas
@@ -64,19 +70,25 @@ export const manufacturerUpdateSchema = Joi.object({
 export const gigCreateSchema = Joi.object({
   title: Joi.string().required().trim(),
   description: Joi.string().required().trim(),
-  skillsRequired: Joi.array().items(Joi.string().trim()).min(1).required(),
+  skillsRequired: Joi.array().items(Joi.string().trim()),
   location: Joi.string().required().trim(),
-  salary: Joi.number().positive().required(),
+  jobType: Joi.string().required().trim(),
+  salary: Joi.number().positive().optional(),
   duration: Joi.string().required().trim(),
+  benefits: Joi.array().items(Joi.string().trim()),
+  applicationDeadline: Joi.date().optional(),
 });
 
 export const gigUpdateSchema = Joi.object({
   title: Joi.string().trim().optional(),
   description: Joi.string().trim().optional(),
-  skillsRequired: Joi.array().items(Joi.string().trim()).min(1).optional(),
+  skillsRequired: Joi.array().items(Joi.string().trim()).optional(),
   location: Joi.string().trim().optional(),
+  jobType: Joi.string().trim().optional(),
   salary: Joi.number().positive().optional(),
   duration: Joi.string().trim().optional(),
+  benefits: Joi.array().items(Joi.string().trim()).optional(),
+  applicationDeadline: Joi.date().optional(),
 });
 
 // Machine validation schemas

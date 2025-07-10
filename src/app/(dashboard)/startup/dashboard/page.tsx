@@ -515,7 +515,7 @@ function StartupDashboardPage() {
                   <div className="space-y-3">
                     {recentGigs.map((gig) => (
                       <div
-                        key={gig.id}
+                        key={gig._id || gig.id}
                         className="flex items-center justify-between p-3 rounded-lg border border-industrial-gunmetal-200 bg-white hover:bg-industrial-gunmetal-50 transition-colors"
                       >
                         <div className="min-w-0">

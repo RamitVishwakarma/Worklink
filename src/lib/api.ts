@@ -325,6 +325,7 @@ import type {
   User,
   AuthResponse,
   Gig,
+  GigsResponse,
   GigApplication,
   Machine,
   MachineApplication,
@@ -417,19 +418,81 @@ export const workerAPI = {
 export const startupAPI = {
   getProfile: async (): Promise<StartupProfile> => {
     const response = await apiGet('/startup/profile');
-    // Extract the startup data from the response
-    return response.Startup || response;
+    // Extract the startup data from the response, handling various response formats
+    const profileData = response.Startup || response.startup || response;
+
+    // Handle potential field name discrepancies
+    if ((profileData as any).workSector && !profileData.industry) {
+      profileData.industry = (profileData as any).workSector;
+    }
+
+    // Handle email field name mapping
+    if ((profileData as any).companyEmail && !profileData.email) {
+      profileData.email = (profileData as any).companyEmail;
+    }
+
+    // Ensure foundedYear is handled properly
+    if ((profileData as any).foundedYear !== undefined) {
+      profileData.foundedYear = Number((profileData as any).foundedYear);
+    }
+
+    return profileData;
   },
 
   updateProfile: async (
     profileData: Partial<StartupProfile>
   ): Promise<StartupProfile> => {
-    const response = await apiPut('/startup/profile', profileData, {
+    // Handle field name mappings if necessary
+    const dataToSend = { ...profileData };
+
+    // If the API expects workSector instead of industry, map it
+    if (dataToSend.industry) {
+      (dataToSend as any).workSector = dataToSend.industry;
+    }
+
+    // If the API expects companyEmail instead of email, map it
+    if (dataToSend.email) {
+      (dataToSend as any).companyEmail = dataToSend.email;
+    }
+
+    // Ensure foundedYear is a number if it exists, or remove it if undefined/null
+    if (
+      dataToSend.foundedYear !== undefined &&
+      dataToSend.foundedYear !== null
+    ) {
+      (dataToSend as any).foundedYear = Number(dataToSend.foundedYear);
+    } else if (
+      dataToSend.foundedYear === null ||
+      dataToSend.foundedYear === ''
+    ) {
+      // Remove the foundedYear property entirely if it's null or empty string
+      delete dataToSend.foundedYear;
+    }
+
+    const response = await apiPut('/startup/profile', dataToSend, {
       showSuccessToast: true,
       successMessage: 'Profile updated successfully!',
     });
-    // Extract the startup data from the response
-    return response.Startup || response;
+
+    // Extract the startup data from the response, handling various response formats
+    const updatedProfile = response.Startup || response.startup || response;
+
+    // Ensure consistent field names in the response
+    if (updatedProfile.workSector && !updatedProfile.industry) {
+      updatedProfile.industry = updatedProfile.workSector;
+    }
+
+    // Map companyEmail to email if needed
+    if ((updatedProfile as any).companyEmail && !updatedProfile.email) {
+      updatedProfile.email = (updatedProfile as any).companyEmail;
+    }
+
+    // Ensure foundedYear is properly handled in the response
+    if ((updatedProfile as any).foundedYear !== undefined) {
+      updatedProfile.foundedYear = Number((updatedProfile as any).foundedYear);
+    }
+
+    return updatedProfile;
   },
 
   createGig: (gigData: any): Promise<Gig> =>
@@ -445,6 +508,16 @@ export const startupAPI = {
       showSuccessToast: true,
       successMessage: 'Gig deleted successfully',
     }),
+
+  toggleGigStatus: (gigId: string, currentStatus: boolean): Promise<Gig> =>
+    apiPatch(
+      `/startup/toggle-gig-status/${gigId}`,
+      {},
+      {
+        showSuccessToast: true,
+        successMessage: `Gig ${currentStatus ? 'deactivated' : 'activated'} successfully`,
+      }
+    ),
 
   applyToMachine: (
     machineId: string,
@@ -521,7 +594,7 @@ export const manufacturerAPI = {
 
 // General/Public endpoints
 export const publicAPI = {
-  getAllGigs: (params?: any): Promise<Gig[]> =>
+  getAllGigs: (params?: any): Promise<GigsResponse> =>
     apiGet('/public/gigs', { ...params }),
 
   getAllMachines: (params?: any): Promise<Machine[]> =>

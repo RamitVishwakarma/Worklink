@@ -7,6 +7,7 @@ export interface IMachine extends Document {
   description: string;
   location: string;
   available: boolean;
+  status: 'active' | 'inactive' | 'maintenance';
   manufacturerId: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -39,6 +40,11 @@ const MachineSchema = new Schema<IMachine>(
       type: Boolean,
       default: true,
     },
+    status: {
+      type: String,
+      enum: ['active', 'inactive', 'maintenance'],
+      default: 'active',
+    },
     manufacturerId: {
       type: Schema.Types.ObjectId,
       ref: 'Manufacturer',
@@ -54,6 +60,7 @@ const MachineSchema = new Schema<IMachine>(
 MachineSchema.index({ manufacturerId: 1 });
 MachineSchema.index({ type: 1 });
 MachineSchema.index({ available: 1 });
+MachineSchema.index({ status: 1 });
 MachineSchema.index({ location: 1 });
 MachineSchema.index({ createdAt: -1 });
 

@@ -9,6 +9,8 @@ export interface IGig extends Document {
   salary: number;
   duration: string;
   startupId: mongoose.Types.ObjectId;
+  isActive: boolean;
+  status: 'active' | 'inactive' | 'closed';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -53,6 +55,15 @@ const GigSchema = new Schema<IGig>(
       ref: 'Startup',
       required: [true, 'Startup ID is required'],
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive', 'closed'],
+      default: 'active',
+    },
   },
   {
     timestamps: true,
@@ -65,5 +76,7 @@ GigSchema.index({ skillsRequired: 1 });
 GigSchema.index({ location: 1 });
 GigSchema.index({ salary: 1 });
 GigSchema.index({ createdAt: -1 });
+GigSchema.index({ isActive: 1 });
+GigSchema.index({ status: 1 });
 
 export default mongoose.models.Gig || mongoose.model<IGig>('Gig', GigSchema);

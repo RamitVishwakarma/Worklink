@@ -69,10 +69,23 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .lean();
 
+    // Transform gigs data to ensure consistent field names
+    const transformedGigs = gigs.map((gig) => {
+      const transformed = {
+        ...gig,
+        // If populate worked, get company name from startupId
+        company: gig.startupId?.companyName || '',
+        // Ensure consistency in skill field names
+        skillsRequired: gig.skillsRequired || [],
+      };
+
+      return transformed;
+    });
+
     const pagination = createPaginationInfo(page, limit, total);
 
     return createSuccessResponse({
-      Gigs: gigs,
+      Gigs: transformedGigs,
       pagination,
     });
   } catch (error) {

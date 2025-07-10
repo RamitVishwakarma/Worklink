@@ -67,6 +67,8 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
 
+    // Process incoming request body
+
     // Validate request body
     const validation = validateSchema(startupUpdateSchema, body);
     if (!validation.success) {

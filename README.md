@@ -5,6 +5,7 @@
 1. [Project Overview](#project-overview)
 2. [Architecture & Technology Stack](#architecture--technology-stack)
 3. [Industrial Design System](#industrial-design-system)
+   - [Industrial Dashboard Components](#industrial-dashboard-components)
 4. [User Types & Roles](#user-types--roles)
 5. [API Endpoints Documentation](#api-endpoints-documentation)
 6. [Frontend Application Structure](#frontend-application-structure)
@@ -87,6 +88,46 @@ WorkLink implements a comprehensive Industrial Design System focused on precisio
 - **Gunmetal Grey**: `#2C3E50` - Primary brand color
 - **Navy Blue**: `#1E3A8A` - Secondary brand color
 - **Safety Yellow**: `#FDE047` - Accent and call-to-action color
+
+### Industrial Dashboard Components
+
+WorkLink includes specialized industrial-themed dashboard components designed for professional manufacturing and trade environments:
+
+#### IndustrialDashboardHeader
+
+A sophisticated header component featuring:
+
+- Metal texture overlays and industrial gradient backgrounds
+- Animated gear icons with continuous rotation
+- User type-specific styling (worker, startup, manufacturer)
+- Responsive design with collapsible sidebar toggle
+- Industrial-styled search, notifications, and user profile
+
+```tsx
+<IndustrialDashboardHeader
+  userType="worker"
+  onToggleSidebar={toggleSidebar}
+  isSidebarCollapsed={sidebarCollapsed}
+/>
+```
+
+#### IndustrialDashboardLayout
+
+A full dashboard layout that combines the header with an industrial sidebar:
+
+- Dynamic navigation based on user type
+- Animated collapsible sidebar with precision transitions
+- Active route highlighting with safety yellow accents
+- Staggered animations and gear iconography
+- Responsive content area that adapts to sidebar state
+
+```tsx
+<IndustrialDashboardLayout userType="worker">
+  {/* Your dashboard content */}
+</IndustrialDashboardLayout>
+```
+
+For complete documentation of these components, see [Industrial Dashboard Components Documentation](./docs/INDUSTRIAL_DASHBOARD_COMPONENTS.md).
 
 #### Usage Guidelines
 

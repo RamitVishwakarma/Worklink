@@ -155,10 +155,16 @@ function StartupProfilePage() {
 
   const handleSave = async () => {
     try {
+      // Ensure our formData has both email and companyEmail set if either exists
+      const dataToUpdate = {
+        ...formData,
+      };
+
       const updatedProfile = (await updateCurrentUserProfile(
         UserType.STARTUP,
-        formData
+        dataToUpdate
       )) as StartupProfile;
+
       setEditing(false);
 
       // Update auth store with new profile data
@@ -166,6 +172,9 @@ function StartupProfilePage() {
         ...user,
         companyName: updatedProfile.companyName,
         email: updatedProfile.email,
+        ...(updatedProfile.email
+          ? ({ companyEmail: updatedProfile.email } as any)
+          : {}),
       });
 
       toast({
@@ -209,9 +218,21 @@ function StartupProfilePage() {
 
   useEffect(() => {
     if (profile) {
+      // Initialize form data from profile
       setFormData(profile);
+    } else if (user) {
+      // If profile data is not available but user data exists in auth store,
+      // initialize form data from local storage user data
+      const initialData: Partial<StartupProfile> = {
+        companyName: user.companyName || '',
+        // Check for both email and companyEmail field in user data
+        email: user.email || (user as any).companyEmail || '',
+        // Map workSector to industry if it exists in user data
+        industry: (user as any).workSector || (user as any).industry || '',
+      };
+      setFormData(initialData);
     }
-  }, [profile]);
+  }, [profile, user]);
 
   // Enhanced loading state with industrial design
   if (isLoading) {
@@ -531,7 +552,9 @@ function StartupProfilePage() {
                                     Company Name
                                   </p>
                                   <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
-                                    {profile.companyName || 'Not specified'}
+                                    {profile.companyName ||
+                                      user?.companyName ||
+                                      'Not specified'}
                                   </p>
                                 </div>
                               </motion.div>
@@ -549,7 +572,9 @@ function StartupProfilePage() {
                                     Industry
                                   </p>
                                   <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
-                                    {profile.industry || 'Not specified'}
+                                    {profile.industry ||
+                                      (user as any)?.workSector ||
+                                      'Not specified'}
                                   </p>
                                 </div>
                               </motion.div>
@@ -585,7 +610,10 @@ function StartupProfilePage() {
                                     Contact Email
                                   </p>
                                   <p className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-industrial-accent transition-colors truncate">
-                                    {profile.email || 'Not specified'}
+                                    {profile.email ||
+                                      user?.email ||
+                                      (user as any)?.companyEmail ||
+                                      'Not specified'}
                                   </p>
                                 </div>
                               </motion.div>
@@ -648,7 +676,9 @@ function StartupProfilePage() {
                           {editing ? (
                             <IndustrialInput
                               id="companyName"
-                              value={formData.companyName || ''}
+                              value={
+                                formData.companyName || user?.companyName || ''
+                              }
                               onChange={(e) =>
                                 handleInputChange('companyName', e.target.value)
                               }
@@ -657,7 +687,9 @@ function StartupProfilePage() {
                             />
                           ) : (
                             <p className="p-2 sm:p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800 text-sm sm:text-base">
-                              {profile?.companyName || 'Not specified'}
+                              {profile?.companyName ||
+                                user?.companyName ||
+                                'Not specified'}
                             </p>
                           )}
                         </div>
@@ -682,7 +714,11 @@ function StartupProfilePage() {
                           {editing ? (
                             <IndustrialInput
                               id="industry"
-                              value={formData.industry || ''}
+                              value={
+                                formData.industry ||
+                                (user as any)?.workSector ||
+                                ''
+                              }
                               onChange={(e) =>
                                 handleInputChange('industry', e.target.value)
                               }
@@ -691,7 +727,9 @@ function StartupProfilePage() {
                             />
                           ) : (
                             <p className="p-2 sm:p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800 text-sm sm:text-base">
-                              {profile?.industry || 'Not specified'}
+                              {profile?.industry ||
+                                (user as any)?.workSector ||
+                                'Not specified'}
                             </p>
                           )}
                         </div>
@@ -708,7 +746,12 @@ function StartupProfilePage() {
                             <IndustrialInput
                               id="email"
                               type="email"
-                              value={formData.email || ''}
+                              value={
+                                formData.email ||
+                                user?.email ||
+                                (user as any)?.companyEmail ||
+                                ''
+                              }
                               onChange={(e) =>
                                 handleInputChange('email', e.target.value)
                               }
@@ -716,8 +759,11 @@ function StartupProfilePage() {
                               className="bg-gray-50 focus:bg-white transition-colors border-gray-200 focus:border-industrial-accent"
                             />
                           ) : (
-                            <p className="p-3 border border-gray-200 rounded-md bg-gray-50 text-gray-800">
-                              {profile?.email || 'Not specified'}
+                            <p className="p-3 border truncate border-gray-200 rounded-md bg-gray-50 text-gray-800">
+                              {profile?.email ||
+                                user?.email ||
+                                (user as any)?.companyEmail ||
+                                'Not specified'}
                             </p>
                           )}
                         </div>
