@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongodb';
 import Gig from '@/models/Gig';
+import Startup from '@/models/Startup'; // Import Startup model for population
 import {
   handleApiError,
   createSuccessResponse,
@@ -15,6 +17,11 @@ import {
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
+
+    // Ensure Startup model is registered for population
+    if (!mongoose.models.Startup) {
+      require('@/models/Startup');
+    }
 
     const { searchParams } = new URL(request.url);
     const { page, limit, search, sort } = parseQueryParams(searchParams);

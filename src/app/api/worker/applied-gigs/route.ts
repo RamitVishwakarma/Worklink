@@ -1,6 +1,9 @@
 import { NextRequest } from 'next/server';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongodb';
 import { GigApplication } from '@/models/Application';
+import Gig from '@/models/Gig'; // Import Gig model for population
+import Startup from '@/models/Startup'; // Import Startup model for nested population
 import {
   handleApiError,
   createSuccessResponse,
@@ -16,6 +19,14 @@ import {
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
+
+    // Ensure models are registered for population
+    if (!mongoose.models.Gig) {
+      require('@/models/Gig');
+    }
+    if (!mongoose.models.Startup) {
+      require('@/models/Startup');
+    }
 
     // Authenticate user
     const token = extractTokenFromRequest(request);

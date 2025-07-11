@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongodb';
 import Machine from '@/models/Machine';
+import Manufacturer from '@/models/Manufacturer'; // Import Manufacturer model for population
 import {
   handleApiError,
   createSuccessResponse,
@@ -15,6 +17,11 @@ import {
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
+
+    // Ensure Manufacturer model is registered for population
+    if (!mongoose.models.Manufacturer) {
+      require('@/models/Manufacturer');
+    }
 
     const { searchParams } = new URL(request.url);
     const { page, limit, search, sort } = parseQueryParams(searchParams);
