@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongodb';
 import Gig from '@/models/Gig';
-import Startup from '@/models/Startup'; // Import Startup model for population
 import {
   handleApiError,
   createSuccessResponse,

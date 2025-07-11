@@ -560,22 +560,22 @@ export default function GigsPage() {
                             Required Skills:
                           </p>
                           <div className="flex flex-wrap gap-1">
-                            {gig.skillsRequired.slice(0, 4).map((skill) => (
+                            {gig.skillsRequired.slice(0, 3).map((skill) => (
                               <Badge
                                 key={skill}
                                 variant="industrial-outline"
-                                className="text-xs truncate max-w-24"
+                                className="text-xs truncate flex items-center justify-center px-2"
                                 title={skill}
                               >
                                 {skill}
                               </Badge>
                             ))}
-                            {gig.skillsRequired.length > 4 && (
+                            {gig.skillsRequired.length > 3 && (
                               <Badge
                                 variant="industrial-outline"
                                 className="text-xs"
                               >
-                                +{gig.skillsRequired.length - 4} more
+                                +{gig.skillsRequired.length - 3} more
                               </Badge>
                             )}
                           </div>
