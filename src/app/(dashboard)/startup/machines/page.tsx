@@ -33,7 +33,7 @@ import { Machine, UserType } from '@/lib/types';
 import {
   Settings,
   MapPin,
-  DollarSign,
+  IndianRupee,
   Building2,
   Search,
   Filter,
@@ -357,7 +357,7 @@ const StartupMachinesPage = () => {
                         </div>
                       </IndustrialCardHeader>
                       <IndustrialCardContent className="space-y-4">
-                        <p className="text-sm text-gray-600 line-clamp-3">
+                        <p className="text-sm text-industrial-gunmetal-600 line-clamp-3">
                           {machine.description}
                         </p>
 
@@ -374,8 +374,8 @@ const StartupMachinesPage = () => {
 
                           {machine.pricePerHour && (
                             <div className="flex items-center gap-2 text-gray-600">
-                              <DollarSign className="h-4 w-4" />
-                              <span>${machine.pricePerHour}/hour</span>
+                              <IndianRupee className="h-4 w-4" />
+                              <span>₹{machine.pricePerHour}/hour</span>
                             </div>
                           )}
 

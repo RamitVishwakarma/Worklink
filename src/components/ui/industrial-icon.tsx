@@ -24,7 +24,7 @@ interface IndustrialIconProps extends React.HTMLAttributes<HTMLDivElement> {
     | 'circuit';
   size?: 'sm' | 'md' | 'lg' | 'xl' | number;
   animated?: boolean;
-  color?: 'primary' | 'secondary' | 'accent' | 'muted';
+  color?: 'primary' | 'secondary' | 'accent' | 'muted' | 'white';
 }
 
 const iconSizes = {
@@ -39,6 +39,7 @@ const iconColors = {
   secondary: 'text-industrial-navy-800',
   accent: 'text-industrial-safety-500',
   muted: 'text-industrial-gunmetal-600',
+  white: 'text-white',
 };
 
 const iconComponents = {

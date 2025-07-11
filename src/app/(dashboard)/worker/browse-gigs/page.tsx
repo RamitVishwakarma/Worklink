@@ -37,7 +37,7 @@ import {
   Briefcase,
   MapPin,
   Calendar,
-  DollarSign,
+  IndianRupee,
   Search,
   Building,
   Loader2,
@@ -443,7 +443,7 @@ export default function WorkerBrowseGigsPage() {
 
                           {gig.salary && (
                             <div className="flex items-center gap-2 text-sm text-industrial-gunmetal-600">
-                              <DollarSign className="h-4 w-4" />
+                              <IndianRupee className="h-4 w-4" />
                               <span>₹{gig.salary.toLocaleString()}/month</span>
                             </div>
                           )}

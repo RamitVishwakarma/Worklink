@@ -46,7 +46,7 @@ import {
   Loader2,
   TrendingUp,
   Target,
-  DollarSign,
+  IndianRupee,
 } from 'lucide-react';
 
 // Enhanced animation variants with industrial precision
@@ -1023,7 +1023,7 @@ function StartupProfilePage() {
                           className="w-full justify-start border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
                           size="sm"
                         >
-                          <DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                          <IndianRupee className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                           <span className="truncate">Manage Applications</span>
                         </Button>
                       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -92,17 +92,36 @@ const itemVariants = {
 function MachineApplicationsPage() {
   const {
     machines,
-    applications,
-    isLoading,
-    isUpdating,
+    isLoading: machinesLoading,
+    fetchUserMachines,
+  } = useMachinesStore();
+  const {
+    machineApplications: rawApplications,
+    machineApplicationsLoading,
     fetchApplications,
     updateApplicationStatus,
-  } = useMachinesStore();
+  } = useApplicationsStore();
   const { user } = useAuthStore();
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const machineId = params.id as string;
+
+  // Ensure applications is always an array
+  const applications = useMemo(() => {
+    console.log(
+      'rawApplications:',
+      rawApplications,
+      'type:',
+      typeof rawApplications,
+      'isArray:',
+      Array.isArray(rawApplications)
+    );
+    const result = Array.isArray(rawApplications) ? rawApplications : [];
+    console.log('processed applications:', result);
+    return result;
+  }, [rawApplications]);
+  const isLoading = machinesLoading || machineApplicationsLoading;
 
   // Get current machine from store
   const machine = machines.find((m) => m._id === machineId) || null;
@@ -159,15 +178,23 @@ function MachineApplicationsPage() {
 
     setProcessingApplication(application._id);
     try {
-      await manufacturerAPI.updateApplicationStatus(
+      const status = action === 'approve' ? 'approved' : 'rejected';
+      const success = await updateApplicationStatus(
         application._id,
-        action === 'approve' ? 'approved' : 'rejected'
+        status,
+        'machine'
       );
 
-      toast({
-        title: 'Success',
-        description: `Application ${action === 'approve' ? 'approved' : 'rejected'} successfully!`,
-      });
+      if (success) {
+        toast({
+          title: 'Success',
+          description: `Application ${action === 'approve' ? 'approved' : 'rejected'} successfully!`,
+        });
+        // Refresh applications to get updated data
+        await fetchApplications();
+      } else {
+        throw new Error(`Failed to ${action} application`);
+      }
     } catch (error: any) {
       toast({
         title: 'Error',

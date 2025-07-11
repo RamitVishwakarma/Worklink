@@ -12,7 +12,7 @@ import {
   MapPin,
   Shield,
   BadgeCheck,
-  DollarSign,
+  IndianRupee,
 } from 'lucide-react';
 
 const features = [
@@ -41,7 +41,7 @@ const features = [
     link: '/manufacturer/dashboard',
   },
   {
-    icon: DollarSign,
+    icon: IndianRupee,
     title: 'Maximize Revenue',
     description:
       "Transform downtime into profit. Whether you're renting equipment or finding work, WorkLink ensures fair compensation.",

@@ -97,6 +97,8 @@ export const machineCreateSchema = Joi.object({
   type: Joi.string().required().trim(),
   description: Joi.string().required().trim(),
   location: Joi.string().required().trim(),
+  specifications: Joi.string().optional().allow(''),
+  pricePerHour: Joi.number().min(0).optional(),
   available: Joi.boolean().optional(),
 });
 
@@ -105,6 +107,8 @@ export const machineUpdateSchema = Joi.object({
   type: Joi.string().trim().optional(),
   description: Joi.string().trim().optional(),
   location: Joi.string().trim().optional(),
+  specifications: Joi.string().optional().allow(''),
+  pricePerHour: Joi.number().min(0).optional(),
   available: Joi.boolean().optional(),
 });
 

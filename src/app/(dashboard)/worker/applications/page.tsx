@@ -37,7 +37,7 @@ import {
   XCircle,
   Calendar,
   MapPin,
-  DollarSign,
+  IndianRupee,
   Building2,
   FileText,
   AlertTriangle,
@@ -536,10 +536,10 @@ function ApplicationsPage() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center space-x-2">
-                                  <DollarSign className="h-4 w-4 text-industrial-muted-foreground" />
+                                  <IndianRupee className="h-4 w-4 text-industrial-muted-foreground" />
                                   <span className="text-industrial-foreground">
                                     {application.gig?.salary
-                                      ? `$${application.gig.salary.toLocaleString()}`
+                                      ? `₹${application.gig.salary.toLocaleString()}`
                                       : 'Not specified'}
                                   </span>
                                 </div>
@@ -593,7 +593,7 @@ function ApplicationsPage() {
                               {application.gig?.location || 'Unknown'}
                             </div>
                             <div className="flex items-center gap-1 text-industrial-muted-foreground">
-                              <DollarSign className="h-3 w-3" />$
+                              <IndianRupee className="h-3 w-3" />₹
                               {application.gig?.salary?.toLocaleString() ||
                                 'N/A'}
                             </div>

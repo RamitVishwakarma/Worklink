@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
 import {
   IndustrialCard,
   IndustrialCardContent,
@@ -31,12 +30,11 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useToast } from '@/hooks/use-toast';
 import { useGigsStore } from '@/lib/store';
 import { useGigOperations } from '@/hooks/useApiIntegration';
-import { Gig } from '@/lib/types';
 import {
   Briefcase,
   MapPin,
   Calendar,
-  DollarSign,
+  IndianRupee,
   Search,
   Filter,
   Building,
@@ -114,18 +112,35 @@ export default function GigsPage() {
   const safeGigs = Array.isArray(gigs) ? gigs : [];
   const filteredGigs = safeGigs.filter((gig) => {
     const matchesSearch =
-      gig.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      gig.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (gig.company &&
-        gig.company.toLowerCase().includes(searchTerm.toLowerCase()));
+      gig.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      gig.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (gig.skillsRequired &&
+        gig.skillsRequired.some((skill: string) =>
+          skill.toLowerCase().includes(searchTerm.toLowerCase())
+        ));
 
     const matchesLocation =
       locationFilter === 'all' ||
-      gig.location.toLowerCase().includes(locationFilter.toLowerCase());
-    const matchesJobType =
-      jobTypeFilter === 'all' || gig.jobType === jobTypeFilter;
+      (gig.location &&
+        gig.location.toLowerCase().includes(locationFilter.toLowerCase()));
 
-    return matchesSearch && matchesLocation && matchesJobType;
+    // Filter by duration and derived job type
+    const matchesDuration =
+      jobTypeFilter === 'all' ||
+      (gig.duration &&
+        (gig.duration.toLowerCase().includes(jobTypeFilter.toLowerCase()) ||
+          (jobTypeFilter === 'full-time' &&
+            gig.duration.toLowerCase().includes('full')) ||
+          (jobTypeFilter === 'part-time' &&
+            gig.duration.toLowerCase().includes('part')) ||
+          (jobTypeFilter === 'contract' &&
+            gig.duration.toLowerCase().includes('contract')) ||
+          (jobTypeFilter === 'temporary' &&
+            gig.duration.toLowerCase().includes('temporary')) ||
+          (jobTypeFilter === 'permanent' &&
+            gig.duration.toLowerCase().includes('permanent'))));
+
+    return matchesSearch && matchesLocation && matchesDuration;
   });
 
   const containerVariants = {
@@ -349,6 +364,18 @@ export default function GigsPage() {
                 >
                   Contract
                 </SelectItem>
+                <SelectItem
+                  value="temporary"
+                  className="text-industrial-gunmetal-800 hover:bg-industrial-gunmetal-50 focus:bg-industrial-gunmetal-50"
+                >
+                  Temporary
+                </SelectItem>
+                <SelectItem
+                  value="permanent"
+                  className="text-industrial-gunmetal-800 hover:bg-industrial-gunmetal-50 focus:bg-industrial-gunmetal-50"
+                >
+                  Permanent
+                </SelectItem>
               </SelectContent>
             </Select>
           </motion.div>
@@ -395,16 +422,29 @@ export default function GigsPage() {
                         <IndustrialCardTitle className="text-base sm:text-lg line-clamp-2 leading-tight break-words">
                           {gig.title}
                         </IndustrialCardTitle>
-                        <Badge
-                          variant="industrial-secondary"
-                          className="text-xs shrink-0"
-                        >
-                          {gig.jobType}
-                        </Badge>
+                        <div className="flex flex-col gap-1 shrink-0">
+                          {/* Combined status badge */}
+                          <Badge
+                            variant={
+                              gig.isActive && gig.status === 'active'
+                                ? 'industrial-accent'
+                                : 'industrial-outline'
+                            }
+                            className="text-xs"
+                          >
+                            {gig.isActive && gig.status === 'active'
+                              ? 'Active'
+                              : gig.status}
+                          </Badge>
+                        </div>
                       </div>
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
                         <Building className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                        <span className="truncate">{gig.company}</span>
+                        <span className="truncate">
+                          {(gig as any).startupId?.companyName ||
+                            (gig as any).company ||
+                            'Company not specified'}
+                        </span>
                       </div>
                     </IndustrialCardHeader>
 
@@ -416,34 +456,111 @@ export default function GigsPage() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
                           <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                          <span className="truncate">{gig.location}</span>
+                          <span className="truncate">
+                            {gig.location || 'Location not specified'}
+                          </span>
                         </div>
 
-                        {gig.salary && (
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                          <IndianRupee className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">
+                            ₹{gig.salary?.toLocaleString() || '0'}/year
+                          </span>
+                        </div>
+
+                        {gig.duration && (
                           <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
-                            <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                             <span className="truncate">
-                              ${gig.salary.toLocaleString()}/year
+                              Duration: {gig.duration}
                             </span>
                           </div>
                         )}
+
+                        {/* Job Type derived from duration */}
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                          <Briefcase className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">
+                            Type:{' '}
+                            {gig.duration?.toLowerCase().includes('full')
+                              ? 'Full-time'
+                              : gig.duration?.toLowerCase().includes('part')
+                                ? 'Part-time'
+                                : gig.duration
+                                      ?.toLowerCase()
+                                      .includes('contract')
+                                  ? 'Contract'
+                                  : gig.duration
+                                        ?.toLowerCase()
+                                        .includes('temporary')
+                                    ? 'Temporary'
+                                    : gig.duration
+                                          ?.toLowerCase()
+                                          .includes('permanent')
+                                      ? 'Permanent'
+                                      : 'Not specified'}
+                          </span>
+                        </div>
 
                         <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
                           <Clock className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                           <span className="truncate">
                             Posted{' '}
-                            {new Date(gig.createdAt).toLocaleDateString()}
+                            {gig.createdAt
+                              ? new Date(gig.createdAt).toLocaleDateString()
+                              : 'Date not available'}
                           </span>
                         </div>
+
+                        {gig.updatedAt && gig.updatedAt !== gig.createdAt && (
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                            <Cog className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="truncate">
+                              Updated{' '}
+                              {new Date(gig.updatedAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+
+                        {(gig as any).startupId?.workSector && (
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                            <Factory className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="truncate">
+                              Sector: {(gig as any).startupId.workSector}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Startup ID for reference */}
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                          <Building className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">
+                            ID:{' '}
+                            {typeof gig.startupId === 'string'
+                              ? gig.startupId.slice(-6)
+                              : (gig as any).startupId?._id?.slice(-6) ||
+                                gig._id.slice(-6)}
+                          </span>
+                        </div>
+
+                        {/* Application count if available */}
+                        {(gig as any).applicationCount !== undefined && (
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-industrial-muted-foreground">
+                            <HardHat className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                            <span className="truncate">
+                              {(gig as any).applicationCount} applications
+                            </span>
+                          </div>
+                        )}
                       </div>
 
-                      {gig.requiredSkills && gig.requiredSkills.length > 0 && (
+                      {gig.skillsRequired && gig.skillsRequired.length > 0 ? (
                         <div className="space-y-2">
                           <p className="text-xs sm:text-sm font-medium text-industrial-foreground">
                             Required Skills:
                           </p>
                           <div className="flex flex-wrap gap-1">
-                            {gig.requiredSkills.slice(0, 3).map((skill) => (
+                            {gig.skillsRequired.slice(0, 4).map((skill) => (
                               <Badge
                                 key={skill}
                                 variant="industrial-outline"
@@ -453,15 +570,27 @@ export default function GigsPage() {
                                 {skill}
                               </Badge>
                             ))}
-                            {gig.requiredSkills.length > 3 && (
+                            {gig.skillsRequired.length > 4 && (
                               <Badge
                                 variant="industrial-outline"
                                 className="text-xs"
                               >
-                                +{gig.requiredSkills.length - 3} more
+                                +{gig.skillsRequired.length - 4} more
                               </Badge>
                             )}
                           </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-xs sm:text-sm font-medium text-industrial-foreground">
+                            Required Skills:
+                          </p>
+                          <Badge
+                            variant="industrial-outline"
+                            className="text-xs"
+                          >
+                            No specific skills required
+                          </Badge>
                         </div>
                       )}
 
@@ -470,13 +599,21 @@ export default function GigsPage() {
                         className="w-full h-9 sm:h-10 text-sm"
                         onClick={() => handleGigApplication(gig._id)}
                         disabled={
-                          applyingTo === gig._id || user?.userType !== 'worker'
+                          applyingTo === gig._id ||
+                          user?.userType !== 'worker' ||
+                          !gig.isActive ||
+                          gig.status !== 'active'
                         }
                       >
                         {applyingTo === gig._id ? (
                           <>
                             <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                             <span className="truncate">Applying...</span>
+                          </>
+                        ) : !gig.isActive || gig.status !== 'active' ? (
+                          <>
+                            <Clock className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="truncate">Not Available</span>
                           </>
                         ) : (
                           <>

@@ -38,7 +38,7 @@ import {
   Clock,
   Users,
   MapPin,
-  DollarSign,
+  IndianRupee,
   Calendar,
   Briefcase,
   Building2,
@@ -473,7 +473,7 @@ function CreateGigPage() {
                             htmlFor="salary"
                             className="text-gray-700 font-semibold flex items-center gap-2"
                           >
-                            <DollarSign className="h-4 w-4 text-industrial-accent" />
+                            <IndianRupee className="h-4 w-4 text-industrial-accent" />
                             Salary (Annual in ₹)
                           </Label>
                           <IndustrialInput
@@ -788,8 +788,8 @@ function CreateGigPage() {
 
                         {formData.salary && (
                           <div className="flex items-center gap-2 text-sm font-bold text-emerald-600">
-                            <DollarSign className="h-4 w-4 text-emerald-500" />₹
-                            {Number(formData.salary).toLocaleString()}/year
+                            <IndianRupee className="h-4 w-4 text-emerald-500" />
+                            ₹{Number(formData.salary).toLocaleString()}/year
                           </div>
                         )}
                       </div>

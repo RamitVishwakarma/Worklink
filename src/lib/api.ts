@@ -503,6 +503,12 @@ export const startupAPI = {
 
   getGigs: (): Promise<Gig[]> => apiGet('/startup/your-gigs'),
 
+  updateGig: (gigId: string, gigData: any): Promise<Gig> =>
+    apiPut(`/startup/update-gig/${gigId}`, gigData, {
+      showSuccessToast: true,
+      successMessage: 'Gig updated successfully!',
+    }),
+
   deleteGig: (gigId: string): Promise<void> =>
     apiDelete(`/startup/delete-gig/${gigId}`, {
       showSuccessToast: true,
@@ -576,7 +582,9 @@ export const manufacturerAPI = {
     ),
 
   getMachineApplications: (): Promise<MachineApplication[]> =>
-    apiGet('/manufacturer/applications'),
+    apiGet('/manufacturer/applications').then((response: any) =>
+      Array.isArray(response) ? response : response.Applications || []
+    ),
 
   updateApplicationStatus: (
     applicationId: string,

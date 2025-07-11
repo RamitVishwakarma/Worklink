@@ -29,6 +29,7 @@ export interface GigsState {
   fetchUserGigs: () => Promise<void>; // No userId needed - uses JWT
   fetchAppliedGigs: () => Promise<void>; // No userId needed - uses JWT
   createGig: (gigData: any) => Promise<any>;
+  updateGig: (gigId: string, gigData: any) => Promise<void>;
   deleteGig: (gigId: string) => Promise<void>;
   toggleGigStatus: (gigId: string, currentStatus: boolean) => Promise<void>;
   applyToGig: (gigId: string, applicationData?: any) => Promise<void>; // No workerId needed
@@ -133,6 +134,35 @@ export const useGigsStore = create<GigsState>()(
         }
       },
 
+      updateGig: async (gigId: string, gigData: any) => {
+        set({ isLoading: true });
+        try {
+          const response = await startupAPI.updateGig(gigId, gigData);
+          const updatedGig = (response as any).Gig || response;
+          const { userGigs, gigs } = get();
+
+          // Update userGigs
+          const updatedUserGigs = userGigs.map((gig) =>
+            gig._id === gigId ? updatedGig : gig
+          );
+
+          // Update gigs
+          const updatedGigs = gigs.map((gig) =>
+            gig._id === gigId ? updatedGig : gig
+          );
+
+          set({
+            userGigs: updatedUserGigs,
+            gigs: updatedGigs,
+            isLoading: false,
+          });
+        } catch (error) {
+          console.error('Failed to update gig:', error);
+          set({ isLoading: false });
+          throw error;
+        }
+      },
+
       deleteGig: async (gigId: string) => {
         set({ isDeleting: true });
         try {
@@ -153,27 +183,19 @@ export const useGigsStore = create<GigsState>()(
       toggleGigStatus: async (gigId: string, currentStatus: boolean) => {
         set({ isLoading: true });
         try {
-          const updatedGig = await startupAPI.toggleGigStatus(
+          const response = await startupAPI.toggleGigStatus(
             gigId,
             currentStatus
           );
-          const { userGigs, gigs } = get();
 
-          // Update userGigs
-          const updatedUserGigs = userGigs.map((gig) =>
-            gig._id === gigId ? { ...gig, status: updatedGig.status } : gig
-          );
+          // Extract the updated gig from the response
+          const updatedGig = (response as any).gig || response;
 
-          // Update gigs
-          const updatedGigs = gigs.map((gig) =>
-            gig._id === gigId ? { ...gig, status: updatedGig.status } : gig
-          );
+          // Force refresh the user gigs to ensure we have the latest data
+          const { fetchUserGigs } = get();
+          await fetchUserGigs();
 
-          set({
-            userGigs: updatedUserGigs,
-            gigs: updatedGigs,
-            isLoading: false,
-          });
+          set({ isLoading: false });
         } catch (error) {
           console.error('Failed to toggle gig status:', error);
           set({ isLoading: false });

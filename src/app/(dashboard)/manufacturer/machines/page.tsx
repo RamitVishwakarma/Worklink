@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { IndustrialInput } from '@/components/ui/input';
+import { IndustrialCheckbox } from '@/components/ui/industrial-checkbox';
 import {
   Select,
   SelectContent,
@@ -28,6 +29,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,6 +59,9 @@ import { useMachinesStore } from '@/lib/store';
 import { Machine, UserType } from '@/lib/types';
 import withAuth from '@/components/auth/withAuth';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Search,
   Filter,
@@ -57,7 +71,7 @@ import {
   XCircle,
   Wrench,
   Building2,
-  DollarSign,
+  IndianRupee,
   Clock,
   Loader2,
   Plus,
@@ -102,6 +116,17 @@ const cardVariants = {
   },
 };
 
+// Form validation schema
+const machineFormSchema = z.object({
+  name: z.string().min(1, 'Machine name is required'),
+  type: z.string().min(1, 'Machine type is required'),
+  description: z.string().min(1, 'Description is required'),
+  location: z.string().min(1, 'Location is required'),
+  pricePerHour: z.number().min(0, 'Price must be positive').optional(),
+  specifications: z.string().optional(),
+  available: z.boolean(),
+});
+
 const getMachineStatusBadge = (
   available: boolean,
   status: string = 'active'
@@ -124,6 +149,16 @@ const getMachineStatusBadge = (
       >
         <Settings className="h-3 w-3 mr-1" />
         Maintenance
+      </Badge>
+    );
+  } else if (status === 'inactive' || !available) {
+    return (
+      <Badge
+        variant="outline"
+        className="bg-red-50 text-red-600 border-red-200 shadow-sm"
+      >
+        <XCircle className="h-3 w-3 mr-1" />
+        Inactive
       </Badge>
     );
   } else {
@@ -164,9 +199,95 @@ function YourMachinesPage() {
   const [togglingMachine, setTogglingMachine] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [machineToDelete, setMachineToDelete] = useState<Machine | null>(null);
+
+  // Modal states
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // Form setup
+  const form = useForm<z.infer<typeof machineFormSchema>>({
+    resolver: zodResolver(machineFormSchema),
+    defaultValues: {
+      name: '',
+      type: '',
+      description: '',
+      location: '',
+      pricePerHour: 0,
+      specifications: '',
+      available: true,
+    },
+  });
   const handleDeleteMachine = async (machine: Machine) => {
     setMachineToDelete(machine);
     setDeleteDialogOpen(true);
+  };
+
+  const handleViewMachine = (machine: Machine) => {
+    setSelectedMachine(machine);
+    setViewModalOpen(true);
+  };
+
+  const handleEditMachine = (machine: Machine) => {
+    setSelectedMachine(machine);
+    form.reset({
+      name: machine.name,
+      type: machine.type,
+      description: machine.description,
+      location: machine.location,
+      pricePerHour: machine.pricePerHour || 0,
+      specifications:
+        typeof machine.specifications === 'string'
+          ? machine.specifications
+          : '',
+      available: machine.available,
+    });
+    setEditModalOpen(true);
+  };
+
+  const onSubmitEdit = async (values: z.infer<typeof machineFormSchema>) => {
+    if (!selectedMachine) return;
+
+    setIsUpdating(true);
+    try {
+      // For now, we'll use the manufacturer API directly since updateMachine might not exist
+      const response = await fetch(
+        `/api/manufacturer/update-machine/${selectedMachine._id || selectedMachine.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify(values),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update machine');
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Machine updated successfully!',
+      });
+
+      setEditModalOpen(false);
+      setSelectedMachine(null);
+      form.reset();
+
+      // Refresh machines list
+      await fetchUserMachines();
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update machine',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const confirmDeleteMachine = async () => {
@@ -359,10 +480,12 @@ function YourMachinesPage() {
               <IndustrialCardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Unavailable</p>
+                    <p className="text-sm text-gray-600">Inactive</p>
                     <p className="text-2xl font-bold text-red-500">
                       {Array.isArray(machines)
-                        ? machines.filter((m) => !m.available).length
+                        ? machines.filter(
+                            (m) => !m.available || m.status === 'inactive'
+                          ).length
                         : 0}
                     </p>
                   </div>
@@ -423,7 +546,7 @@ function YourMachinesPage() {
                       value="unavailable"
                       className="text-gray-900 hover:bg-gray-50"
                     >
-                      Unavailable
+                      Inactive
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -455,7 +578,7 @@ function YourMachinesPage() {
             </div>
 
             <Button
-              onClick={() => router.push('/dashboard/manufacturer/add-machine')}
+              onClick={() => router.push('/manufacturer/add-machine')}
               className="bg-industrial-accent hover:bg-industrial-accent/90 text-industrial-background"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -488,7 +611,7 @@ function YourMachinesPage() {
                       {machines.length === 0 && (
                         <Button
                           onClick={() =>
-                            router.push('/dashboard/manufacturer/add-machine')
+                            router.push('/manufacturer/add-machine')
                           }
                           className="bg-industrial-accent hover:bg-industrial-accent/90 text-industrial-background"
                         >
@@ -546,19 +669,21 @@ function YourMachinesPage() {
                                     className="w-48"
                                   >
                                     <DropdownMenuItem
-                                      onClick={() =>
-                                        router.push(
-                                          `/dashboard/manufacturer/machines/${machine._id || machine.id}`
-                                        )
-                                      }
+                                      onClick={() => handleViewMachine(machine)}
                                     >
                                       <Eye className="h-4 w-4 mr-2" />
                                       View Details
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
+                                      onClick={() => handleEditMachine(machine)}
+                                    >
+                                      <Edit className="h-4 w-4 mr-2" />
+                                      Edit Machine
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
                                       onClick={() =>
                                         router.push(
-                                          `/dashboard/manufacturer/machines/${machine._id || machine.id}/applications`
+                                          `/manufacturer/machines/${machine._id || machine.id}/applications`
                                         )
                                       }
                                     >
@@ -615,7 +740,7 @@ function YourMachinesPage() {
                             </IndustrialCardHeader>
 
                             <IndustrialCardContent className="space-y-4">
-                              <p className="text-sm text-industrial-muted-foreground line-clamp-2">
+                              <p className="text-sm text-industrial-gunmetal-600 line-clamp-2">
                                 {machine.description}
                               </p>
 
@@ -641,17 +766,68 @@ function YourMachinesPage() {
                                       className="text-industrial-accent"
                                     />
                                     <span className="text-industrial-accent font-medium">
-                                      ${machine.pricePerHour}/hr
+                                      ₹{machine.pricePerHour}/hr
                                     </span>
                                   </div>
                                 )}
                               </div>
 
                               <div className="flex items-center justify-between pt-2">
-                                {getMachineStatusBadge(
-                                  machine.available,
-                                  machine.status
-                                )}
+                                <div className="flex items-center gap-3">
+                                  {getMachineStatusBadge(
+                                    machine.available,
+                                    machine.status
+                                  )}
+
+                                  {/* Toggle Switch */}
+                                  <div className="flex items-center gap-2 bg-industrial-muted/20 rounded-lg px-3 py-1">
+                                    <button
+                                      onClick={() =>
+                                        handleToggleAvailability(
+                                          machine._id || machine.id,
+                                          machine.available || false
+                                        )
+                                      }
+                                      disabled={
+                                        togglingMachine ===
+                                        (machine._id || machine.id)
+                                      }
+                                      className={`
+                                        relative inline-flex h-5 w-9 items-center justify-center rounded-full border-2 transition-all duration-200 
+                                        ${
+                                          machine.available
+                                            ? 'bg-industrial-accent border-industrial-accent'
+                                            : 'bg-gray-200 border-gray-300'
+                                        }
+                                        ${
+                                          togglingMachine ===
+                                          (machine._id || machine.id)
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'hover:shadow-md cursor-pointer'
+                                        }
+                                      `}
+                                    >
+                                      <span
+                                        className={`
+                                          inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 shadow-sm
+                                          ${machine.available ? 'translate-x-2' : '-translate-x-2'}
+                                        `}
+                                      />
+                                      {togglingMachine ===
+                                        (machine._id || machine.id) && (
+                                        <Loader2 className="absolute h-3 w-3 animate-spin text-white" />
+                                      )}
+                                    </button>
+                                    <span className="text-xs text-industrial-muted-foreground font-medium">
+                                      {togglingMachine ===
+                                      (machine._id || machine.id)
+                                        ? 'Updating...'
+                                        : machine.available
+                                          ? 'Active'
+                                          : 'Inactive'}
+                                    </span>
+                                  </div>
+                                </div>
 
                                 <span className="text-xs text-industrial-muted-foreground">
                                   {new Date(
@@ -713,6 +889,390 @@ function YourMachinesPage() {
               )}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Machine Modal */}
+      <Dialog open={viewModalOpen} onOpenChange={setViewModalOpen}>
+        <DialogContent className="bg-white border-gray-200 max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-industrial-foreground">
+              <IndustrialIcon icon="gear" className="text-industrial-primary" />
+              Machine Details
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedMachine && (
+            <div className="space-y-6">
+              {/* Header Section */}
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-industrial-foreground">
+                    {selectedMachine.name}
+                  </h3>
+                  <p className="text-industrial-muted-foreground flex items-center gap-2 mt-1">
+                    <IndustrialIcon icon="wrench" size="sm" />
+                    {selectedMachine.type}
+                  </p>
+                </div>
+                <div className="ml-4">
+                  {getMachineStatusBadge(
+                    selectedMachine.available,
+                    selectedMachine.status
+                  )}
+                </div>
+              </div>
+
+              {/* Details Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-industrial-foreground">
+                      Description
+                    </label>
+                    <p className="mt-1 text-industrial-muted-foreground">
+                      {selectedMachine.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-industrial-foreground">
+                      Location
+                    </label>
+                    <p className="mt-1 text-industrial-muted-foreground flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      {selectedMachine.location}
+                    </p>
+                  </div>
+
+                  {selectedMachine.pricePerHour && (
+                    <div>
+                      <label className="text-sm font-medium text-industrial-foreground">
+                        Price per Hour
+                      </label>
+                      <p className="mt-1 text-industrial-accent font-medium flex items-center gap-2">
+                        <IndianRupee className="h-4 w-4" />₹
+                        {selectedMachine.pricePerHour}/hour
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-industrial-foreground">
+                      Created
+                    </label>
+                    <p className="mt-1 text-industrial-muted-foreground flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {new Date(selectedMachine.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-industrial-foreground">
+                      Status
+                    </label>
+                    <p className="mt-1">
+                      {selectedMachine.available ? (
+                        <span className="text-green-600 font-medium">
+                          Available for use
+                        </span>
+                      ) : (
+                        <span className="text-red-600 font-medium">
+                          Currently unavailable
+                        </span>
+                      )}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-industrial-foreground">
+                      Machine ID
+                    </label>
+                    <p className="mt-1 text-xs text-industrial-muted-foreground font-mono">
+                      {selectedMachine._id || selectedMachine.id}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specifications */}
+              {selectedMachine.specifications && (
+                <div>
+                  <label className="text-sm font-medium text-industrial-foreground">
+                    Specifications
+                  </label>
+                  <div className="mt-2 p-4 bg-industrial-muted/20 rounded-lg">
+                    <p className="text-industrial-muted-foreground whitespace-pre-wrap">
+                      {typeof selectedMachine.specifications === 'string'
+                        ? selectedMachine.specifications
+                        : JSON.stringify(
+                            selectedMachine.specifications,
+                            null,
+                            2
+                          )}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t">
+                <Button
+                  onClick={() => {
+                    setViewModalOpen(false);
+                    handleEditMachine(selectedMachine);
+                  }}
+                  className="bg-industrial-primary hover:bg-industrial-primary/90 text-white"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Machine
+                </Button>
+
+                <Button
+                  onClick={() =>
+                    router.push(
+                      `/manufacturer/machines/${selectedMachine._id || selectedMachine.id}/applications`
+                    )
+                  }
+                  variant="outline"
+                  className="border-industrial-border hover:bg-industrial-muted"
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  View Applications
+                </Button>
+
+                <Button
+                  onClick={() => setViewModalOpen(false)}
+                  variant="outline"
+                  className="border-industrial-border hover:bg-industrial-muted ml-auto"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Machine Modal */}
+      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+        <DialogContent className="bg-white border-gray-200 max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-industrial-foreground">
+              <Edit className="h-5 w-5 text-industrial-primary" />
+              Edit Machine
+            </DialogTitle>
+            <DialogDescription className="text-industrial-muted-foreground">
+              Update your machine details and specifications.
+            </DialogDescription>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmitEdit)}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Machine Name */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-industrial-foreground">
+                        Machine Name
+                      </FormLabel>
+                      <FormControl>
+                        <IndustrialInput
+                          placeholder="Enter machine name"
+                          {...field}
+                          className="bg-white"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Machine Type */}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-industrial-foreground">
+                        Machine Type
+                      </FormLabel>
+                      <FormControl>
+                        <IndustrialInput
+                          placeholder="e.g., CNC Machine, 3D Printer"
+                          {...field}
+                          className="bg-white"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Description */}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-industrial-foreground">
+                      Description
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Describe your machine and its capabilities"
+                        className="bg-white min-h-[100px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Location */}
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-industrial-foreground">
+                        Location
+                      </FormLabel>
+                      <FormControl>
+                        <IndustrialInput
+                          placeholder="Enter location"
+                          {...field}
+                          className="bg-white"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Price per Hour */}
+                <FormField
+                  control={form.control}
+                  name="pricePerHour"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-industrial-foreground">
+                        Price per Hour (₹)
+                      </FormLabel>
+                      <FormControl>
+                        <IndustrialInput
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder="0.00"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || 0)
+                          }
+                          className="bg-white"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Specifications */}
+              <FormField
+                control={form.control}
+                name="specifications"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-industrial-foreground">
+                      Specifications
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter detailed specifications, capabilities, and technical details"
+                        className="bg-white min-h-[120px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-industrial-muted-foreground">
+                      Include technical specifications, dimensions, power
+                      requirements, etc.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Availability */}
+              <FormField
+                control={form.control}
+                name="available"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border border-industrial-border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base text-industrial-foreground">
+                        Machine Availability
+                      </FormLabel>
+                      <FormDescription className="text-industrial-muted-foreground">
+                        Enable this to allow workers and startups to apply for
+                        machine usage.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <IndustrialCheckbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter className="gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setEditModalOpen(false);
+                    setSelectedMachine(null);
+                    form.reset();
+                  }}
+                  disabled={isUpdating}
+                  className="border-industrial-border hover:bg-industrial-muted"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="bg-industrial-accent hover:bg-industrial-accent/90 text-industrial-background"
+                >
+                  {isUpdating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Update Machine
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </IndustrialLayout>

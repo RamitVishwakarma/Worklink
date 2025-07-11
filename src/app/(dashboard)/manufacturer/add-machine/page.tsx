@@ -5,16 +5,17 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { IndustrialInput } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { IndustrialButton } from '@/components/ui/industrial-button';
+import { IndustrialInput } from '@/components/ui/industrial-input';
+import { IndustrialTextarea } from '@/components/ui/industrial-textarea';
+import { IndustrialCheckbox } from '@/components/ui/industrial-checkbox';
 import {
   Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+  IndustrialSelectTrigger,
+  IndustrialSelectContent,
+  IndustrialSelectItem,
+} from '@/components/ui/industrial-select';
 import {
   Form,
   FormControl,
@@ -52,7 +53,7 @@ const machineSchema = z.object({
   location: z.string().min(1, 'Location is required'),
   pricePerHour: z.number().min(0, 'Price must be a positive number'),
   specifications: z.string().optional(),
-  availability: z.boolean(),
+  available: z.boolean(),
 });
 
 type MachineFormData = z.infer<typeof machineSchema>;
@@ -88,7 +89,7 @@ function AddMachinePage() {
       location: '',
       pricePerHour: 0,
       specifications: '',
-      availability: true,
+      available: true,
     },
   });
 
@@ -112,10 +113,17 @@ function AddMachinePage() {
 
       toast({
         title: 'Success',
-        description: 'Machine added successfully!',
+        description:
+          'Machine added successfully! Redirecting to your machines...',
       });
 
-      router.push('/dashboard/manufacturer/machines');
+      // Reset form for potential reuse
+      form.reset();
+
+      // Wait a moment for the user to see the success message
+      setTimeout(() => {
+        router.push('/manufacturer/machines');
+      }, 1000);
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -138,11 +146,23 @@ function AddMachinePage() {
         >
           <motion.div variants={itemVariants}>
             <div className="flex items-center space-x-4 mb-8">
-              <IndustrialIcon icon="wrench" size="lg" />
+              <div className="p-3 bg-industrial-gunmetal-100 rounded-lg">
+                <IndustrialIcon
+                  icon="wrench"
+                  size="lg"
+                  className="text-industrial-gunmetal-700"
+                />
+              </div>
               <div>
-                <IndustrialHeader level={1}>Add New Machine</IndustrialHeader>
+                <IndustrialHeader
+                  level={1}
+                  className="text-industrial-gunmetal-800"
+                >
+                  Add New Machine
+                </IndustrialHeader>
                 <p className="text-industrial-gunmetal-600 mt-2">
-                  Add a new machine to your manufacturing fleet
+                  Add a new machine to your manufacturing fleet and make it
+                  available for rent
                 </p>
               </div>
             </div>
@@ -181,6 +201,7 @@ function AddMachinePage() {
                             <FormControl>
                               <IndustrialInput
                                 placeholder="e.g., CNC Milling Machine"
+                                variant="default"
                                 {...field}
                               />
                             </FormControl>
@@ -200,33 +221,66 @@ function AddMachinePage() {
                               defaultValue={field.value}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <IndustrialSelectTrigger variant="industrial">
                                   <SelectValue placeholder="Select machine type" />
-                                </SelectTrigger>
+                                </IndustrialSelectTrigger>
                               </FormControl>
-                              <SelectContent>
-                                <SelectItem value="CNC">CNC Machine</SelectItem>
-                                <SelectItem value="Lathe">Lathe</SelectItem>
-                                <SelectItem value="Mill">
+                              <IndustrialSelectContent variant="industrial">
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="CNC"
+                                >
+                                  CNC Machine
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Lathe"
+                                >
+                                  Lathe
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Mill"
+                                >
                                   Milling Machine
-                                </SelectItem>
-                                <SelectItem value="Drill">
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Drill"
+                                >
                                   Drilling Machine
-                                </SelectItem>
-                                <SelectItem value="Press">
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Press"
+                                >
                                   Press Machine
-                                </SelectItem>
-                                <SelectItem value="Grinder">
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Grinder"
+                                >
                                   Grinding Machine
-                                </SelectItem>
-                                <SelectItem value="Welder">
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Welder"
+                                >
                                   Welding Machine
-                                </SelectItem>
-                                <SelectItem value="Cutter">
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Cutter"
+                                >
                                   Cutting Machine
-                                </SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
-                              </SelectContent>
+                                </IndustrialSelectItem>
+                                <IndustrialSelectItem
+                                  variant="industrial"
+                                  value="Other"
+                                >
+                                  Other
+                                </IndustrialSelectItem>
+                              </IndustrialSelectContent>
                             </Select>
                             <FormMessage />
                           </FormItem>
@@ -241,9 +295,10 @@ function AddMachinePage() {
                         <FormItem>
                           <FormLabel>Description</FormLabel>
                           <FormControl>
-                            <Textarea
+                            <IndustrialTextarea
                               placeholder="Describe the machine, its capabilities, and any special features..."
                               className="min-h-[100px]"
+                              variant="steel"
                               {...field}
                             />
                           </FormControl>
@@ -265,6 +320,7 @@ function AddMachinePage() {
                             <FormControl>
                               <IndustrialInput
                                 placeholder="e.g., Mumbai, Maharashtra"
+                                variant="default"
                                 {...field}
                               />
                             </FormControl>
@@ -278,11 +334,12 @@ function AddMachinePage() {
                         name="pricePerHour"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Price per Hour ($)</FormLabel>
+                            <FormLabel>Price per Hour (₹)</FormLabel>
                             <FormControl>
                               <IndustrialInput
                                 type="number"
                                 placeholder="0"
+                                variant="default"
                                 {...field}
                                 onChange={(e) =>
                                   field.onChange(
@@ -304,9 +361,10 @@ function AddMachinePage() {
                         <FormItem>
                           <FormLabel>Technical Specifications</FormLabel>
                           <FormControl>
-                            <Textarea
+                            <IndustrialTextarea
                               placeholder="Enter technical specifications, dimensions, power requirements, etc..."
                               className="min-h-[80px]"
+                              variant="steel"
                               {...field}
                             />
                           </FormControl>
@@ -318,25 +376,61 @@ function AddMachinePage() {
                       )}
                     />
 
+                    <FormField
+                      control={form.control}
+                      name="available"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-industrial-gunmetal-300 p-4 bg-industrial-gunmetal-50">
+                          <FormControl>
+                            <IndustrialCheckbox
+                              variant="industrial"
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-industrial-gunmetal-800 font-semibold">
+                              Machine Available for Rent
+                            </FormLabel>
+                            <FormDescription className="text-industrial-gunmetal-600">
+                              Mark this machine as available for workers and
+                              startups to apply for usage
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
                     <div className="flex items-center justify-end space-x-4 pt-6">
-                      <Button
+                      <IndustrialButton
                         type="button"
                         variant="outline"
                         onClick={() => router.back()}
                         disabled={isSubmitting}
                       >
                         Cancel
-                      </Button>
-                      <Button
+                      </IndustrialButton>
+                      <IndustrialButton
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-industrial-accent hover:bg-industrial-accent/90"
+                        variant="industrial-accent"
+                        className="min-w-[140px]"
                       >
-                        {isSubmitting && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Adding Machine...
+                          </>
+                        ) : (
+                          <>
+                            <IndustrialIcon
+                              icon="gear"
+                              className="mr-2 h-4 w-4"
+                            />
+                            Add Machine
+                          </>
                         )}
-                        Add Machine
-                      </Button>
+                      </IndustrialButton>
                     </div>
                   </form>
                 </Form>

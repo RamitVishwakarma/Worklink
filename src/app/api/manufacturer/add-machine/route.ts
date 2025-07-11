@@ -41,10 +41,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new machine
-    const machine = new Machine({
+    const machineData = {
       ...validation.data,
       manufacturerId: authResult.user.id,
-    });
+    };
+
+    // Parse specifications from string to object if provided
+    if (
+      machineData.specifications &&
+      typeof machineData.specifications === 'string'
+    ) {
+      try {
+        // If it's a JSON string, parse it
+        machineData.specifications = JSON.parse(machineData.specifications);
+      } catch {
+        // If it's not JSON, store as plain text in an object
+        machineData.specifications = {
+          description: machineData.specifications,
+        };
+      }
+    }
+
+    const machine = new Machine(machineData);
 
     await machine.save();
 

@@ -6,6 +6,8 @@ export interface IMachine extends Document {
   type: string;
   description: string;
   location: string;
+  specifications?: Record<string, any>;
+  pricePerHour?: number;
   available: boolean;
   status: 'active' | 'inactive' | 'maintenance';
   manufacturerId: mongoose.Types.ObjectId;
@@ -35,6 +37,15 @@ const MachineSchema = new Schema<IMachine>(
       type: String,
       required: [true, 'Location is required'],
       trim: true,
+    },
+    specifications: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
+    pricePerHour: {
+      type: Number,
+      min: [0, 'Price per hour must be positive'],
+      default: 0,
     },
     available: {
       type: Boolean,

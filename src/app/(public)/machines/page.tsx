@@ -45,7 +45,7 @@ import {
   Filter,
   MapPin,
   Calendar,
-  DollarSign,
+  IndianRupee,
   Clock,
   Loader2,
   Building2,
@@ -96,6 +96,37 @@ export default function MachinesPage() {
     fetchMachines,
     applyToMachine,
   } = useMachinesStore();
+
+  // Check if current user owns the machine
+  const isOwner = (machine: Machine) => {
+    if (!user || !isAuthenticated) return false;
+
+    // Handle different manufacturer data formats
+    let machineOwnerId: string;
+
+    if (typeof machine.manufacturer === 'string') {
+      machineOwnerId = machine.manufacturer;
+    } else if (
+      machine.manufacturer &&
+      typeof machine.manufacturer === 'object'
+    ) {
+      const manufacturerObj = machine.manufacturer as any;
+      machineOwnerId = manufacturerObj._id || manufacturerObj.id;
+    } else {
+      // Fallback for API response format
+      const machineData = machine as any;
+      const manufacturerId = machineData.manufacturerId;
+      if (typeof manufacturerId === 'string') {
+        machineOwnerId = manufacturerId;
+      } else if (manufacturerId && typeof manufacturerId === 'object') {
+        machineOwnerId = manufacturerId._id || manufacturerId.id;
+      } else {
+        return false;
+      }
+    }
+
+    return user.id === machineOwnerId;
+  };
 
   // Defensive array check with useMemo
   const machines = useMemo(
@@ -166,6 +197,16 @@ export default function MachinesPage() {
       return;
     }
 
+    // Check if user is the owner
+    if (isOwner(machine)) {
+      toast({
+        title: 'Cannot Apply',
+        description: 'You cannot apply to use your own machine.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setApplyingToMachine(machine._id || machine.id);
     try {
       await applyToMachine(machine._id || machine.id);
@@ -186,6 +227,16 @@ export default function MachinesPage() {
   };
 
   const openApplicationDialog = (machine: Machine) => {
+    // Check if user is the owner before opening dialog
+    if (isOwner(machine)) {
+      toast({
+        title: 'Cannot Apply',
+        description: 'You cannot apply to use your own machine.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setSelectedMachine(machine);
     setApplicationDialogOpen(true);
   };
@@ -413,22 +464,20 @@ export default function MachinesPage() {
               </IndustrialCardContent>
             </IndustrialCard>
 
-            <IndustrialCard className="border-gray-200">
+            <IndustrialCard className="border-purple-200">
               <IndustrialCardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
                   <div className="min-w-0 flex-1">
                     <p className="text-xs sm:text-sm text-gray-600 truncate">
-                      Machine Types
+                      My Machines
                     </p>
-                    <p className="text-lg sm:text-2xl font-bold text-gray-800 truncate">
-                      {types.length}
+                    <p className="text-lg sm:text-2xl font-bold text-purple-600 truncate">
+                      {Array.isArray(machines)
+                        ? machines.filter((m) => isOwner(m)).length
+                        : 0}
                     </p>
                   </div>
-                  <IndustrialIcon
-                    icon="gear"
-                    className="text-gray-600 flex-shrink-0"
-                    size="sm"
-                  />
+                  <Building2 className="text-purple-600 flex-shrink-0 h-4 w-4 sm:h-6 sm:w-6" />
                 </div>
               </IndustrialCardContent>
             </IndustrialCard>
@@ -586,16 +635,16 @@ export default function MachinesPage() {
                                   <IndustrialCardTitle className="text-base sm:text-lg group-hover:text-blue-600 transition-colors text-gray-900 break-words">
                                     {machine.name}
                                   </IndustrialCardTitle>
-                                  <IndustrialCardDescription className="flex items-center gap-1 mt-1">
+                                  <div className="flex items-center gap-2 mt-1">
                                     <IndustrialIcon
                                       icon="gear"
                                       size="sm"
-                                      className="flex-shrink-0"
+                                      className="flex-shrink-0 text-gray-500"
                                     />
-                                    <span className="truncate text-xs sm:text-sm">
+                                    <span className="truncate text-xs sm:text-sm text-gray-600">
                                       {machine.type}
                                     </span>
-                                  </IndustrialCardDescription>
+                                  </div>
                                 </div>
                                 <Badge
                                   variant={
@@ -603,21 +652,32 @@ export default function MachinesPage() {
                                   }
                                   className={`flex-shrink-0 text-xs ${
                                     machine.available
-                                      ? 'bg-green-100 text-green-800'
-                                      : 'bg-gray-100 text-gray-600'
+                                      ? 'bg-green-100 text-green-800 border-green-200'
+                                      : 'bg-red-100 text-red-600 border-red-200'
                                   }`}
                                 >
-                                  {machine.available ? 'Available' : 'In Use'}
+                                  {machine.available ? (
+                                    <>
+                                      <CheckCircle className="h-3 w-3 mr-1" />
+                                      Available
+                                    </>
+                                  ) : (
+                                    <>
+                                      <XCircle className="h-3 w-3 mr-1" />
+                                      In Use
+                                    </>
+                                  )}
                                 </Badge>
                               </div>
                             </IndustrialCardHeader>
 
                             <IndustrialCardContent className="space-y-3 sm:space-y-4 flex-1 flex flex-col">
-                              <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3">
+                              <p className="text-xs sm:text-sm text-industrial-gunmetal-600 line-clamp-2 sm:line-clamp-3">
                                 {machine.description}
                               </p>
 
                               <div className="grid grid-cols-1 gap-2 sm:gap-3 text-xs sm:text-sm flex-1">
+                                {/* Location */}
                                 <div className="flex items-center gap-2">
                                   <IndustrialIcon
                                     icon="factory"
@@ -629,15 +689,91 @@ export default function MachinesPage() {
                                   </span>
                                 </div>
 
+                                {/* Manufacturer Info */}
+                                {machine.manufacturer &&
+                                  typeof machine.manufacturer === 'object' && (
+                                    <div className="flex items-center gap-2">
+                                      <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600 flex-shrink-0" />
+                                      <div className="flex flex-col min-w-0">
+                                        <span className="text-blue-600 font-medium truncate text-xs">
+                                          {
+                                            (machine.manufacturer as any)
+                                              .companyName
+                                          }
+                                        </span>
+                                        {(machine.manufacturer as any)
+                                          .workSector && (
+                                          <span className="text-gray-500 text-xs truncate">
+                                            {
+                                              (machine.manufacturer as any)
+                                                .workSector
+                                            }
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                {/* Price */}
                                 {machine.pricePerHour && (
                                   <div className="flex items-center gap-2">
-                                    <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
+                                    <IndianRupee className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
                                     <span className="text-green-600 font-medium truncate">
-                                      ${machine.pricePerHour}/hr
+                                      ₹{machine.pricePerHour}/hr
                                     </span>
                                   </div>
                                 )}
 
+                                {/* Specifications */}
+                                {machine.specifications &&
+                                  Object.keys(machine.specifications).length >
+                                    0 && (
+                                    <div className="flex items-start gap-2">
+                                      <Settings className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0 mt-0.5" />
+                                      <div className="flex flex-col min-w-0">
+                                        <span className="text-gray-600 text-xs font-medium">
+                                          Specifications:
+                                        </span>
+                                        <span className="text-gray-500 text-xs line-clamp-2">
+                                          {typeof machine.specifications ===
+                                          'object'
+                                            ? machine.specifications
+                                                .description ||
+                                              Object.entries(
+                                                machine.specifications
+                                              )
+                                                .map(
+                                                  ([key, value]) =>
+                                                    `${key}: ${value}`
+                                                )
+                                                .join(', ')
+                                            : machine.specifications}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                {/* Status */}
+                                <div className="flex items-center gap-2">
+                                  {machine.available ? (
+                                    <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
+                                  ) : (
+                                    <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-600 flex-shrink-0" />
+                                  )}
+                                  <span
+                                    className={`text-xs font-medium ${
+                                      machine.available
+                                        ? 'text-green-600'
+                                        : 'text-red-600'
+                                    }`}
+                                  >
+                                    {machine.available
+                                      ? 'Available for rent'
+                                      : 'Currently in use'}
+                                  </span>
+                                </div>
+
+                                {/* Date */}
                                 <div className="flex items-center gap-2">
                                   <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
                                   <span className="text-xs text-gray-600 truncate">
@@ -650,7 +786,20 @@ export default function MachinesPage() {
                               </div>
 
                               <div className="pt-3 sm:pt-4 mt-auto">
-                                {machine.available ? (
+                                {isOwner(machine) ? (
+                                  <Button
+                                    disabled
+                                    variant="outline"
+                                    className="w-full text-xs sm:text-sm border-gray-300 text-gray-500"
+                                    size="sm"
+                                  >
+                                    <Building2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                                    <span className="hidden sm:inline">
+                                      Your Machine
+                                    </span>
+                                    <span className="sm:hidden">Yours</span>
+                                  </Button>
+                                ) : machine.available ? (
                                   <Button
                                     onClick={() =>
                                       openApplicationDialog(machine)
@@ -752,15 +901,59 @@ export default function MachinesPage() {
                 </span>
               </div>
 
+              {/* Manufacturer Info */}
+              {selectedMachine.manufacturer &&
+                typeof selectedMachine.manufacturer === 'object' && (
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-gray-600">Manufacturer:</span>
+                    <span className="text-blue-600 font-medium break-words">
+                      {(selectedMachine.manufacturer as any).companyName}
+                    </span>
+                  </div>
+                )}
+
               {selectedMachine.pricePerHour && (
                 <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                  <IndianRupee className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
                   <span className="text-gray-600">Rate:</span>
                   <span className="text-green-600 font-medium">
-                    ${selectedMachine.pricePerHour}/hour
+                    ₹{selectedMachine.pricePerHour}/hour
                   </span>
                 </div>
               )}
+
+              {/* Specifications */}
+              {selectedMachine.specifications &&
+                Object.keys(selectedMachine.specifications).length > 0 && (
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex items-start gap-2 text-xs sm:text-sm">
+                      <Settings className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0 mt-0.5" />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-gray-600 font-medium mb-1">
+                          Technical Specifications:
+                        </span>
+                        <div className="text-gray-900 text-xs bg-gray-50 p-2 rounded border">
+                          {typeof selectedMachine.specifications === 'object'
+                            ? selectedMachine.specifications.description ||
+                              Object.entries(selectedMachine.specifications)
+                                .map(([key, value]) => `${key}: ${value}`)
+                                .join(', ')
+                            : selectedMachine.specifications}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              {/* Status */}
+              <div className="flex items-center gap-2 text-xs sm:text-sm">
+                <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
+                <span className="text-gray-600">Status:</span>
+                <span className="text-green-600 font-medium">
+                  Available for rent
+                </span>
+              </div>
             </div>
           )}
 

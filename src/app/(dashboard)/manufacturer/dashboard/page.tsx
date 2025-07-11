@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import {
@@ -43,11 +43,14 @@ import {
 import Link from 'next/link';
 
 function ManufacturerDashboardPage() {
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   // Store data
-  const { machines: rawMachines, isLoading: machinesLoading } =
-    useMachinesStore();
+  const {
+    userMachines: rawMachines,
+    isLoading: machinesLoading,
+    fetchUserMachines,
+  } = useMachinesStore();
   const {
     machineApplications: rawMachineApplications,
     machineApplicationsLoading,
@@ -56,12 +59,31 @@ function ManufacturerDashboardPage() {
   const applicationStats = useMachineApplicationStats();
 
   // Defensive array checks
-  const machines = Array.isArray(rawMachines) ? rawMachines : [];
+  const machines = useMemo(() => {
+    return Array.isArray(rawMachines) ? rawMachines : [];
+  }, [rawMachines]);
   const machineApplications = Array.isArray(rawMachineApplications)
     ? rawMachineApplications
     : [];
 
   const loading = machinesLoading || machineApplicationsLoading;
+
+  // Fetch user machines on mount
+  useEffect(() => {
+    if (isAuthenticated && user?.userType === 'manufacturer') {
+      console.log('Dashboard: Fetching user machines...');
+      fetchUserMachines();
+    }
+  }, [isAuthenticated, user?.userType, fetchUserMachines]);
+
+  // Debug logging
+  useEffect(() => {
+    console.log('Dashboard: rawMachines =', rawMachines);
+    console.log('Dashboard: machines =', machines);
+    console.log('Dashboard: machinesLoading =', machinesLoading);
+    console.log('Dashboard: isAuthenticated =', isAuthenticated);
+    console.log('Dashboard: user =', user);
+  }, [rawMachines, machines, machinesLoading, isAuthenticated, user]);
 
   // Get recent machines and applications for display
   // const recentMachines = machines.slice(0, 3);
@@ -104,12 +126,10 @@ function ManufacturerDashboardPage() {
                   className="flex items-center gap-2 sm:gap-3 text-xl sm:text-2xl lg:text-3xl"
                 >
                   <div className="p-2 bg-gradient-to-br from-industrial-accent/20 to-industrial-accent/10 rounded-md border border-industrial-accent/30 flex items-center justify-center">
-                    <Image
-                      src="/logo.png"
-                      alt="WorkLink Logo"
-                      width={24}
-                      height={24}
-                      className="object-contain"
+                    <IndustrialIcon
+                      icon="factory"
+                      size="lg"
+                      className="text-industrial-accent"
                     />
                   </div>
                   <span className="truncate">Manufacturer Dashboard</span>
@@ -168,6 +188,7 @@ function ManufacturerDashboardPage() {
               ) : (
                 <>
                   <IndustrialCard
+                    key="total-machines"
                     variant="industrial"
                     className="hover:shadow-lg transition-shadow"
                   >
@@ -194,6 +215,7 @@ function ManufacturerDashboardPage() {
                   </IndustrialCard>
 
                   <IndustrialCard
+                    key="total-applications"
                     variant="industrial"
                     className="hover:shadow-lg transition-shadow"
                   >
@@ -216,6 +238,7 @@ function ManufacturerDashboardPage() {
                   </IndustrialCard>
 
                   <IndustrialCard
+                    key="approved-applications"
                     variant="industrial"
                     className="hover:shadow-lg transition-shadow"
                   >
@@ -238,6 +261,7 @@ function ManufacturerDashboardPage() {
                   </IndustrialCard>
 
                   <IndustrialCard
+                    key="pending-applications"
                     variant="industrial"
                     className="hover:shadow-lg transition-shadow"
                   >
@@ -260,6 +284,7 @@ function ManufacturerDashboardPage() {
                   </IndustrialCard>
 
                   <IndustrialCard
+                    key="active-machines"
                     variant="industrial"
                     className="hover:shadow-lg transition-shadow"
                   >
@@ -282,6 +307,7 @@ function ManufacturerDashboardPage() {
                   </IndustrialCard>
 
                   <IndustrialCard
+                    key="rejected-applications"
                     variant="industrial"
                     className="hover:shadow-lg transition-shadow"
                   >
@@ -313,7 +339,7 @@ function ManufacturerDashboardPage() {
                     <IndustrialIcon icon="gear" size="sm" />
                     Your Machines
                   </IndustrialCardTitle>
-                  <Link href="/dashboard/manufacturer/machines">
+                  <Link href="/manufacturer/machines">
                     <Button
                       variant="industrial-secondary"
                       size="sm"
@@ -351,7 +377,7 @@ function ManufacturerDashboardPage() {
                       <p className="text-industrial-secondary mb-3 sm:mb-4 text-sm sm:text-base">
                         No machines listed yet
                       </p>
-                      <Link href="/dashboard/manufacturer/add-machine">
+                      <Link href="/manufacturer/add-machine">
                         <Button
                           variant="industrial-primary"
                           className="w-full sm:w-auto"
@@ -363,9 +389,9 @@ function ManufacturerDashboardPage() {
                     </div>
                   ) : (
                     <div className="space-y-3 sm:space-y-4">
-                      {machines.slice(0, 5).map((machine) => (
+                      {machines.slice(0, 5).map((machine, index) => (
                         <div
-                          key={machine.id}
+                          key={machine.id || machine._id || `machine-${index}`}
                           className="flex items-center justify-between p-3 sm:p-4 border border-industrial-border rounded-lg hover:bg-industrial-primary/5 transition-colors"
                         >
                           <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
@@ -373,6 +399,7 @@ function ManufacturerDashboardPage() {
                               <IndustrialIcon
                                 icon="factory"
                                 size="md"
+                                color="white"
                                 className="text-industrial-gunmetal-900"
                               />
                             </div>
@@ -380,7 +407,7 @@ function ManufacturerDashboardPage() {
                               <h3 className="font-medium text-industrial-primary text-sm sm:text-base truncate">
                                 {machine.name}
                               </h3>
-                              <p className="text-xs sm:text-sm text-industrial-secondary truncate">
+                              <p className="text-xs sm:text-sm text-industrial-gunmetal-600 truncate">
                                 {machine.type} • {machine.location}
                               </p>
                             </div>
@@ -388,22 +415,18 @@ function ManufacturerDashboardPage() {
                           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
                             <Badge
                               variant={
-                                machine.isAvailable
+                                machine.available
                                   ? 'industrial-primary'
                                   : 'industrial-secondary'
                               }
                               className="text-xs hidden sm:inline-flex"
                             >
-                              {machine.isAvailable
-                                ? 'Available'
-                                : 'Unavailable'}
+                              {machine.available ? 'Available' : 'Unavailable'}
                             </Badge>
                             <div
-                              className={`w-2 h-2 rounded-full sm:hidden ${machine.isAvailable ? 'bg-green-500' : 'bg-gray-400'}`}
+                              className={`w-2 h-2 rounded-full sm:hidden ${machine.available ? 'bg-green-500' : 'bg-gray-400'}`}
                             />
-                            <Link
-                              href={`/dashboard/manufacturer/machines/${machine.id}/edit`}
-                            >
+                            <Link href={`/manufacturer/machines`}>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -428,7 +451,7 @@ function ManufacturerDashboardPage() {
                     <IndustrialIcon icon="hardhat" size="sm" />
                     Recent Applications
                   </IndustrialCardTitle>
-                  <Link href="/dashboard/manufacturer/applications">
+                  <Link href="/manufacturer/applications">
                     <Button
                       variant="industrial-secondary"
                       size="sm"
@@ -458,18 +481,22 @@ function ManufacturerDashboardPage() {
                     </div>
                   ) : machineApplications.length === 0 ? (
                     <div className="text-center py-6 sm:py-8">
-                      <Users className="h-10 w-10 sm:h-12 sm:w-12 text-industrial-muted mx-auto mb-3 sm:mb-4" />
-                      <p className="text-industrial-secondary text-sm sm:text-base">
+                      <Users className="h-10 w-10 sm:h-12 sm:w-12 text-industrial-gunmetal-500 mx-auto mb-3 sm:mb-4" />
+                      <p className="text-industrial-gunmetal-600 text-sm sm:text-base">
                         No applications received yet
                       </p>
                     </div>
                   ) : (
                     <div className="space-y-3 sm:space-y-4">
                       {recentApplications.map(
-                        (application: MachineApplication) => (
+                        (application: MachineApplication, index) => (
                           <div
-                            key={application.id}
-                            className="flex items-center justify-between p-3 sm:p-4 border-2 border-industrial-gunmetal-300 rounded-lg hover:bg-metal-grid transition-colors shadow-industrial-sm hover:shadow-industrial-md hover:border-industrial-gunmetal-400"
+                            key={
+                              application.id ||
+                              application._id ||
+                              `application-${index}`
+                            }
+                            className="flex items-center justify-between p-3 sm:p-4 border-2 border-industrial-gunmetal-300 rounded-lg hover:bg-industrial-gunmetal-50 transition-colors shadow-industrial-sm hover:shadow-industrial-md hover:border-industrial-gunmetal-400 bg-white"
                           >
                             <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
                               <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-industrial-navy-500 to-industrial-navy-600 rounded-lg flex items-center justify-center shadow-industrial-sm flex-shrink-0">
@@ -494,11 +521,11 @@ function ManufacturerDashboardPage() {
                                     : 'Startup'}{' '}
                                   - {application.applicantId}
                                 </h3>
-                                <p className="text-xs sm:text-sm text-industrial-secondary flex items-center gap-1 truncate">
+                                <p className="text-xs sm:text-sm text-industrial-gunmetal-600 flex items-center gap-1 truncate">
                                   <IndustrialIcon
                                     icon="wrench"
                                     size="sm"
-                                    className="text-industrial-secondary flex-shrink-0"
+                                    className="text-industrial-gunmetal-500 flex-shrink-0"
                                   />
                                   Applied for {application.machine?.name}
                                 </p>
@@ -544,8 +571,8 @@ function ManufacturerDashboardPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                     <Link href="/manufacturer/add-machine" className="block">
                       <Button
-                        variant="industrial-outline"
-                        className="w-full justify-start h-auto p-3 sm:p-4 border-2 hover:bg-industrial-gunmetal-50 text-left"
+                        variant="outline"
+                        className="w-full justify-start h-auto p-3 sm:p-4 border-2 border-industrial-gunmetal-300 hover:bg-industrial-gunmetal-50 hover:border-industrial-gunmetal-400 text-left bg-white"
                       >
                         <div className="flex items-center w-full">
                           <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-industrial-safety-300 to-industrial-safety-400 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shadow-industrial-sm flex-shrink-0">
@@ -555,7 +582,7 @@ function ManufacturerDashboardPage() {
                             <div className="font-medium text-industrial-gunmetal-800 text-sm sm:text-base truncate">
                               Add New Machine
                             </div>
-                            <div className="text-xs text-industrial-secondary line-clamp-2 sm:whitespace-normal">
+                            <div className="text-xs text-industrial-gunmetal-600 line-clamp-2 sm:whitespace-normal">
                               List a new machine for applications
                             </div>
                           </div>
@@ -564,18 +591,18 @@ function ManufacturerDashboardPage() {
                     </Link>
                     <Link href="/manufacturer/machines" className="block">
                       <Button
-                        variant="industrial-outline"
-                        className="w-full justify-start h-auto p-3 sm:p-4 border-2 hover:bg-industrial-gunmetal-50 text-left"
+                        variant="outline"
+                        className="w-full justify-start h-auto p-3 sm:p-4 border-2 border-industrial-gunmetal-300 hover:bg-industrial-gunmetal-50 hover:border-industrial-gunmetal-400 text-left bg-white"
                       >
                         <div className="flex items-center w-full">
-                          <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-industrial-navy-300 to-industrial-navy-400 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shadow-industrial-sm flex-shrink-0">
+                          <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-industrial-navy-500 to-industrial-navy-600 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shadow-industrial-sm flex-shrink-0">
                             <Factory className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                           </div>
                           <div className="text-left flex flex-col min-w-0 flex-1">
                             <div className="font-medium text-industrial-gunmetal-800 text-sm sm:text-base truncate">
                               Manage Machines
                             </div>
-                            <div className="text-xs text-industrial-secondary line-clamp-2 sm:whitespace-normal">
+                            <div className="text-xs text-industrial-gunmetal-600 line-clamp-2 sm:whitespace-normal">
                               View and edit your machines
                             </div>
                           </div>
@@ -584,8 +611,8 @@ function ManufacturerDashboardPage() {
                     </Link>
                     <Link href="/manufacturer/applications" className="block">
                       <Button
-                        variant="industrial-outline"
-                        className="w-full justify-start h-auto p-3 sm:p-4 border-2 hover:bg-industrial-gunmetal-50 text-left"
+                        variant="outline"
+                        className="w-full justify-start h-auto p-3 sm:p-4 border-2 border-industrial-gunmetal-300 hover:bg-industrial-gunmetal-50 hover:border-industrial-gunmetal-400 text-left bg-white"
                       >
                         <div className="flex items-center w-full">
                           <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-industrial-gunmetal-600 to-industrial-gunmetal-700 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shadow-industrial-sm flex-shrink-0">
@@ -595,7 +622,7 @@ function ManufacturerDashboardPage() {
                             <div className="font-medium text-industrial-gunmetal-800 text-sm sm:text-base truncate">
                               Review Applications
                             </div>
-                            <div className="text-xs text-industrial-secondary line-clamp-2 sm:whitespace-normal">
+                            <div className="text-xs text-industrial-gunmetal-600 line-clamp-2 sm:whitespace-normal">
                               Approve or reject requests
                             </div>
                           </div>

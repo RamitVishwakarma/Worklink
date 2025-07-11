@@ -19,7 +19,12 @@ import {
   IndustrialHeader,
 } from '@/components/ui/industrial-layout';
 import { IndustrialIcon } from '@/components/ui/industrial-icon';
-import { useAuthStore, useProfilesStore } from '@/lib/store';
+import {
+  useAuthStore,
+  useProfilesStore,
+  useMachinesStore,
+  useMachineStats,
+} from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
 import withAuth from '@/components/auth/withAuth';
 import { UserType, ManufacturerProfile } from '@/lib/types';
@@ -41,7 +46,7 @@ import {
 } from 'lucide-react';
 
 function ManufacturerProfilePage() {
-  const { user, updateUser } = useAuthStore();
+  const { user, updateUser, isAuthenticated } = useAuthStore();
   const {
     currentProfile,
     isLoading,
@@ -49,6 +54,8 @@ function ManufacturerProfilePage() {
     fetchCurrentUserProfile,
     updateCurrentUserProfile,
   } = useProfilesStore();
+  const { fetchUserMachines } = useMachinesStore();
+  const machineStats = useMachineStats();
   const { toast } = useToast();
 
   const [editing, setEditing] = useState(false);
@@ -84,6 +91,13 @@ function ManufacturerProfilePage() {
       memoizedFetchProfile();
     }
   }, [user, memoizedFetchProfile]);
+
+  // Fetch machines data for statistics
+  useEffect(() => {
+    if (isAuthenticated && user?.userType === 'manufacturer') {
+      fetchUserMachines();
+    }
+  }, [isAuthenticated, user?.userType, fetchUserMachines]);
 
   // Update form data when profile loads
   useEffect(() => {
@@ -475,7 +489,7 @@ function ManufacturerProfilePage() {
                                 Total Machines
                               </p>
                               <p className="text-base sm:text-lg lg:text-2xl font-bold text-industrial-navy-600 truncate">
-                                {(currentProfile as any)?.totalMachines || 0}
+                                {machineStats.total}
                               </p>
                             </div>
                           </div>
@@ -492,7 +506,24 @@ function ManufacturerProfilePage() {
                                 Active Machines
                               </p>
                               <p className="text-base sm:text-lg lg:text-2xl font-bold text-industrial-safety-600 truncate">
-                                {(currentProfile as any)?.activeMachines || 0}
+                                {machineStats.active}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Inactive Machines */}
+                        <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                            <motion.div className="flex-shrink-0">
+                              <Settings className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-gray-500" />
+                            </motion.div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs sm:text-sm text-gray-600 truncate">
+                                Inactive Machines
+                              </p>
+                              <p className="text-base sm:text-lg lg:text-2xl font-bold text-gray-600 truncate">
+                                {machineStats.inactive}
                               </p>
                             </div>
                           </div>

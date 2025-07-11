@@ -30,7 +30,8 @@ export const useGigStats = (gigs: Gig[] | undefined) => {
  * @returns An object with operation functions and loading states.
  */
 export const useGigOperations = () => {
-  const { deleteGig, toggleGigStatus, isLoading, isDeleting } = useGigsStore();
+  const { deleteGig, toggleGigStatus, updateGig, isLoading, isDeleting } =
+    useGigsStore();
   const { toast } = useToast();
 
   const handleDeleteGig = async (gigId: string): Promise<boolean> => {
@@ -45,6 +46,29 @@ export const useGigOperations = () => {
     } catch (error: any) {
       toast({
         title: 'Error Deleting Gig',
+        description:
+          error.message || 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+      return false;
+    }
+  };
+
+  const handleUpdateGig = async (
+    gigId: string,
+    gigData: any
+  ): Promise<boolean> => {
+    try {
+      await updateGig(gigId, gigData);
+      toast({
+        title: 'Gig Updated',
+        description: 'The gig has been successfully updated.',
+        variant: 'default',
+      });
+      return true;
+    } catch (error: any) {
+      toast({
+        title: 'Error Updating Gig',
         description:
           error.message || 'An unexpected error occurred. Please try again.',
         variant: 'destructive',
@@ -79,8 +103,10 @@ export const useGigOperations = () => {
 
   return {
     handleDeleteGig,
+    handleUpdateGig,
     handleToggleGigStatus,
     isDeleting,
     isToggling: isLoading,
+    isUpdating: isLoading,
   };
 };

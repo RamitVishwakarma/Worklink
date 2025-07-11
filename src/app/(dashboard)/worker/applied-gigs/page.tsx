@@ -36,7 +36,7 @@ import {
   XCircle,
   Calendar,
   MapPin,
-  DollarSign,
+  IndianRupee,
   Building2,
   RefreshCw,
   HardHat,
@@ -413,9 +413,9 @@ export default function AppliedGigsPage() {
                                 </TableCell>
                                 <TableCell className="px-4">
                                   <div className="flex items-center space-x-2">
-                                    <DollarSign className="h-4 w-4 text-industrial-gunmetal-600 flex-shrink-0" />
+                                    <IndianRupee className="h-4 w-4 text-industrial-gunmetal-600 flex-shrink-0" />
                                     <span className="text-industrial-gunmetal-700">
-                                      $
+                                      ₹
                                       {application.gig?.salary?.toLocaleString() ||
                                         'N/A'}
                                     </span>
@@ -476,9 +476,9 @@ export default function AppliedGigsPage() {
                               </span>
                             </div>
                             <div className="flex items-center gap-1 text-industrial-gunmetal-700">
-                              <DollarSign className="h-3 w-3 text-industrial-accent flex-shrink-0" />
+                              <IndianRupee className="h-3 w-3 text-industrial-accent flex-shrink-0" />
                               <span className="truncate">
-                                $
+                                ₹
                                 {application.gig?.salary?.toLocaleString() ||
                                   'N/A'}
                               </span>

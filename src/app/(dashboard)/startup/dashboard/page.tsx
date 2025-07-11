@@ -33,7 +33,7 @@ import {
   Plus,
   Building2,
   MapPin,
-  DollarSign,
+  IndianRupee,
   Calendar,
   Clock,
   CheckCircle,
@@ -48,32 +48,58 @@ function StartupDashboardPage() {
   const { user } = useAuthStore();
 
   // Store data
-  const { gigs: rawGigs, isLoading: gigsLoading } = useGigsStore();
-  const { gigApplications: rawGigApplications, gigApplicationsLoading } =
-    useApplicationsStore();
+  const {
+    gigs: rawGigs,
+    userGigs: rawUserGigs,
+    isLoading: gigsLoading,
+    fetchUserGigs,
+  } = useGigsStore();
+  const {
+    gigApplications: rawGigApplications,
+    gigApplicationsLoading,
+    fetchApplications,
+  } = useApplicationsStore();
   const { currentProfile } = useProfilesStore();
-  const gigStats = useGigStats();
-  const applicationStats = useGigApplicationStats();
 
-  // Defensive array checks
-  const gigs = Array.isArray(rawGigs) ? rawGigs : [];
-  const gigApplications = Array.isArray(rawGigApplications)
-    ? rawGigApplications
-    : [];
+  // Defensive array checks with useMemo to prevent unnecessary re-renders
+  const gigs = React.useMemo(
+    () => (Array.isArray(rawGigs) ? rawGigs : []),
+    [rawGigs]
+  );
+  const userGigs = React.useMemo(
+    () => (Array.isArray(rawUserGigs) ? rawUserGigs : []),
+    [rawUserGigs]
+  );
+  const gigApplications = React.useMemo(
+    () => (Array.isArray(rawGigApplications) ? rawGigApplications : []),
+    [rawGigApplications]
+  );
+
+  // Calculate stats based on actual userGigs from store
+  const gigStats = useGigStats(userGigs);
+  const applicationStats = useGigApplicationStats();
 
   const loading = gigsLoading || gigApplicationsLoading;
 
-  // Get recent data - filter user's gigs for startup
-  const userGigs = gigs.filter((gig) => gig.postedBy === user?.id);
+  // Get recent data - use userGigs from store instead of filtering
   const recentGigs = userGigs.slice(0, 5);
   const recentApplications = gigApplications.slice(0, 5);
+
+  // Fetch user's gigs and applications on component mount
+  React.useEffect(() => {
+    fetchUserGigs();
+    fetchApplications();
+  }, [fetchUserGigs, fetchApplications]);
 
   React.useEffect(() => {
     if (!loading) {
       const message = `Startup dashboard loaded. You have ${userGigs.length} posted gigs, ${applicationStats.total} total applications received, and ${applicationStats.pending} pending reviews.`;
       console.log('Accessibility:', message);
+      console.log('Debug - userGigs:', userGigs);
+      console.log('Debug - gigStats:', gigStats);
+      console.log('Debug - applicationStats:', applicationStats);
     }
-  }, [loading, userGigs.length, applicationStats]);
+  }, [loading, userGigs.length, applicationStats, userGigs, gigStats]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -528,10 +554,10 @@ function StartupDashboardPage() {
                               <span className="truncate">{gig.location}</span>
                             </div>
                             <div className="flex items-center text-xs text-industrial-gunmetal-600">
-                              <DollarSign className="h-3 w-3 mr-1 flex-shrink-0" />
+                              <IndianRupee className="h-3 w-3 mr-1 flex-shrink-0" />
                               <span>
                                 {gig.salary
-                                  ? `$${gig.salary}/hr`
+                                  ? `₹${gig.salary}/hr`
                                   : 'Not specified'}
                               </span>
                             </div>

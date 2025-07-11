@@ -33,23 +33,35 @@ export interface Manufacturer extends User {
   location?: string;
 }
 
-// Gig related types
+// Gig related types - Updated to match actual Gig model
 export interface Gig {
   _id: string;
   id: string; // For compatibility
   title: string;
   description: string;
-  company: string;
+  skillsRequired: string[]; // Updated from requiredSkills
   location: string;
-  salary?: number;
-  jobType: 'full-time' | 'part-time' | 'contract';
-  requiredSkills: string[];
-  postedBy: string; // startup ID
+  salary: number; // Required in model
+  duration: string; // Added from model
+  startupId: string | PopulatedStartup; // Added from model (mongoose.Types.ObjectId as string or populated object)
+  isActive: boolean;
+  status: 'active' | 'inactive' | 'closed';
   createdAt: string;
   updatedAt: string;
-  status: 'active' | 'inactive' | 'closed';
-  isActive: boolean;
+  // Legacy fields for backward compatibility
+  company?: string; // Derived or populated field
+  jobType?: 'full-time' | 'part-time' | 'contract'; // Derived from duration
+  requiredSkills?: string[]; // Alias for skillsRequired
+  postedBy?: string; // Alias for startupId
   applicationCount?: number; // Count of applications
+}
+
+// Populated startup data when fetching gigs
+export interface PopulatedStartup {
+  _id: string;
+  companyName: string;
+  workSector?: string;
+  location?: string;
 }
 
 export interface GigsResponse {

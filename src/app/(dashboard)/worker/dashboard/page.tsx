@@ -357,7 +357,7 @@ function WorkerDashboardPage() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-industrial-gunmetal-800">
-                          ${gig.salary?.toLocaleString() || 'TBD'}
+                          ₹{gig.salary?.toLocaleString() || 'TBD'}
                         </span>
                         <Button
                           size="sm"

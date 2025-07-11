@@ -305,15 +305,6 @@ function AllApplicationsPage() {
           <motion.div variants={itemVariants}>
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center space-x-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => router.back()}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
                 <div className="flex items-center space-x-4">
                   <IndustrialIcon
                     icon="factory"

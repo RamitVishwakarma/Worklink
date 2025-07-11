@@ -115,8 +115,12 @@ export const useApplicationsStore = create<ApplicationsState>()(
             // For manufacturers, fetch applications to their machines
             set({ machineApplicationsLoading: true });
             const applications = await manufacturerAPI.getMachineApplications();
+            // Ensure we always get an array
+            const applicationsArray = Array.isArray(applications)
+              ? applications
+              : [];
             set({
-              machineApplications: applications,
+              machineApplications: applicationsArray,
               machineApplicationsLoading: false,
             });
           }

@@ -82,8 +82,20 @@ export const useMachinesStore = create<MachinesState>()(
         set({ isLoading: true, fetchError: null });
         try {
           const response = await publicAPI.getAllMachines(params);
-          // Ensure machines is always an array, even if API returns null/undefined
-          const machines = Array.isArray(response) ? response : [];
+
+          // Handle different response formats
+          let machines: Machine[] = [];
+          if (Array.isArray(response)) {
+            machines = response;
+          } else if (response && typeof response === 'object') {
+            const responseObj = response as any;
+            if (Array.isArray(responseObj.Machines)) {
+              machines = responseObj.Machines;
+            } else if (Array.isArray(responseObj.machines)) {
+              machines = responseObj.machines;
+            }
+          }
+
           set({ machines, isLoading: false, fetchError: null });
         } catch (error: any) {
           console.error('Failed to fetch machines:', error);
@@ -103,7 +115,21 @@ export const useMachinesStore = create<MachinesState>()(
       fetchUserMachines: async () => {
         set({ isLoading: true, fetchError: null });
         try {
-          const userMachines = await manufacturerAPI.getMachines();
+          const response = await manufacturerAPI.getMachines();
+
+          // Handle response format - API returns { Machines: Machine[], pagination }
+          let userMachines: Machine[] = [];
+          if (Array.isArray(response)) {
+            userMachines = response;
+          } else if (response && typeof response === 'object') {
+            const responseObj = response as any;
+            if (Array.isArray(responseObj.Machines)) {
+              userMachines = responseObj.Machines;
+            } else if (Array.isArray(responseObj.machines)) {
+              userMachines = responseObj.machines;
+            }
+          }
+
           set({ userMachines, isLoading: false, fetchError: null });
         } catch (error: any) {
           console.error('Failed to fetch user machines:', error);
@@ -113,6 +139,7 @@ export const useMachinesStore = create<MachinesState>()(
             'Failed to fetch user machines';
           set({
             isLoading: false,
+            userMachines: [], // Reset to empty array on error
             fetchError: errorMessage,
             error: errorMessage,
           });
