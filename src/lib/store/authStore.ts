@@ -94,7 +94,6 @@ export const useAuthStore = create<AuthState>()(
             // Token is valid, keep the user authenticated
             state.setUserAndToken(state.user, token);
           } catch (error) {
-            console.log('Token validation failed, logging out user');
             // Token is invalid or expired, clear everything
             state.setUserAndToken(null, null);
           }
@@ -116,7 +115,6 @@ export const useAuthStore = create<AuthState>()(
       handleAuthError: () => {
         // Clear authentication state when auth errors occur
         get().setUserAndToken(null, null);
-        console.log('Authentication error handled, user logged out');
       },
     }),
     {

@@ -109,16 +109,7 @@ function MachineApplicationsPage() {
 
   // Ensure applications is always an array
   const applications = useMemo(() => {
-    console.log(
-      'rawApplications:',
-      rawApplications,
-      'type:',
-      typeof rawApplications,
-      'isArray:',
-      Array.isArray(rawApplications)
-    );
     const result = Array.isArray(rawApplications) ? rawApplications : [];
-    console.log('processed applications:', result);
     return result;
   }, [rawApplications]);
   const isLoading = machinesLoading || machineApplicationsLoading;

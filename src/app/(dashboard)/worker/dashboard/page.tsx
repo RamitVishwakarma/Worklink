@@ -60,13 +60,6 @@ function WorkerDashboardPage() {
   const recentGigs = gigs.slice(0, 6);
   const recentApplications = gigApplications.slice(0, 3);
 
-  React.useEffect(() => {
-    if (!loading) {
-      const message = `Dashboard loaded. You have ${applicationStats.total} total applications, ${applicationStats.pending} pending, and ${gigStats.active} active gigs available.`;
-      console.log('Accessibility:', message);
-    }
-  }, [loading, applicationStats, gigStats]);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

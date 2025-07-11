@@ -29,10 +29,3 @@ export type { MachinesState } from './machinesStore';
 export type { ProfilesState } from './profilesStore';
 export type { ApplicationsState } from './applicationsStore';
 export type { NotificationsState, Notification } from './notificationsStore';
-
-// Store initialization helper
-export const initializeStores = () => {
-  // This function can be called in the app initialization
-  // to set up any necessary store configurations or data fetching
-  console.log('Stores initialized');
-};

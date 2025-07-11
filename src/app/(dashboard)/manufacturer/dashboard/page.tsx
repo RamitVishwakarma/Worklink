@@ -71,19 +71,9 @@ function ManufacturerDashboardPage() {
   // Fetch user machines on mount
   useEffect(() => {
     if (isAuthenticated && user?.userType === 'manufacturer') {
-      console.log('Dashboard: Fetching user machines...');
       fetchUserMachines();
     }
   }, [isAuthenticated, user?.userType, fetchUserMachines]);
-
-  // Debug logging
-  useEffect(() => {
-    console.log('Dashboard: rawMachines =', rawMachines);
-    console.log('Dashboard: machines =', machines);
-    console.log('Dashboard: machinesLoading =', machinesLoading);
-    console.log('Dashboard: isAuthenticated =', isAuthenticated);
-    console.log('Dashboard: user =', user);
-  }, [rawMachines, machines, machinesLoading, isAuthenticated, user]);
 
   // Get recent machines and applications for display
   // const recentMachines = machines.slice(0, 3);
@@ -134,7 +124,7 @@ function ManufacturerDashboardPage() {
                   </div>
                   <span className="truncate">Manufacturer Dashboard</span>
                 </IndustrialHeader>
-                <p className="text-industrial-secondary mt-1 sm:mt-2 text-sm sm:text-base">
+                <p className="mt-1 sm:mt-2 text-sm sm:text-base">
                   Welcome back, {user?.companyName || 'Manufacturer'}! Manage
                   your machines and applications.
                 </p>

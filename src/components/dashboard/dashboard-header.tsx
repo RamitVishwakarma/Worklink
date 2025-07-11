@@ -1,14 +1,11 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { IndustrialIcon } from '@/components/ui/industrial-icon';
 import { NotificationBell } from '@/components/ui/notifications';
 import { useAuthStore } from '@/lib/store/authStore';
+import { Startup, Manufacturer } from '@/lib/types';
 
 interface DashboardHeaderProps {
   userType: 'worker' | 'startup' | 'manufacturer';
@@ -51,7 +48,27 @@ export function DashboardHeader({ userType }: DashboardHeaderProps) {
           <div className="flex items-center gap-3 pl-4 border-l border-industrial-border">
             <div className="hidden sm:block text-right">
               <div className="text-sm font-medium text-industrial-gunmetal-900">
-                {user?.email?.split('@')[0] || 'User'}
+                {(() => {
+                  if (!user) return 'User';
+                  switch (userType) {
+                    case 'worker':
+                      return user.email?.split('@')[0] || 'Worker';
+                    case 'startup':
+                      return (
+                        (user as Startup).companyName ||
+                        user.email?.split('@')[0] ||
+                        'Startup'
+                      );
+                    case 'manufacturer':
+                      return (
+                        (user as Manufacturer).companyName ||
+                        user.email?.split('@')[0] ||
+                        'Manufacturer'
+                      );
+                    default:
+                      return user.email?.split('@')[0] || 'User';
+                  }
+                })()}
               </div>
               <div className="text-xs text-industrial-gunmetal-600">
                 {capitalize(userType)}

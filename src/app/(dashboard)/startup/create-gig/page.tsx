@@ -276,7 +276,6 @@ function CreateGigPage() {
         company: user?.companyName || 'A Startup',
       };
 
-      console.log('Submitting gig data:', gigData);
       const response = await createGig(gigData);
 
       if (response) {

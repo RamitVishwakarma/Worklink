@@ -88,7 +88,7 @@ type FormValues = z.infer<typeof formSchema>;
 export function SignupForm() {
   const signup = useAuthStore((state) => state.signup);
   const router = useRouter();
-  const { toast } = useToast(); // Initialize useToast
+  const { toast } = useToast();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -182,7 +182,6 @@ export function SignupForm() {
       console.error('Signup failed:', error);
       let errorMessage =
         'An unexpected error occurred during signup. Please try again.';
-
       if (
         error instanceof AxiosError &&
         error.response &&

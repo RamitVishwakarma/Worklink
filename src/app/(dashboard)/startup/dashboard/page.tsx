@@ -91,16 +91,6 @@ function StartupDashboardPage() {
     fetchApplications();
   }, [fetchUserGigs, fetchApplications]);
 
-  React.useEffect(() => {
-    if (!loading) {
-      const message = `Startup dashboard loaded. You have ${userGigs.length} posted gigs, ${applicationStats.total} total applications received, and ${applicationStats.pending} pending reviews.`;
-      console.log('Accessibility:', message);
-      console.log('Debug - userGigs:', userGigs);
-      console.log('Debug - gigStats:', gigStats);
-      console.log('Debug - applicationStats:', applicationStats);
-    }
-  }, [loading, userGigs.length, applicationStats, userGigs, gigStats]);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

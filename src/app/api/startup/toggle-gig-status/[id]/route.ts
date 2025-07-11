@@ -54,11 +54,6 @@ export async function PATCH(
     gig.status = gig.isActive ? 'active' : 'inactive';
     await gig.save();
 
-    // Add some debug logging
-    console.log(
-      `Toggle gig status success - gig: ${gigId}, active: ${gig.isActive}, status: ${gig.status}`
-    );
-
     return createSuccessResponse(
       {
         gig,
