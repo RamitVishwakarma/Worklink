@@ -38,13 +38,6 @@ const stats = [
   },
 ];
 
-const certifications = [
-  'ISO 9001',
-  'OSHA Compliant',
-  'CE Certification',
-  'UL Listed',
-];
-
 export function TrustIndicators() {
   return (
     <section className="py-20 bg-white" id="trust">
@@ -93,49 +86,6 @@ export function TrustIndicators() {
             );
           })}
         </div>
-
-        {/* Certifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="bg-gray-50 rounded-xl p-8 border border-gray-200"
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start mb-3">
-                <ShieldCheck className="w-6 h-6 text-industrial-safety-300 mr-2" />
-                <h3 className="font-oswald font-bold text-xl text-industrial-gunmetal-800">
-                  Industrial Safety First
-                </h3>
-              </div>
-              <p className="text-gray-600 max-w-md">
-                Every worker, startup, and manufacturer on our platform meets
-                rigorous safety and quality standards to ensure reliable
-                industrial partnerships.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              {certifications.map((cert, index) => (
-                <motion.div
-                  key={cert}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="flex items-center bg-white px-4 py-2 rounded-md shadow-sm border border-gray-200"
-                >
-                  <Award className="w-5 h-5 text-industrial-gunmetal-800 mr-2" />
-                  <span className="font-medium text-sm text-industrial-gunmetal-800">
-                    {cert}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
