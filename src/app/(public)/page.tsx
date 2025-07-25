@@ -42,7 +42,6 @@ export default function HomePage() {
       <SiteMap />
       <TrustIndicators />
       <NewsletterSection />
-      <Footer />
     </>
   );
 }
